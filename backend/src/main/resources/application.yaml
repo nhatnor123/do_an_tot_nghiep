@@ -1,0 +1,15 @@
+server:
+  port: 8099
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/do_an_tot_nghiep
+    username: root
+    password: 30121998
+
+jwt:
+  secret: datn
