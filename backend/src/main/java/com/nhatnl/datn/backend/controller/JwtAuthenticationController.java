@@ -77,7 +77,7 @@ public class JwtAuthenticationController {
         }
         return ResponseEntity.ok(false);
     }
-    
+
     @PostMapping(value = "/register")
     public ResponseEntity<?> registerNewAccount(@RequestBody CreateAccountReq request) {
         log.info("registerNewAccount");

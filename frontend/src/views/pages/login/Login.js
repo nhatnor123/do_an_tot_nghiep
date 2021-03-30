@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   CButton,
   CCard,
@@ -12,11 +12,69 @@ import {
   CInputGroup,
   CInputGroupPrepend,
   CInputGroupText,
-  CRow
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+  CRow,
+  CSelect,
+  CInvalidFeedback,
+  CValidFeedback,
+} from "@coreui/react";
+import CIcon from "@coreui/icons-react";
+import { message } from "antd";
 
-const Login = () => {
+import authenticationApi from "../../../datn/api/AuthenticationApi";
+import { setAccessToken } from "../../../datn/api/TokenUtil";
+
+const Login = (props) => {
+  let [username, setUserName] = useState("");
+  let [password, setPassword] = useState("");
+  let [role, setRole] = useState("");
+
+  const handleSubmitForm = async () => {
+    console.log(username, password, role);
+    let isValidated = true;
+    if (!username || username === "") {
+      message.error("Vui lòng nhập tên đăng nhập", 1);
+      isValidated = false;
+    }
+    if (!password || password === "") {
+      message.error("Vui lòng nhập mật khẩu", 1);
+      isValidated = false;
+    }
+    if (!role || role === "none-select") {
+      message.error("Vui lòng chọn vai trò đăng nhập", 1);
+      isValidated = false;
+    }
+    if (!isValidated) {
+      return;
+    }
+    try {
+      const response = await authenticationApi.getToken({
+        username,
+        password,
+        role,
+      });
+      console.log("token = ", response.token);
+      setAccessToken(response.token);
+      message.success("Đăng nhập thành công", 3);
+      props.history.push(`/${role.toLowerCase()}`);
+    } catch (e) {
+      console.error(e);
+      message.error("Đăng nhập thất bại", 3);
+      message.error("Sai tên đăng nhập hoặc mật khẩu", 3);
+    }
+  };
+
+  const handleChangeUsername = (event) => {
+    setUserName(event.target.value);
+  };
+
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleChangeRole = (event) => {
+    setRole(event.target.value);
+  };
+
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -26,15 +84,31 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm>
-                    <h1>Login</h1>
-                    <p className="text-muted">Sign In to your account</p>
+                    <h1>Đăng nhập</h1>
+                    <p className="text-muted">
+                      Đăng nhập bằng tài khoản của bạn
+                    </p>
                     <CInputGroup className="mb-3">
                       <CInputGroupPrepend>
                         <CInputGroupText>
                           <CIcon name="cil-user" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="text" placeholder="Username" autoComplete="username" />
+                      <CInput
+                        className="form-control-warning"
+                        type="text"
+                        placeholder="Tên đăng nhập"
+                        autoComplete="username"
+                        value={username}
+                        onChange={handleChangeUsername}
+                        required
+                      />
+                      <CInvalidFeedback className="help-block">
+                        Please provide a valid information
+                      </CInvalidFeedback>
+                      <CValidFeedback className="help-block">
+                        Input provided
+                      </CValidFeedback>
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupPrepend>
@@ -42,27 +116,71 @@ const Login = () => {
                           <CIcon name="cil-lock-locked" />
                         </CInputGroupText>
                       </CInputGroupPrepend>
-                      <CInput type="password" placeholder="Password" autoComplete="current-password" />
+                      <CInput
+                        type="password"
+                        placeholder="Mật khẩu"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={handleChangePassword}
+                        required
+                      />
+                    </CInputGroup>
+                    <CInputGroup className="mb-4">
+                      <CInputGroupPrepend>
+                        <CInputGroupText>
+                          <CIcon name="cilSettings" />
+                        </CInputGroupText>
+                      </CInputGroupPrepend>
+                      <CCol>
+                        <CSelect
+                          custom
+                          name="role"
+                          id="select"
+                          value={role}
+                          onChange={handleChangeRole}
+                        >
+                          <option value="TEACHER">Giáo viên</option>
+                          <option value="STUDENT">Học viên</option>
+                          <option value="ADMIN">Admin</option>
+                        </CSelect>
+                      </CCol>
                     </CInputGroup>
                     <CRow>
                       <CCol xs="6">
-                        <CButton color="primary" className="px-4">Login</CButton>
+                        <CButton
+                          color="primary"
+                          className="px-4"
+                          onClick={handleSubmitForm}
+                        >
+                          Đăng nhập
+                        </CButton>
                       </CCol>
                       <CCol xs="6" className="text-right">
-                        <CButton color="link" className="px-0">Forgot password?</CButton>
+                        <CButton color="link" className="px-0">
+                          Quên mật khẩu ?
+                        </CButton>
                       </CCol>
                     </CRow>
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5 d-md-down-none" style={{ width: '44%' }}>
+              <CCard
+                className="text-white bg-success py-5 d-md-down-none"
+                style={{ width: "44%" }}
+              >
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                      labore et dolore magna aliqua.</p>
+                    <h2>Đăng ký</h2>
+                    <p>Chưa có tài khoản ? Đăng ký ngay !</p>
                     <Link to="/register">
-                      <CButton color="primary" className="mt-3" active tabIndex={-1}>Register Now!</CButton>
+                      <CButton
+                        color="primary"
+                        className="mt-3"
+                        active
+                        tabIndex={-1}
+                      >
+                        Đăng ký ngay!
+                      </CButton>
                     </Link>
                   </div>
                 </CCardBody>
@@ -72,7 +190,7 @@ const Login = () => {
         </CRow>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
