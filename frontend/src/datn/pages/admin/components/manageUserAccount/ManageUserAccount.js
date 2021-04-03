@@ -58,6 +58,7 @@ message.config({
 class ManageUserAccount extends React.Component {
   constructor(props) {
     super(props);
+    this.formRef = React.createRef();
     this.state = {
       dataSource: [],
       columns: [
@@ -354,12 +355,13 @@ class ManageUserAccount extends React.Component {
         visible: false,
       });
       this.getAccountList();
+      this.handleResetForm();
     } catch (e) {
       console.error(e);
       message.error("Thêm mới tài khoản thất bại", 3);
-      this.setState({
-        visible: false,
-      });
+      // this.setState({
+      //   visible: false,
+      // });
     }
   };
 
@@ -405,6 +407,10 @@ class ManageUserAccount extends React.Component {
     };
   }
 
+  handleResetForm = () => {
+    this.formRef.current.resetFields();
+  };
+
   componentDidMount() {
     this.getAccountList();
   }
@@ -437,6 +443,7 @@ class ManageUserAccount extends React.Component {
                   hideRequiredMark
                   scrollToFirstError
                   onFinish={this.handleSummitCreateNewAccount}
+                  ref={this.formRef}
                 >
                   <Form.Item {...tailFormItemLayout}>
                     <Form.Item
@@ -621,9 +628,18 @@ class ManageUserAccount extends React.Component {
                     <Button
                       type="primary"
                       htmlType="submit"
-                      style={{ margin: "10px 10px 10px 10px" }}
+                      style={{ margin: "10px 10px 10px 10%" }}
                     >
                       Thêm mới
+                    </Button>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{ margin: "10px 10px 30px 30%" }}
+                      onClick={this.handleResetForm}
+                      htmlType="button"
+                    >
+                      Đặt lại
                     </Button>
                   </Form.Item>
                 </Form>
