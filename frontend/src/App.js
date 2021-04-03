@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { AuthRoute } from "./datn/components/auth/AuthRoute";
 import "./scss/style.scss";
+
+import TheAdminLayout from "./datn/pages/admin/container/TheAdminLayout";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -9,13 +12,17 @@ const loading = (
 );
 
 // Containers
-const TheLayout = React.lazy(() => import("./containers/TheLayout"));
+// const TheLayout = React.lazy(() => import("./containers/TheLayout"));
+
+// const TheAdminLayout = React.lazy(() => {
+//   import("./datn/pages/admin/container/TheAdminLayout");
+// });
 
 // Pages
-const Login = React.lazy(() => import("./views/pages/login/Login"));
-const Register = React.lazy(() => import("./views/pages/register/Register"));
-const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
-const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
+const Login = React.lazy(() => import("./datn/pages/login/Login"));
+const Register = React.lazy(() => import("./datn/pages/register/Register"));
+const Page404 = React.lazy(() => import("./datn/pages/page404/Page404"));
+const Page500 = React.lazy(() => import("./datn/pages/page500/Page500"));
 
 class App extends Component {
   render() {
@@ -47,10 +54,10 @@ class App extends Component {
               name="Page 500"
               render={(props) => <Page500 {...props} />}
             />
-            <Route
-              path="/"
-              name="Home"
-              render={(props) => <TheLayout {...props} />}
+            <AuthRoute
+              path="/admin"
+              component={TheAdminLayout}
+              role={"ADMIN"}
             />
             <Route
               exact

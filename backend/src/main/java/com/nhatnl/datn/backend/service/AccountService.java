@@ -1,116 +1,125 @@
 package com.nhatnl.datn.backend.service;
 
 import com.nhatnl.datn.backend.dto.entity.AccountDto;
-import com.nhatnl.datn.backend.dto.request.account.ActiveAccountReq;
-import com.nhatnl.datn.backend.dto.request.account.DisableAccountReq;
-import com.nhatnl.datn.backend.dto.request.account.RegisterNewAccountReq;
-import com.nhatnl.datn.backend.dto.request.account.UpdateAccountReq;
+import com.nhatnl.datn.backend.dto.request.account.*;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.repository.AccountRepo;
-import org.modelmapper.ModelMapper;
+import com.nhatnl.datn.backend.util.Mapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AccountService {
     private final AccountRepo accountRepo;
-    private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepo accountRepo, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepo accountRepo, PasswordEncoder passwordEncoder) {
         this.accountRepo = accountRepo;
-        this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<AccountDto> getAllListAccount() {
-        List<Account> accountList = this.accountRepo.getAllListAccount();
-
-        List<AccountDto> accountDtoList = new ArrayList<>();
-        for (Account account : accountList) {
-            accountDtoList.add(modelMapper.map(account, AccountDto.class));
+    public AccountDto register(CreateReq req) {
+        if (req.getRole() == Account.Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Dont have permission to register Admin Account");
         }
 
-        return accountDtoList;
+        return this.create(req);
     }
 
-    public List<AccountDto> getListAccountAdmin() {
-        List<Account> accountList = this.accountRepo.getListAccountActiveByRole("ADMIN");
-
-        List<AccountDto> accountDtoList = new ArrayList<>();
-        for (Account account : accountList) {
-            accountDtoList.add(modelMapper.map(account, AccountDto.class));
-        }
-
-        return accountDtoList;
+    public AccountDto getSelfAccount() {
+        User currentUser = getCurrentUser();
+        return this.findByUsername(currentUser.getUsername());
     }
 
-    public List<AccountDto> getListAccountEditor() {
-        List<Account> accountList = this.accountRepo.getListAccountActiveByRole("EDITOR");
-
-        List<AccountDto> accountDtoList = new ArrayList<>();
-        for (Account account : accountList) {
-            accountDtoList.add(modelMapper.map(account, AccountDto.class));
-        }
-
-        return accountDtoList;
-    }
-
-    public List<AccountDto> getListAccountCollaborator() {
-        List<Account> accountList = this.accountRepo.getListAccountActiveByRole("COLLABORATOR");
-
-        List<AccountDto> accountDtoList = new ArrayList<>();
-        for (Account account : accountList) {
-            accountDtoList.add(modelMapper.map(account, AccountDto.class));
-        }
-
-        return accountDtoList;
-    }
-
-    public AccountDto createNewAccount(RegisterNewAccountReq request, Account.Role role, Boolean isApproved) {
+    public AccountDto create(CreateReq req) {
         Account account = Account.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(role)
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .phoneNo(request.getPhoneNo())
-                .email(request.getEmail())
+                .username(req.getUsername())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .email(req.getEmail())
+                .firstName(req.getFirstName())
+                .lastName(req.getLastName())
+                .role(req.getRole())
+                .phoneNo(req.getPhoneNo())
+                .address(req.getAddress())
+                .imageUrl(req.getImageUrl())
+                .birthday(req.getBirthday())
                 .isActive(true)
-
                 .build();
 
-        account = this.accountRepo.create(account);
-
-        return modelMapper.map(account, AccountDto.class);
+        account = accountRepo.create(account);
+        return Mapper.accountFromModelToDto(account);
     }
 
-    public AccountDto update(UpdateAccountReq request) {
-        Account account = (this.accountRepo.getById(request.getAccountId().toString())).get(0);
+    public AccountDto updateSelfAccount(UpdateSelfAccountReq request) {
+        User currentUser = getCurrentUser();
 
-        account.setFirstName(request.getFirstName());
-        account.setLastName(request.getLastName());
-        account.setPhoneNo(request.getPhoneNo());
+        accountRepo.updateInfoAccount(
+                currentUser.getUsername(),
+                request.getFirstName(),
+                request.getLastName(),
+                request.getPhoneNo(),
+                request.getAddress(),
+                request.getImageUrl(),
+                request.getBirthday(),
+                request.getFieldList()
+        );
 
-        account = accountRepo.update(account);
-
-        return modelMapper.map(account, AccountDto.class);
+        return getSelfAccount();
     }
 
-    public void disableAccount(DisableAccountReq request) {
-        this.accountRepo.disableAccount(request.getAccountId());
-    }
-
-    public void activeAccount(ActiveAccountReq request) {
-        this.accountRepo.activeAccount(request.getAccountId());
+    public AccountDto getById(Long accountId) {
+        Account account = this.accountRepo.getById(accountId);
+        return Mapper.accountFromModelToDto(account);
     }
 
     public AccountDto findByUsername(String username) {
         Account account = this.accountRepo.findByUsername(username);
+        return Mapper.accountFromModelToDto(account);
+    }
 
-        return modelMapper.map(account, AccountDto.class);
+    public List<AccountDto> search(SearchReq req) {
+        List<Account> accountList = this.accountRepo.search(
+                req.getAccountId(),
+                req.getUsername(),
+                req.getEmail(),
+                req.getFirstName(),
+                req.getLastName(),
+                req.getRole(),
+                req.getPhoneNo(),
+                req.getAddress(),
+                req.getBirthdayFrom(),
+                req.getBirthdayTo(),
+                req.getIsActive(),
+                req.getCreatedAtFrom(),
+                req.getCreatedAtTo(),
+                req.getUpdatedAtFrom(),
+                req.getUpdatedAtTo(),
+                req.getFieldList()
+        );
+
+        return Mapper.accountListFromModelToDto(accountList);
+    }
+
+    public AccountDto lock(Long accountId) {
+        this.accountRepo.lockAccount(accountId);
+        return this.getById(accountId);
+    }
+
+    public AccountDto unlock(Long accountId) {
+        this.accountRepo.unlockAccount(accountId);
+        return this.getById(accountId);
+    }
+
+    private User getCurrentUser() {
+        UsernamePasswordAuthenticationToken user
+                = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        return (User) user.getPrincipal();
     }
 }

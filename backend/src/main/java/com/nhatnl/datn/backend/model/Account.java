@@ -32,6 +32,7 @@ public class Account {
     @Column(name = "lastName", length = 30, nullable = false)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 40, nullable = false)
     private Role role;
 

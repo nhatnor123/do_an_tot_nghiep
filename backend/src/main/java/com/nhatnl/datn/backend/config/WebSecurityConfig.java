@@ -59,8 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/authenticate/**"
-                        , "/account/register-collaborator"
-                        , "/account/get-all-list-account"
+                        , "/account/register"
                 )
                 .permitAll()
                 // all other requests need to be authenticated

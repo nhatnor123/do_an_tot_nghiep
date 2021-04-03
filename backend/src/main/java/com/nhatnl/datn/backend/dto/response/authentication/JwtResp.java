@@ -1,4 +1,4 @@
-package com.nhatnl.datn.backend.dto.jwt;
+package com.nhatnl.datn.backend.dto.response.authentication;
 
 public class JwtResp {
     private final String jwtToken;

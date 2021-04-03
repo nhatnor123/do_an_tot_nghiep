@@ -1,4 +1,4 @@
-package com.nhatnl.datn.backend.dto.response;
+package com.nhatnl.datn.backend.dto.response.authentication;
 
 import lombok.*;
 

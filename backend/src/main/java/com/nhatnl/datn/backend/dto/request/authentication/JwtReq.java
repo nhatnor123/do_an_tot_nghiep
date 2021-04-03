@@ -1,4 +1,4 @@
-package com.nhatnl.datn.backend.dto.jwt;
+package com.nhatnl.datn.backend.dto.request.authentication;
 
 import com.nhatnl.datn.backend.model.Account;
 import lombok.*;

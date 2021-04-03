@@ -2,10 +2,9 @@ package com.nhatnl.datn.backend.controller;
 
 import com.nhatnl.datn.backend.config.jwtConfig.JwtTokenUtil;
 import com.nhatnl.datn.backend.constant.Constant;
-import com.nhatnl.datn.backend.dto.jwt.JwtReq;
-import com.nhatnl.datn.backend.dto.jwt.CheckJwtReq;
-import com.nhatnl.datn.backend.dto.request.account.CreateAccountReq;
-import com.nhatnl.datn.backend.dto.response.AuthenticateResp;
+import com.nhatnl.datn.backend.dto.request.authentication.JwtReq;
+import com.nhatnl.datn.backend.dto.request.authentication.CheckJwtReq;
+import com.nhatnl.datn.backend.dto.response.authentication.AuthenticateResp;
 import com.nhatnl.datn.backend.service.JwtUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -64,8 +63,8 @@ public class JwtAuthenticationController {
     }
 
     @RequestMapping(value = "check-token", method = RequestMethod.POST)
-    public ResponseEntity<?> checkJwt(@RequestBody CheckJwtReq request) {
-        log.info("checkJwt");
+    public ResponseEntity<?> checkToken(@RequestBody CheckJwtReq request) {
+        log.info("checkToken");
 
         UsernamePasswordAuthenticationToken user
                 = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
@@ -76,12 +75,6 @@ public class JwtAuthenticationController {
             }
         }
         return ResponseEntity.ok(false);
-    }
-
-    @PostMapping(value = "/register")
-    public ResponseEntity<?> registerNewAccount(@RequestBody CreateAccountReq request) {
-        log.info("registerNewAccount");
-        return ResponseEntity.ok(jwtUserDetailsService.createAccount(request));
     }
 
 }
