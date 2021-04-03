@@ -18,12 +18,17 @@ import {
   SearchOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
+  EyeOutlined,
+  LockOutlined,
+  UnlockOutlined,
 } from "@ant-design/icons";
 
 import accountApi from "../../../../api/AccountApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
-const { Header, Content } = Layout;
+import "./ManageUserAccount.css";
+
+const { Content } = Layout;
 
 const inputStyle = {
   fontSize: "16px",
@@ -36,12 +41,12 @@ const labelStyle = {
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
-      span: 24,
+      span: 18,
       offset: 0,
     },
     sm: {
-      span: 16,
-      offset: 8,
+      span: 24,
+      offset: 0,
     },
   },
 };
@@ -62,65 +67,65 @@ class ManageUserAccount extends React.Component {
           key: "index",
         },
         {
-          title: "username",
+          title: "Tên đăng nhập",
           dataIndex: "username",
           key: "username",
           ...this.getColumnSearchProps("username"),
         },
         {
-          title: "email",
+          title: "Email",
           dataIndex: "email",
           key: "email",
           ...this.getColumnSearchProps("email"),
         },
         {
-          title: "role",
+          title: "Vai trò",
           dataIndex: "role",
           key: "role",
           ...this.getColumnSearchProps("role"),
         },
         {
-          title: "firstName",
+          title: "Họ",
           dataIndex: "firstName",
           key: "firstName",
           ...this.getColumnSearchProps("firstName"),
         },
         {
-          title: "lastName",
+          title: "Tên",
           dataIndex: "lastName",
           key: "lastName",
           ...this.getColumnSearchProps("lastName"),
         },
         {
-          title: "phoneNo",
+          title: "SĐT",
           dataIndex: "phoneNo",
           key: "phoneNo",
           ...this.getColumnSearchProps("phoneNo"),
         },
         {
-          title: "address",
+          title: "Địa chỉ",
           dataIndex: "address",
           key: "address",
           ...this.getColumnSearchProps("address"),
         },
         {
-          title: "birthday",
+          title: "Ngày sinh",
           dataIndex: "birthday",
           key: "birthday",
         },
         {
-          title: "isActive",
-          dataIndex: "isActive",
-          key: "isActive",
-          ...this.getColumnSearchProps("isActive"),
+          title: "Trạng thái",
+          dataIndex: "isActiveText",
+          key: "isActiveText",
+          ...this.getColumnSearchProps("isActiveText"),
         },
         {
-          title: "createdAt",
+          title: "Thời điểm tạo",
           dataIndex: "createdAt",
           key: "createdAt",
         },
         {
-          title: "updatedAt",
+          title: "Thời điểm cập nhật",
           dataIndex: "updatedAt",
           key: "updatedAt",
         },
@@ -133,9 +138,30 @@ class ManageUserAccount extends React.Component {
               cancelText="Hủy"
               okText="Đồng ý"
               onConfirm={this.handleLockAccount(record.accountId)}
-              disabled={record.isActive === "false"}
+              disabled={record.isActive === false}
             >
-              <Button disabled={record.isActive === "false"}>Khóa</Button>
+              <Button disabled={record.isActive === false}>
+                <EyeOutlined />
+              </Button>
+            </Popconfirm>
+          ),
+        },
+        {
+          title: "",
+          key: "accountId",
+          render: (text, record) => (
+            <Popconfirm
+              title="Xác nhận khóa tài khoản này ?"
+              cancelText="Hủy"
+              okText="Đồng ý"
+              onConfirm={this.handleLockAccount(record.accountId)}
+              disabled={record.isActive === false}
+            >
+              <Tooltip placement="top" title="Khóa tài khoản">
+                <Button disabled={record.isActive === false}>
+                  <LockOutlined />
+                </Button>
+              </Tooltip>
             </Popconfirm>
           ),
         },
@@ -148,9 +174,14 @@ class ManageUserAccount extends React.Component {
               cancelText="Hủy"
               okText="Đồng ý"
               onConfirm={this.handleUnlockAccount(record.accountId)}
-              disabled={record.isActive === "true"}
+              disabled={record.isActive === true}
+              placement="topLeft"
             >
-              <Button disabled={record.isActive === "true"}>Mở khóa</Button>
+              <Tooltip placement="top" title="Mở khóa tài khoản">
+                <Button disabled={record.isActive === true}>
+                  <UnlockOutlined />
+                </Button>
+              </Tooltip>
             </Popconfirm>
           ),
         },
@@ -184,7 +215,7 @@ class ManageUserAccount extends React.Component {
           ref={(node) => {
             this.searchInput = node;
           }}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Nhập nội dung`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -283,7 +314,10 @@ class ManageUserAccount extends React.Component {
       let dataSourceResponsed = response.map((item, index) => {
         return {
           ...item,
-          isActive: item.isActive ? "true" : "false",
+          isActiveText: item.isActive ? "true" : "false",
+          birthday: item.birthday.substring(0, item.birthday.length - 19),
+          createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
+          updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
           index: index + 1,
         };
       });
@@ -383,15 +417,20 @@ class ManageUserAccount extends React.Component {
         <Content style={{ overflow: "initial" }}>
           <div className="site-layout-background">
             <div>
-              <Button type="primary" onClick={this.showDrawer}>
+              <Button
+                type="primary"
+                onClick={this.showDrawer}
+                style={{ margin: "1% 0px 1% 1%" }}
+              >
                 <PlusOutlined /> Thêm mới
               </Button>
               <Drawer
                 title="Thêm mới tài khoản"
-                width={720}
+                width={500}
                 onClose={this.onClose}
                 visible={this.state.visible}
-                bodyStyle={{ paddingBottom: 80 }}
+                bodyStyle={{ paddingBottom: 95 }}
+                placement="right"
               >
                 <Form
                   layout="vertical"
@@ -579,19 +618,23 @@ class ManageUserAccount extends React.Component {
                         <Radio value="ADMIN">Admin</Radio>
                       </Radio.Group>
                     </Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{ margin: "10px 10px 10px 10px" }}
+                    >
                       Thêm mới
                     </Button>
                   </Form.Item>
                 </Form>
               </Drawer>
             </div>
-            <div style={{ marginTop: "20px" }}>
+            <div>
               <Table
                 dataSource={this.state.dataSource}
                 columns={this.state.columns}
                 scroll={{ x: "calc(100%)" }}
-                pagination={{ position: ["topRight"] }}
+                pagination={{ position: ["bottomRight"] }}
                 bordered
               />
             </div>

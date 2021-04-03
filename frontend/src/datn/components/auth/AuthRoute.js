@@ -9,7 +9,7 @@ export const AuthRoute = ({ component: Component, exact, path, role }) => {
       path={path}
       render={(props) => {
         props = { ...props, role };
-        console.log("props =", props, role);
+
         return (
           <AuthBeforeRender
             history={props.history}

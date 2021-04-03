@@ -18,6 +18,7 @@ public class Mapper {
                 .phoneNo(account.getPhoneNo())
                 .address(account.getAddress())
                 .imageUrl(account.getImageUrl())
+                .birthday(account.getBirthday())
                 .isActive(account.getIsActive())
                 .createdAt(account.getCreatedAt())
                 .updatedAt(account.getUpdatedAt())
