@@ -177,7 +177,7 @@ class ManageUserAccount extends React.Component {
               disabled={record.isActive === true}
               placement="topLeft"
             >
-              <Tooltip placement="top" title="Mở khóa tài khoản">
+              <Tooltip placement="topLeft" title="Mở khóa tài khoản">
                 <Button disabled={record.isActive === true}>
                   <UnlockOutlined />
                 </Button>

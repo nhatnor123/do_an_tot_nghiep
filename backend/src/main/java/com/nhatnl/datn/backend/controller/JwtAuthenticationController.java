@@ -5,7 +5,7 @@ import com.nhatnl.datn.backend.constant.Constant;
 import com.nhatnl.datn.backend.dto.request.authentication.JwtReq;
 import com.nhatnl.datn.backend.dto.request.authentication.CheckJwtReq;
 import com.nhatnl.datn.backend.dto.response.authentication.AuthenticateResp;
-import com.nhatnl.datn.backend.service.JwtUserDetailsService;
+import com.nhatnl.datn.backend.service.impl.JwtUserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.*;
 public class JwtAuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final JwtUserDetailsService jwtUserDetailsService;
+    private final JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     public JwtAuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil
-            , JwtUserDetailsService jwtUserDetailsService) {
+            , JwtUserDetailsServiceImpl jwtUserDetailsService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtUserDetailsService = jwtUserDetailsService;

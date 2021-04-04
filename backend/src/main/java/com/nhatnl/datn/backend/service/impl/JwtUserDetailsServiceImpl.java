@@ -1,4 +1,4 @@
-package com.nhatnl.datn.backend.service;
+package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.constant.Constant;
 import com.nhatnl.datn.backend.model.Account;
@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class JwtUserDetailsService implements UserDetailsService {
+public class JwtUserDetailsServiceImpl implements UserDetailsService {
     private final AccountRepo accountRepo;
 
-    public JwtUserDetailsService(AccountRepo accountRepo) {
+    public JwtUserDetailsServiceImpl(AccountRepo accountRepo) {
         this.accountRepo = accountRepo;
     }
 
@@ -38,5 +38,5 @@ public class JwtUserDetailsService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority(Constant.ROLE_PREFIX + account.getRole()));
         return authorities;
     }
-    
+
 }
