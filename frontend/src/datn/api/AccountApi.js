@@ -9,7 +9,7 @@ const accountApi = {
     return axiosClient.post(url, params);
   },
   getSelfAccount: async (token) => {
-    const url = `${accountApiPath}/get-token`;
+    const url = `${accountApiPath}/get-self-account`;
     return axiosClient.get(url, setupTokenHeader(token));
   },
   create: async (params, token) => {
@@ -34,6 +34,10 @@ const accountApi = {
   },
   unlock: async (params, token) => {
     const url = `${accountApiPath}/unlock`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
+  changePassword: async (params, token) => {
+    const url = `${accountApiPath}/change-password`;
     return axiosClient.post(url, params, setupTokenHeader(token));
   },
 };

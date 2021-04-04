@@ -18,7 +18,6 @@ import {
   SearchOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
-  EyeOutlined,
   LockOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
@@ -52,7 +51,7 @@ const tailFormItemLayout = {
 };
 
 message.config({
-  top: 150,
+  top: 80,
 });
 
 class ManageUserAccount extends React.Component {
@@ -130,23 +129,23 @@ class ManageUserAccount extends React.Component {
           dataIndex: "updatedAt",
           key: "updatedAt",
         },
-        {
-          title: "",
-          key: "accountId",
-          render: (text, record) => (
-            <Popconfirm
-              title="Xác nhận khóa tài khoản này ?"
-              cancelText="Hủy"
-              okText="Đồng ý"
-              onConfirm={this.handleLockAccount(record.accountId)}
-              disabled={record.isActive === false}
-            >
-              <Button disabled={record.isActive === false}>
-                <EyeOutlined />
-              </Button>
-            </Popconfirm>
-          ),
-        },
+        // {
+        //   title: "",
+        //   key: "accountId",
+        //   render: (text, record) => (
+        //     <Popconfirm
+        //       title="Xác nhận khóa tài khoản này ?"
+        //       cancelText="Hủy"
+        //       okText="Đồng ý"
+        //       onConfirm={this.handleLockAccount(record.accountId)}
+        //       disabled={record.isActive === false}
+        //     >
+        //       <Button disabled={record.isActive === false}>
+        //         <EyeOutlined />
+        //       </Button>
+        //     </Popconfirm>
+        //   ),
+        // },
         {
           title: "",
           key: "accountId",
@@ -315,7 +314,7 @@ class ManageUserAccount extends React.Component {
       let dataSourceResponsed = response.map((item, index) => {
         return {
           ...item,
-          isActiveText: item.isActive ? "true" : "false",
+          isActiveText: item.isActive ? "Đang hoạt động" : "Bị khóa",
           birthday: item.birthday.substring(0, item.birthday.length - 19),
           createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
           updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
@@ -416,7 +415,7 @@ class ManageUserAccount extends React.Component {
   }
 
   render() {
-    console.log("render manageAccount");
+    console.log("render manageUserAccount");
 
     return (
       <Layout className="site-layout">

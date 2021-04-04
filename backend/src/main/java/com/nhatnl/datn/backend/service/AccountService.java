@@ -6,6 +6,7 @@ import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.repository.AccountRepo;
 import com.nhatnl.datn.backend.util.Mapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -19,10 +20,13 @@ import java.util.List;
 public class AccountService {
     private final AccountRepo accountRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public AccountService(AccountRepo accountRepo, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepo accountRepo, PasswordEncoder passwordEncoder,
+                          AuthenticationManager authenticationManager) {
         this.accountRepo = accountRepo;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     public AccountDto register(CreateReq req) {
@@ -75,17 +79,17 @@ public class AccountService {
     }
 
     public AccountDto getById(Long accountId) {
-        Account account = this.accountRepo.getById(accountId);
+        Account account = accountRepo.getById(accountId);
         return Mapper.accountFromModelToDto(account);
     }
 
     public AccountDto findByUsername(String username) {
-        Account account = this.accountRepo.findByUsername(username);
+        Account account = accountRepo.findByUsername(username);
         return Mapper.accountFromModelToDto(account);
     }
 
     public List<AccountDto> search(SearchReq req) {
-        List<Account> accountList = this.accountRepo.search(
+        List<Account> accountList = accountRepo.search(
                 req.getAccountId(),
                 req.getUsername(),
                 req.getEmail(),
@@ -115,6 +119,20 @@ public class AccountService {
     public AccountDto unlock(Long accountId) {
         this.accountRepo.unlockAccount(accountId);
         return this.getById(accountId);
+    }
+
+    public AccountDto changePassword(ChangePasswordReq req) throws Exception {
+        User currentUser = getCurrentUser();
+        String username = currentUser.getUsername();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, req.getOldPassword()));
+        Account account = accountRepo.changePassword(
+                currentUser.getUsername(),
+                passwordEncoder.encode(req.getNewPassword())
+        );
+        if (account == null) {
+            throw new Exception("Password wrong or account is inactive");
+        }
+        return Mapper.accountFromModelToDto(account);
     }
 
     private User getCurrentUser() {

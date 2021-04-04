@@ -8,14 +8,34 @@ const ManageUserAccount = React.lazy(() =>
   import("../components/manageUserAccount/ManageUserAccount")
 );
 
+const ManageAccount = React.lazy(() =>
+  import("../components/manageAccount/ManageAccount")
+);
+
+const ChangePassword = React.lazy(() =>
+  import("../components/changePassword/ChangePassword")
+);
+
 const routes = [
-  { path: "/admin", exact: true, name: "Home" },
+  { path: "/admin", exact: true, name: "Trang chủ" },
   { path: "/admin/home", exact: true, name: "Dashboard", component: Dashboard },
   {
     path: "/admin/manageUserAccount",
     exact: true,
-    name: "ManageUserAccount",
+    name: "Quản lý tài khoản người dùng",
     component: ManageUserAccount,
+  },
+  {
+    path: "/admin/manageAccount",
+    exact: true,
+    name: "Quản lý tài khoản cá nhân",
+    component: ManageAccount,
+  },
+  {
+    path: "/admin/manageAccount/changePassword",
+    exact: true,
+    name: "Thay đổi mật khẩu",
+    component: ChangePassword,
   },
 ];
 

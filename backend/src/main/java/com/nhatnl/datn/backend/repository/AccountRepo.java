@@ -36,22 +36,22 @@ public class AccountRepo {
         StringBuilder queryString = new StringBuilder();
         queryString.append("UPDATE Account SET");
         if (fieldList.contains("firstName")) {
-            queryString.append(" firstName = :firstName");
+            queryString.append(" firstName = :firstName ,");
         }
         if (fieldList.contains("lastName")) {
-            queryString.append(" lastName = :lastName");
+            queryString.append(" lastName = :lastName ,");
         }
         if (fieldList.contains("phoneNo")) {
-            queryString.append(" phoneNo = :phoneNo");
+            queryString.append(" phoneNo = :phoneNo ,");
         }
         if (fieldList.contains("address")) {
-            queryString.append(" address = :address");
+            queryString.append(" address = :address ,");
         }
         if (fieldList.contains("imageUrl")) {
-            queryString.append(" imageUrl = :imageUrl");
+            queryString.append(" imageUrl = :imageUrl ,");
         }
         if (fieldList.contains("birthday")) {
-            queryString.append(" birthday = :birthday");
+            queryString.append(" birthday = :birthday ");
         }
         queryString.append(" WHERE username=:username AND isActive = true");
 
@@ -219,6 +219,13 @@ public class AccountRepo {
         Query query = entityManager.createNativeQuery(queryString, Account.class);
         query.setParameter("accountId", accountId);
         query.executeUpdate();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Account changePassword(String username, String newPassword) {
+        Account account = this.findByUsername(username);
+        account.setPassword(newPassword);
+        return this.update(account);
     }
 
 }

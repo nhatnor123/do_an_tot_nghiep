@@ -30,14 +30,14 @@ class AuthBeforeRender extends Component {
           isAuthenticated: res,
         });
         if (!res) {
-          message.error("Vui lòng đăng nhập !", 3);
+          message.warn("Vui lòng đăng nhập !", 3);
           this.props.history.push("/login");
         }
       })
       .catch((err) => {
         console.log("err = ");
         console.log(err);
-        message.error("Vui lòng đăng nhập !", 3);
+        message.warn("Vui lòng đăng nhập !", 3);
         this.props.history.push("/login");
       });
   }

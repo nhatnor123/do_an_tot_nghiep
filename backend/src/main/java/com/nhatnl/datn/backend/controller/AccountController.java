@@ -72,4 +72,11 @@ public class AccountController {
         log.info("unlock");
         return ResponseEntity.ok(accountService.unlock(request.getAccountId()));
     }
+
+    @PreAuthorize("hasRole('ADMIN')" + "|| hasRole('TEACHER')" + "|| hasRole('STUDENT')")
+    @PostMapping(path = "/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq request) throws Exception {
+        log.info("changePassword");
+        return ResponseEntity.ok(accountService.changePassword(request));
+    }
 }

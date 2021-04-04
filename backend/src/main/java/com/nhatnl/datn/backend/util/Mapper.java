@@ -8,6 +8,9 @@ import java.util.List;
 
 public class Mapper {
     public static AccountDto accountFromModelToDto(Account account) {
+        if (account == null) {
+            return null;
+        }
         return AccountDto.builder()
                 .accountId(account.getAccountId())
                 .username(account.getUsername())

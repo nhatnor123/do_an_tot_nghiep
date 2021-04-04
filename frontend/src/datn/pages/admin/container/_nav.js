@@ -19,10 +19,22 @@ const _nav = [
     icon: "cil-pencil",
   },
   {
-    _tag: "CSidebarNavItem",
+    _tag: "CSidebarNavDropdown",
     name: "Tài khoản cá nhân",
-    to: "/admin/manageAccount",
+    route: "/admin/manageAccount",
     icon: "cil-user",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "Xem thông tin tài khoản",
+        to: "/admin/manageAccount",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Đổi mật khẩu",
+        to: "/admin/manageAccount/changePassword",
+      },
+    ],
   },
   {
     _tag: "CSidebarNavTitle",
