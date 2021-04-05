@@ -132,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto changePassword(ChangePasswordReq req) throws Exception {
+    public AccountDto changePassword(ChangePasswordReq req) {
         User currentUser = getCurrentUser();
         String username = currentUser.getUsername();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, req.getOldPassword()));
@@ -140,9 +140,6 @@ public class AccountServiceImpl implements AccountService {
                 currentUser.getUsername(),
                 passwordEncoder.encode(req.getNewPassword())
         );
-        if (account == null) {
-            throw new Exception("Password wrong or account is inactive");
-        }
         return Mapper.accountFromModelToDto(account);
     }
 

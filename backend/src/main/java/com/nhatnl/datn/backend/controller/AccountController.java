@@ -75,7 +75,7 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')" + "|| hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq request) throws Exception {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordReq request) {
         log.info("changePassword");
         return ResponseEntity.ok(accountService.changePassword(request));
     }

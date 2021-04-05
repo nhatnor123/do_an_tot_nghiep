@@ -27,6 +27,6 @@ public interface AccountService {
 
     AccountDto unlock(Long accountId);
 
-    AccountDto changePassword(ChangePasswordReq req) throws Exception;
+    AccountDto changePassword(ChangePasswordReq req);
 
 }
