@@ -69,7 +69,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto updateSelfAccount(UpdateSelfAccountReq request) {
         User currentUser = getCurrentUser();
 
-        accountRepo.updateInfoAccount(
+        accountRepo.updateAccountInfo(
                 currentUser.getUsername(),
                 request.getFirstName(),
                 request.getLastName(),

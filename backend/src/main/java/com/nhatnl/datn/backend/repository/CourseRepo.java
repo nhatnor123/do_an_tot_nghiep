@@ -1,0 +1,26 @@
+package com.nhatnl.datn.backend.repository;
+
+import com.nhatnl.datn.backend.model.Course;
+
+import java.util.Date;
+import java.util.List;
+
+public interface CourseRepo {
+    Course create(Course course);
+
+    Course update(Course course);
+
+    void updateCourseInfo(Long courseId, Long teacherId, String name, String description, String imageUrl, String code,
+                          Boolean isPublic, List<String> fieldList);
+
+    Course getById(Long courseId);
+
+    List<Course> search(Long courseId, Long teacherId, String name, String description, Boolean isPublic,
+                        Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                        Date updatedAtTo, List<String> fieldList);
+
+    void archive(Long courseId);
+
+    void recover(Long courseId);
+
+}

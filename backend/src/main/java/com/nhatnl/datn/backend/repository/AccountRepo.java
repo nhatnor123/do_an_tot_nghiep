@@ -10,7 +10,7 @@ public interface AccountRepo {
 
     Account update(Account account);
 
-    void updateInfoAccount(String username, String firstName, String lastName, String phoneNo, String address,
+    void updateAccountInfo(String username, String firstName, String lastName, String phoneNo, String address,
                            String imageUrl, Date birthday, List<String> fieldList);
 
     Account getById(Long accountId);

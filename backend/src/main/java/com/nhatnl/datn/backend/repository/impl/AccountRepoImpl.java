@@ -35,7 +35,7 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateInfoAccount(String username, String firstName, String lastName, String phoneNo, String address,
+    public void updateAccountInfo(String username, String firstName, String lastName, String phoneNo, String address,
                                   String imageUrl, Date birthday, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
         queryString.append("UPDATE Account SET");
