@@ -66,7 +66,7 @@ public class LoggingServiceImpl implements LoggingService {
 
     @Override
     public void logResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body) {
-        this.logResponseDevMode(httpServletRequest, httpServletResponse, body);
+//        this.logResponseDevMode(httpServletRequest, httpServletResponse, body);
     }
 
     private void logResponseDevMode(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body) {

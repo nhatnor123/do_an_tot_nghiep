@@ -1,6 +1,6 @@
-create database test_datn;
+create database do_an_tot_nghiep;
 
-use test_datn;
+use do_an_tot_nghiep;
 
 CREATE TABLE `Account` (
 	`accountId` INT NOT NULL AUTO_INCREMENT,
@@ -13,7 +13,7 @@ CREATE TABLE `Account` (
 	`phoneNo` varchar(15) NOT NULL ,
 	`address` TEXT NOT NULL,
 	`imageUrl` TEXT NOT NULL,
-	`age` INT NOT NULL,
+	`birthday` DATE NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
 	`updatedAt` DATETIME NOT NULL,

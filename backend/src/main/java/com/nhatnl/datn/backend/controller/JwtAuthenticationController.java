@@ -2,7 +2,7 @@ package com.nhatnl.datn.backend.controller;
 
 import com.nhatnl.datn.backend.config.jwtConfig.JwtTokenUtil;
 import com.nhatnl.datn.backend.constant.Constant;
-import com.nhatnl.datn.backend.dto.request.authentication.JwtReq;
+import com.nhatnl.datn.backend.dto.request.authentication.GetJwtTokenReq;
 import com.nhatnl.datn.backend.dto.request.authentication.CheckJwtReq;
 import com.nhatnl.datn.backend.dto.response.authentication.AuthenticateResp;
 import com.nhatnl.datn.backend.service.impl.JwtUserDetailsServiceImpl;
@@ -35,7 +35,7 @@ public class JwtAuthenticationController {
     }
 
     @RequestMapping(value = "/get-token", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtReq authenticationRequest) throws Exception {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody GetJwtTokenReq authenticationRequest) throws Exception {
         log.info("Authenticate : \n{}", authenticationRequest.toString());
 
         this.authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -52,7 +52,6 @@ public class JwtAuthenticationController {
     }
 
     private void authenticate(String username, String password) throws Exception {
-        log.info("authenticate");
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {

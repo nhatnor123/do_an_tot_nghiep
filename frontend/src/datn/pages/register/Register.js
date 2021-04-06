@@ -95,6 +95,12 @@ const Register = (props) => {
                         required: true,
                         message: "Vui lòng điền tên đăng nhập !",
                       },
+                      {
+                        pattern: new RegExp(
+                          "^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$"
+                        ),
+                        message: "Sai định dạng tên đăng nhập",
+                      },
                     ]}
                   >
                     <Input style={inputStyle} />
@@ -216,6 +222,12 @@ const Register = (props) => {
                       {
                         required: true,
                         message: "Vui lòng nhập số điện thoại !",
+                      },
+                      {
+                        pattern: new RegExp(
+                          "^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$"
+                        ),
+                        message: "Sai định dạng số điện thoại",
                       },
                     ]}
                   >

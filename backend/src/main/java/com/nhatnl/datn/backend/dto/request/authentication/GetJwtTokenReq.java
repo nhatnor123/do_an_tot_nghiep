@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JwtReq {
+public class GetJwtTokenReq {
     private String username;
     private String password;
     private Account.Role role;
