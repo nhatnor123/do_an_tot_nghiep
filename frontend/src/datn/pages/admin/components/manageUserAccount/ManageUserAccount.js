@@ -12,6 +12,7 @@ import {
   Popconfirm,
   Radio,
   DatePicker,
+  Modal,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import {
@@ -429,12 +430,13 @@ class ManageUserAccount extends React.Component {
               >
                 <PlusOutlined /> Thêm mới
               </Button>
-              <Drawer
+              <Modal
                 title="Thêm mới tài khoản"
                 width={500}
-                onClose={this.onClose}
+                okButtonProps={{ disabled: true }}
+                cancelText={"Thoát"}
+                onCancel={this.onClose}
                 visible={this.state.visible}
-                bodyStyle={{ paddingBottom: 95 }}
                 placement="right"
               >
                 <Form
@@ -645,7 +647,6 @@ class ManageUserAccount extends React.Component {
                     </Button>
                     <Button
                       type="primary"
-                      htmlType="submit"
                       style={{ margin: "10px 10px 30px 30%" }}
                       onClick={this.handleResetForm}
                       htmlType="button"
@@ -654,12 +655,48 @@ class ManageUserAccount extends React.Component {
                     </Button>
                   </Form.Item>
                 </Form>
-              </Drawer>
+              </Modal>
             </div>
             <div>
               <Table
                 dataSource={this.state.dataSource}
                 columns={this.state.columns}
+                expandable={{
+                  expandedRowRender: (record) => {
+                    let data;
+                    if (record.role === "TEACHER") {
+                      data = record.teacher;
+                      return data ? (
+                        <div style={{ marginLeft: "40px" }}>
+                          <p>Tên hiển thị: {data.displayName}</p>
+                          <p>Mô tả: {data.description}</p>
+                          <p>
+                            Trạng thái:{" "}
+                            {data.isPublic ? "Công khai" : "Không công khai"}
+                          </p>
+                        </div>
+                      ) : (
+                        <div></div>
+                      );
+                    } else if (record.role === "STUDENT") {
+                      data = record.student;
+                      return data ? (
+                        <div style={{ marginLeft: "40px" }}>
+                          <p>Tên hiển thị {data.displayName}</p>
+                          <p>Mô tả: {data.description}</p>
+                        </div>
+                      ) : (
+                        <div></div>
+                      );
+                    }
+                  },
+                  rowExpandable: (record) => {
+                    return (
+                      (record.role === "TEACHER" && record.teacher) ||
+                      (record.role === "STUDENT" && record.student)
+                    );
+                  },
+                }}
                 scroll={{ x: "calc(100%)" }}
                 pagination={{ position: ["bottomRight"] }}
                 bordered

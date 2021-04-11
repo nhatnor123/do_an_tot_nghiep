@@ -1,9 +1,12 @@
 package com.nhatnl.datn.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,5 +43,11 @@ public class Lesson {
 
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "courseId", nullable = false, insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+    private Course course;
 
 }

@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Account {
     @Column(name = "username", length = 255, nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(name = "password", length = 255, nullable = false)
     private String password;
 
@@ -56,6 +58,12 @@ public class Account {
 
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private Teacher teacher;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    private Student student;
 
     public enum Role {
         ADMIN,

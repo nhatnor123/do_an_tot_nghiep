@@ -1,6 +1,8 @@
 package com.nhatnl.datn.backend.dto.entity;
 
 import com.nhatnl.datn.backend.model.Account;
+import com.nhatnl.datn.backend.model.Student;
+import com.nhatnl.datn.backend.model.Teacher;
 import lombok.*;
 
 import java.util.Date;
@@ -23,4 +25,6 @@ public class AccountDto {
     private Boolean isActive;
     private Date createdAt;
     private Date updatedAt;
+    private Student student;
+    private Teacher teacher;
 }

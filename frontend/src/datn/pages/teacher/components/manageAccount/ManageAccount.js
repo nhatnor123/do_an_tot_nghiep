@@ -8,6 +8,7 @@ import {
   DatePicker,
   Col,
   Row,
+  Radio,
 } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
@@ -75,7 +76,10 @@ class ManageAccount extends React.Component {
         address,
         imageUrl,
         role,
+        teacher,
       } = response;
+      let { displayName, description, isPublic } = teacher;
+      isPublic = isPublic ? "true" : "false";
       console.log("res = ", response);
       this.setState({
         selfAccount: response,
@@ -88,6 +92,9 @@ class ManageAccount extends React.Component {
         address,
         imageUrl,
         role,
+        displayName,
+        description,
+        isPublic,
       });
       this.formRef.current.setFieldsValue({
         username,
@@ -99,6 +106,9 @@ class ManageAccount extends React.Component {
         address,
         imageUrl,
         role,
+        displayName,
+        description,
+        isPublic,
       });
     } catch (e) {
       console.error(e);
@@ -118,6 +128,11 @@ class ManageAccount extends React.Component {
           address: value.address,
           imageUrl: value.imageUrl,
           birthday: value.birthday,
+          otherInfo: {
+            displayName: value.displayName,
+            description: value.description,
+            isPublic: value.isPublic === "true" ? true : false,
+          },
           fieldList: [
             "firstName",
             "lastName",
@@ -125,6 +140,9 @@ class ManageAccount extends React.Component {
             "address",
             "imageUrl",
             "birthday",
+            "displayName",
+            "description",
+            "isPublic",
           ],
         },
         accessToken
@@ -273,6 +291,48 @@ class ManageAccount extends React.Component {
               </Form.Item>
 
               <Form.Item
+                name="displayName"
+                label={<div style={labelStyle}>Tên hiển thị</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền tên hiển thị !",
+                  },
+                ]}
+              >
+                <Input style={inputStyle} />
+              </Form.Item>
+
+              <Form.Item
+                name="description"
+                label={<div style={labelStyle}>Mô tả</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền mô tả !",
+                  },
+                ]}
+              >
+                <Input style={inputStyle} />
+              </Form.Item>
+
+              <Form.Item
+                name="isPublic"
+                label={<div style={labelStyle}>Trạng thái</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn trạng thái",
+                  },
+                ]}
+              >
+                <Radio.Group>
+                  <Radio value="true">Công khai</Radio>
+                  <Radio value="false">Không công khai</Radio>
+                </Radio.Group>
+              </Form.Item>
+
+              <Form.Item
                 name="imageUrl"
                 label={<div style={labelStyle}>Ảnh đại diện</div>}
                 rules={[
@@ -306,7 +366,6 @@ class ManageAccount extends React.Component {
               </Button>
               <Button
                 type="primary"
-                htmlType="submit"
                 style={{ margin: "10px 10px 30px 30%" }}
                 onClick={this.handleResetForm}
                 htmlType="button"

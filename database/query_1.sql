@@ -35,8 +35,8 @@ CREATE TABLE `Comment` (
 CREATE TABLE `Student` (
 	`studentId` INT NOT NULL AUTO_INCREMENT,
 	`accountId` INT NOT NULL,
-	`displayName` varchar(255) NOT NULL,
-	`description` TEXT NOT NULL,
+	`displayName` varchar(255),
+	`description` TEXT ,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
 	`updatedAt` DATETIME NOT NULL,
@@ -46,8 +46,8 @@ CREATE TABLE `Student` (
 CREATE TABLE `Teacher` (
 	`teacherId` INT NOT NULL AUTO_INCREMENT,
 	`accountId` INT NOT NULL,
-	`displayName` varchar(255) NOT NULL,
-	`description` TEXT NOT NULL,
+	`displayName` varchar(255) ,
+	`description` TEXT ,
 	`isPublic` BOOLEAN NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,

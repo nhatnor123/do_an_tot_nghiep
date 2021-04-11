@@ -35,7 +35,7 @@ public class AccountRepoImpl implements AccountRepo {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateAccountInfo(String username, String firstName, String lastName, String phoneNo, String address,
+    public void updateAccountInfo(Long accountId, String firstName, String lastName, String phoneNo, String address,
                                   String imageUrl, Date birthday, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
         queryString.append("UPDATE Account SET");
@@ -57,11 +57,11 @@ public class AccountRepoImpl implements AccountRepo {
         if (fieldList.contains("birthday")) {
             queryString.append(" birthday = :birthday ");
         }
-        queryString.append(" WHERE username=:username AND isActive = true");
+        queryString.append(" WHERE accountId=:accountId AND isActive = true");
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Account.class);
 
-        query.setParameter("username", username);
+        query.setParameter("accountId", accountId);
         if (fieldList.contains("firstName")) {
             query.setParameter("firstName", firstName);
         }

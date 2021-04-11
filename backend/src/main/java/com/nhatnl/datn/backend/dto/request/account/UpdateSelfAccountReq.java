@@ -16,5 +16,17 @@ public class UpdateSelfAccountReq {
     private String address;
     private String imageUrl;
     private Date birthday;
+    private OtherInfo otherInfo;
     private List<String> fieldList;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class OtherInfo {
+        private String displayName;
+        private String description;
+        private Boolean isPublic;
+    }
+
 }

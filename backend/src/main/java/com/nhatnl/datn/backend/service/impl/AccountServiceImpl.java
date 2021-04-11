@@ -3,7 +3,9 @@ package com.nhatnl.datn.backend.service.impl;
 import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.account.*;
 import com.nhatnl.datn.backend.model.Account;
+import com.nhatnl.datn.backend.model.Teacher;
 import com.nhatnl.datn.backend.repository.AccountRepo;
+import com.nhatnl.datn.backend.repository.TeacherRepo;
 import com.nhatnl.datn.backend.service.AccountService;
 import com.nhatnl.datn.backend.util.Mapper;
 import org.springframework.http.HttpStatus;
@@ -19,15 +21,17 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    private final AccountRepo accountRepo;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final AccountRepo accountRepo;
+    private final TeacherRepo teacherRepo;
 
-    public AccountServiceImpl(AccountRepo accountRepo, PasswordEncoder passwordEncoder,
-                              AuthenticationManager authenticationManager) {
+    public AccountServiceImpl(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
+                              AccountRepo accountRepo, TeacherRepo teacherRepo) {
         this.accountRepo = accountRepo;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.teacherRepo = teacherRepo;
     }
 
     @Override
@@ -47,30 +51,45 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto create(CreateReq req) {
-        Account account = Account.builder()
-                .username(req.getUsername())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .email(req.getEmail())
-                .firstName(req.getFirstName())
-                .lastName(req.getLastName())
-                .role(req.getRole())
-                .phoneNo(req.getPhoneNo())
-                .address(req.getAddress())
-                .imageUrl(req.getImageUrl())
-                .birthday(req.getBirthday())
-                .isActive(true)
-                .build();
+        Account account = accountRepo.create(
+                Account.builder()
+                        .username(req.getUsername())
+                        .password(passwordEncoder.encode(req.getPassword()))
+                        .email(req.getEmail())
+                        .firstName(req.getFirstName())
+                        .lastName(req.getLastName())
+                        .role(req.getRole())
+                        .phoneNo(req.getPhoneNo())
+                        .address(req.getAddress())
+                        .imageUrl(req.getImageUrl())
+                        .birthday(req.getBirthday())
+                        .isActive(true)
+                        .build()
+        );
 
-        account = accountRepo.create(account);
+        if (account.getRole() == Account.Role.TEACHER) {
+            teacherRepo.create(
+                    Teacher.builder()
+                            .accountId(account.getAccountId())
+                            .displayName("")
+                            .description("")
+                            .isPublic(false)
+                            .isActive(true)
+                            .build()
+            );
+        } else if (account.getRole() == Account.Role.STUDENT) {
+
+        }
+
         return Mapper.accountFromModelToDto(account);
     }
 
     @Override
     public AccountDto updateSelfAccount(UpdateSelfAccountReq request) {
-        User currentUser = getCurrentUser();
+        AccountDto accountDto = this.getSelfAccount();
 
         accountRepo.updateAccountInfo(
-                currentUser.getUsername(),
+                accountDto.getAccountId(),
                 request.getFirstName(),
                 request.getLastName(),
                 request.getPhoneNo(),
@@ -80,7 +99,24 @@ public class AccountServiceImpl implements AccountService {
                 request.getFieldList()
         );
 
-        return getSelfAccount();
+        if (request.getOtherInfo() == null) {
+            return getSelfAccount();
+        }
+
+        if (accountDto.getRole() == Account.Role.TEACHER) {
+            teacherRepo.updateTeacherInfo(
+                    accountDto.getAccountId(),
+                    request.getOtherInfo().getDisplayName(),
+                    request.getOtherInfo().getDescription(),
+                    request.getOtherInfo().getIsPublic(),
+                    request.getFieldList()
+            );
+        } else if (accountDto.getRole() == Account.Role.STUDENT) {
+            //
+        }
+
+
+        return this.getSelfAccount();
     }
 
     @Override

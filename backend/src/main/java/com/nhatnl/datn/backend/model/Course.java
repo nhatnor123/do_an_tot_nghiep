@@ -1,9 +1,12 @@
 package com.nhatnl.datn.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,8 +23,8 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name = "teacherId", nullable = false)
-    private Long teacherId;
+//    @Column(name = "teacherId", nullable = false)
+//    private Long teacherId;
 
     @Column(name = "name", length = 255, nullable = false)
     private String name;
@@ -46,5 +49,13 @@ public class Course {
 
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "teacherId", nullable = false, insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+    private Teacher teacher;
+
+
 
 }

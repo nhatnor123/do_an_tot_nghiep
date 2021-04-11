@@ -25,6 +25,8 @@ public class Mapper {
                 .isActive(account.getIsActive())
                 .createdAt(account.getCreatedAt())
                 .updatedAt(account.getUpdatedAt())
+                .student(account.getStudent())
+                .teacher(account.getTeacher())
                 .build();
     }
 

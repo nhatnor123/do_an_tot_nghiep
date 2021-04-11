@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,10 +24,10 @@ public class Student {
     @Column(name = "accountId", nullable = false)
     private Long accountId;
 
-    @Column(name = "displayName", length = 255, nullable = false)
+    @Column(name = "displayName", length = 255, nullable = true)
     private String displayName;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = true)
     private String description;
 
     @Column(name = "isActive", nullable = false)
@@ -37,5 +38,10 @@ public class Student {
 
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "accountId", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
+    private Account account;
 
 }
