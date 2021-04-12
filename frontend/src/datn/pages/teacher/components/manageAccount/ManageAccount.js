@@ -9,12 +9,15 @@ import {
   Col,
   Row,
   Radio,
+  Upload,
+  Modal,
 } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 import moment from "moment";
 
 import accountApi from "../../../../api/AccountApi";
+import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
 import "./ManageAccount.css";
@@ -40,6 +43,27 @@ const tailFormItemLayout = {
   },
 };
 
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJpgOrPng) {
+    message.error("Chỉ có thể upload được ảnh có định dạng JPG/PNG !");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Dung lượng ảnh phải bé hơn 2MB !");
+  }
+  return isJpgOrPng && isLt2M;
+}
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
 message.config({
   top: 80,
 });
@@ -59,8 +83,32 @@ class ManageAccount extends React.Component {
       address: null,
       imageUrl: null,
       role: null,
+      previewVisible: false,
+      previewImage: "",
+      previewTitle: "",
+      fileList: [],
     };
   }
+
+  handleCancel = () => this.setState({ previewVisible: false });
+
+  handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+      previewTitle:
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+    });
+  };
+
+  handleChange = ({ fileList }) => {
+    console.log("state after change image : ", this.state);
+    this.setState({ fileList });
+  };
 
   getSelfAccount = async () => {
     var accessToken = getAccessToken();
@@ -95,6 +143,15 @@ class ManageAccount extends React.Component {
         displayName,
         description,
         isPublic,
+        fileList: [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: imageUrl,
+            response: { fileDownloadUri: imageUrl },
+          },
+        ],
       });
       this.formRef.current.setFieldsValue({
         username,
@@ -119,6 +176,11 @@ class ManageAccount extends React.Component {
   handleSubmitUpdateSelfAccountInfo = async (value) => {
     var accessToken = getAccessToken();
 
+    if (!this.state.fileList[0]) {
+      message.error("Vui lòng gửi ảnh đại diện lên !");
+      return;
+    }
+
     try {
       const response = await accountApi.updateSelfAccount(
         {
@@ -126,7 +188,7 @@ class ManageAccount extends React.Component {
           lastName: value.lastName,
           phoneNo: value.phoneNo,
           address: value.address,
-          imageUrl: value.imageUrl,
+          imageUrl: this.state.fileList[0].response.fileDownloadUri,
           birthday: value.birthday,
           otherInfo: {
             displayName: value.displayName,
@@ -167,6 +229,14 @@ class ManageAccount extends React.Component {
 
   render() {
     console.log("render manageAccount");
+
+    const { previewVisible, previewImage, fileList, previewTitle } = this.state;
+    const uploadButton = (
+      <div>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>Upload</div>
+      </div>
+    );
 
     return (
       <Row>
@@ -335,14 +405,29 @@ class ManageAccount extends React.Component {
               <Form.Item
                 name="imageUrl"
                 label={<div style={labelStyle}>Ảnh đại diện</div>}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng tải ảnh đại diện lên !",
-                  },
-                ]}
               >
-                <Input style={inputStyle} />
+                <Upload
+                  action={dbFileApi.uploadFileUrl}
+                  listType="picture-card"
+                  fileList={fileList}
+                  beforeUpload={beforeUpload}
+                  onPreview={this.handlePreview}
+                  onChange={this.handleChange}
+                >
+                  {fileList.length >= 1 ? null : uploadButton}
+                </Upload>
+                <Modal
+                  visible={previewVisible}
+                  title={previewTitle}
+                  footer={null}
+                  onCancel={this.handleCancel}
+                >
+                  <img
+                    alt="example"
+                    style={{ width: "100%" }}
+                    src={previewImage}
+                  />
+                </Modal>
               </Form.Item>
 
               <Form.Item

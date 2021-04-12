@@ -6,7 +6,7 @@ import {
   Input,
   Button,
   Space,
-  Drawer,
+  Upload,
   Form,
   Tooltip,
   Popconfirm,
@@ -24,6 +24,7 @@ import {
 } from "@ant-design/icons";
 
 import accountApi from "../../../../api/AccountApi";
+import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
 import "./ManageUserAccount.css";
@@ -50,6 +51,27 @@ const tailFormItemLayout = {
     },
   },
 };
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJpgOrPng) {
+    message.error("Chỉ có thể upload được ảnh có định dạng JPG/PNG !");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Dung lượng ảnh phải bé hơn 2MB !");
+  }
+  return isJpgOrPng && isLt2M;
+}
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 
 message.config({
   top: 80,
@@ -189,8 +211,32 @@ class ManageUserAccount extends React.Component {
       ],
       searchText: "",
       searchedColumn: "",
+      previewVisible: false,
+      previewImage: "",
+      previewTitle: "",
+      fileList: [],
     };
   }
+
+  handleCancel = () => this.setState({ previewVisible: false });
+
+  handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
+      previewTitle:
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
+    });
+  };
+
+  handleChange = ({ fileList }) => {
+    console.log("state after change image : ", this.state);
+    this.setState({ fileList });
+  };
 
   showDrawer = () => {
     this.setState({
@@ -332,6 +378,11 @@ class ManageUserAccount extends React.Component {
   handleSummitCreateNewAccount = async (value) => {
     var accessToken = getAccessToken();
 
+    if (!this.state.fileList[0]) {
+      message.error("Vui lòng gửi ảnh đại diện lên !");
+      return;
+    }
+
     try {
       const response = await accountApi.create(
         {
@@ -343,7 +394,7 @@ class ManageUserAccount extends React.Component {
           role: value.role,
           phoneNo: value.phoneNo,
           address: value.address,
-          imageUrl: value.imageUrl,
+          imageUrl: this.state.fileList[0].response.fileDownloadUri,
           birthday: value.birthday,
         },
         accessToken
@@ -417,6 +468,14 @@ class ManageUserAccount extends React.Component {
 
   render() {
     console.log("render manageUserAccount");
+
+    const { previewVisible, previewImage, fileList, previewTitle } = this.state;
+    const uploadButton = (
+      <div>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>Upload</div>
+      </div>
+    );
 
     return (
       <Layout className="site-layout">
@@ -612,14 +671,29 @@ class ManageUserAccount extends React.Component {
                     <Form.Item
                       name="imageUrl"
                       label={<div style={labelStyle}>Ảnh đại diện</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng tải ảnh đại diện lên !",
-                        },
-                      ]}
                     >
-                      <Input style={inputStyle} />
+                      <Upload
+                        action={dbFileApi.uploadFileUrl}
+                        listType="picture-card"
+                        fileList={fileList}
+                        beforeUpload={beforeUpload}
+                        onPreview={this.handlePreview}
+                        onChange={this.handleChange}
+                      >
+                        {fileList.length >= 1 ? null : uploadButton}
+                      </Upload>
+                      <Modal
+                        visible={previewVisible}
+                        title={previewTitle}
+                        footer={null}
+                        onCancel={this.handleCancel}
+                      >
+                        <img
+                          alt="example"
+                          style={{ width: "100%" }}
+                          src={previewImage}
+                        />
+                      </Modal>
                     </Form.Item>
 
                     <Form.Item
