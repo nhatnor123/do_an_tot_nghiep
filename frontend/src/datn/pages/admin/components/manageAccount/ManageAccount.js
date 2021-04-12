@@ -216,7 +216,7 @@ class ManageAccount extends React.Component {
     const uploadButton = (
       <div>
         <PlusOutlined />
-        <div style={{ marginTop: 8 }}>Upload</div>
+        <div style={{ marginTop: 8 }}>Tải ảnh</div>
       </div>
     );
 
@@ -391,7 +391,6 @@ class ManageAccount extends React.Component {
               </Button>
               <Button
                 type="primary"
-                htmlType="submit"
                 style={{ margin: "10px 10px 30px 30%" }}
                 onClick={this.handleResetForm}
                 htmlType="button"

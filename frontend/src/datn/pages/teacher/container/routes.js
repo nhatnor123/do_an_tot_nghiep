@@ -4,8 +4,8 @@ const Dashboard = React.lazy(() =>
   import("../../../../views/dashboard/Dashboard")
 );
 
-const ManageUserAccount = React.lazy(() =>
-  import("../components/manageUserAccount/ManageUserAccount")
+const ManageCourse = React.lazy(() =>
+  import("../components/manageCourse/ManageCourse")
 );
 
 const ManageAccount = React.lazy(() =>
@@ -25,10 +25,10 @@ const routes = [
     component: Dashboard,
   },
   {
-    path: "/teacher/manageUserAccount",
+    path: "/teacher/manageCourse",
     exact: true,
-    name: "Quản lý tài khoản người dùng",
-    component: ManageUserAccount,
+    name: "Quản lý khóa học của giáo viên",
+    component: ManageCourse,
   },
   {
     path: "/teacher/manageAccount",

@@ -93,6 +93,20 @@ public class CourseRepoImpl implements CourseRepo {
     }
 
     @Override
+    public Course getByIdAndTeacherId(Long courseId, Long teacherId) {
+        String queryString = "select * from Course where courseId = :courseId and teacherId = :teacherId";
+        Query query = entityManager.createNativeQuery(queryString, Course.class);
+        query.setParameter("courseId", courseId);
+        query.setParameter("teacherId", teacherId);
+        List<Course> listAccount = query.getResultList();
+        if (listAccount == null || listAccount.size() == 0) {
+            return null;
+        } else {
+            return listAccount.get(0);
+        }
+    }
+
+    @Override
     public List<Course> search(Long courseId, Long teacherId, String name, String description, Boolean isPublic,
                                Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                Date updatedAtTo, List<String> fieldList) {
@@ -166,8 +180,8 @@ public class CourseRepoImpl implements CourseRepo {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void archive(Long courseId) {
-        String queryString = "UPDATE Course SET isActive=false WHERE courseId=:courseId ";
+    public void archive(Long courseId, Long teacherId) {
+        String queryString = "UPDATE Course SET isActive=false WHERE courseId=:courseId AND teacherId = :teacherId ";
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("courseId", courseId);
         query.executeUpdate();
@@ -175,8 +189,8 @@ public class CourseRepoImpl implements CourseRepo {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void recover(Long courseId) {
-        String queryString = "UPDATE Course SET isActive=true WHERE courseId=:courseId ";
+    public void recover(Long courseId, Long teacherId) {
+        String queryString = "UPDATE Course SET isActive=true WHERE courseId=:courseId AND teacherId = :teacherId ";
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("courseId", courseId);
         query.executeUpdate();

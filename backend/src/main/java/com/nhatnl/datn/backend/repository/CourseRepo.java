@@ -15,12 +15,14 @@ public interface CourseRepo {
 
     Course getById(Long courseId);
 
+    Course getByIdAndTeacherId(Long courseId, Long teacherId);
+
     List<Course> search(Long courseId, Long teacherId, String name, String description, Boolean isPublic,
                         Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                         Date updatedAtTo, List<String> fieldList);
 
-    void archive(Long courseId);
+    void archive(Long courseId, Long teacherId);
 
-    void recover(Long courseId);
+    void recover(Long courseId, Long teacherId);
 
 }

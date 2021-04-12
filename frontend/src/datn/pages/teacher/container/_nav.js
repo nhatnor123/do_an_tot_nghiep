@@ -14,8 +14,8 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Tài khoản người dùng",
-    to: "/teacher/manageUserAccount",
+    name: "Khóa học",
+    to: "/teacher/manageCourse",
     icon: "cil-pencil",
   },
   {

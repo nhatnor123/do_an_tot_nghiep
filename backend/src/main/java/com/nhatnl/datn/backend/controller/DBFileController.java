@@ -32,7 +32,7 @@ public class DBFileController {
         DBFile dbFile = imageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("file/download    /")
+                .path("file/download/")
                 .path(dbFile.getFileId().toString())
                 .toUriString();
 

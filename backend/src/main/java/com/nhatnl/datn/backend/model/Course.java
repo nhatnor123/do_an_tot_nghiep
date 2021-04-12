@@ -51,9 +51,9 @@ public class Course {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "teacherId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "teacherId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private Teacher teacher;
 
 

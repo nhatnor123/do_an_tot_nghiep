@@ -47,7 +47,7 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(path = "/get-by-id")
-    public ResponseEntity<?> getById(@RequestBody GetById request) {
+    public ResponseEntity<?> getById(@RequestBody GetByIdReq request) {
         log.info("getById");
         return ResponseEntity.ok(accountService.getById(request.getAccountId()));
     }
