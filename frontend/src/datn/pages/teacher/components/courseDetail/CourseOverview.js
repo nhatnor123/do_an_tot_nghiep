@@ -1,24 +1,23 @@
 import React from "react";
 import {
-  Upload,
-  Radio,
+  message,
+  Tag,
+  Tabs,
   Form,
-  Input,
   Modal,
   Button,
-  message,
+  Radio,
   Row,
   Col,
+  Input,
+  Upload,
 } from "antd";
-import CourseGrid from "../courseGrid/CourseGrid";
-
 import { PlusOutlined } from "@ant-design/icons";
-
 import courseApi from "../../../../api/CourseApi";
 import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
-import "./ManageCourse.css";
+const { TabPane } = Tabs;
 
 const inputStyle = {
   fontSize: "16px",
@@ -62,66 +61,67 @@ function getBase64(file) {
   });
 }
 
-class ManageCourse extends React.Component {
+class CourseOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.formRefCreateNewCourse = React.createRef();
+    this.formRefUpdateCourse = React.createRef();
     this.state = {
-      isModalCreateNewCourseVisible: false,
+      courseId: props.courseId,
+      isModalUpdateCourseVisible: false,
       previewVisible: false,
       previewImage: "",
       previewTitle: "",
       fileList: [],
-      courseList: [],
     };
   }
 
   componentDidMount() {
-    this.getCourseList();
+    console.log("State = ", this.state);
+    this.getCourseDetail();
   }
 
-  getCourseList = async () => {
+  getCourseDetail = async () => {
     var accessToken = getAccessToken();
     try {
-      const response = await courseApi.search(
+      const response = await courseApi.getById(
         {
-          courseId: "",
-          name: "",
-          description: "",
-          isPublic: "",
-          isActive: false,
-          createdAtFrom: "",
-          createdAtTo: "",
-          updatedAtFrom: "",
-          updatedAtTo: "",
-          fieldList: [],
+          courseId: this.state.courseId,
         },
         accessToken
       );
       console.log("res = ", response);
       this.setState({
-        courseList: response,
+        courseDetail: response,
+      });
+      console.log("this =", this);
+      this.formRefUpdateCourse.current.setFieldsValue({
+        name: response.name,
+        description: response.description,
+        isPublic: response.isPublic,
       });
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách khóa học của giáo viên thất bại", 3);
+      message.error(
+        "Lấy thông tin chi tiết khóa học của giáo viên thất bại",
+        3
+      );
     }
   };
 
-  showModalCreateNewCourse = () => {
+  showModalUpdateCourse = () => {
     this.setState({
-      isModalCreateNewCourseVisible: true,
+      isModalUpdateCourseVisible: true,
     });
   };
 
-  onCloseModalCreateNewCourse = () => {
+  onCloseModalUpdateCourse = () => {
     this.setState({
-      isModalCreateNewCourseVisible: false,
+      isModalUpdateCourseVisible: false,
     });
   };
 
-  handleResetFormCreateNewCourse = () => {
-    this.formRefCreateNewCourse.current.resetFields();
+  handleResetFormUpdateCourse = () => {
+    this.formRefUpdateCourse.current.resetFields();
   };
 
   handleCancelPreviewImage = () => this.setState({ previewVisible: false });
@@ -144,7 +144,7 @@ class ManageCourse extends React.Component {
     this.setState({ fileList });
   };
 
-  handleSummitCreateNewCourse = async (value) => {
+  handleSummitUpdateCourse = async (value) => {
     var accessToken = getAccessToken();
 
     if (!this.state.fileList[0]) {
@@ -152,60 +152,32 @@ class ManageCourse extends React.Component {
       return;
     }
 
-    console.log("value =", value);
     try {
-      const response = await courseApi.create(
+      const response = await courseApi.updateCourseInfo(
         {
+          courseId: this.state.courseId,
           name: value.name,
           description: value.description,
-          isPublic: value.isPublic === "true" ? true : false,
+          isPublic: value.isPublic === "isPublic" ? true : false,
           imageUrl: this.state.fileList[0].response.fileDownloadUri,
+          fieldList: ["name", "description", "isPublic", "imageUrl"],
         },
         accessToken
       );
       console.log("resp = ", response);
 
-      message.success("Thêm mới khóa học thành công", 3);
-      this.onCloseModalCreateNewCourse();
-      this.getCourseList();
-      this.handleResetFormCreateNewCourse();
+      message.success("Cập nhật thông tin khóa học thành công", 3);
+      this.onCloseModalUpdateCourse();
+      this.getCourseDetail();
+      this.handleResetFormUpdateCourse();
     } catch (e) {
       console.error(e);
-      message.error("Thêm mới khóa học thất bại", 3);
-    }
-  };
-
-  handleSearchCourse = async (value, event) => {
-    var accessToken = getAccessToken();
-    try {
-      const response = await courseApi.search(
-        {
-          courseId: "",
-          name: value,
-          description: "",
-          isPublic: "",
-          isActive: false,
-          createdAtFrom: "",
-          createdAtTo: "",
-          updatedAtFrom: "",
-          updatedAtTo: "",
-          fieldList: ["name"],
-        },
-        accessToken
-      );
-      console.log("res = ", response);
-      this.setState({
-        courseList: response,
-      });
-    } catch (e) {
-      console.error(e);
-      message.error("Lấy danh sách khóa học của giáo viên thất bại", 3);
+      message.error("Cập nhật thông tin khóa học thất bại", 3);
     }
   };
 
   render() {
-    console.log("render manageCourse");
-    console.log("state =", this.state);
+    let courseDetail = this.state.courseDetail ? this.state.courseDetail : null;
 
     const { previewVisible, previewImage, fileList, previewTitle } = this.state;
     const uploadButton = (
@@ -215,41 +187,34 @@ class ManageCourse extends React.Component {
       </div>
     );
 
-    return (
+    return this.state.courseDetail ? (
       <div>
         <Row>
           <Col span={5}>
             <Button
               type="primary"
-              onClick={this.showModalCreateNewCourse}
+              onClick={this.showModalUpdateCourse}
               style={{ margin: "1% 0px 1% 1%" }}
             >
-              <PlusOutlined /> Thêm mới
+              <PlusOutlined /> Sửa
             </Button>
-          </Col>
-          <Col offset={9}>
-            <Input.Search
-              placeholder="Tìm kiếm khóa học"
-              onSearch={this.handleSearchCourse}
-              enterButton
-            />
           </Col>
         </Row>
         <Modal
-          title="Thêm mới khóa học"
+          title="Sửa khóa học"
           width={650}
           okButtonProps={{ disabled: true }}
           cancelText={"Thoát"}
-          onCancel={this.onCloseModalCreateNewCourse}
-          visible={this.state.isModalCreateNewCourseVisible}
+          onCancel={this.onCloseModalUpdateCourse}
+          visible={this.state.isModalUpdateCourseVisible}
           placement="right"
         >
           <Form
             layout="vertical"
             hideRequiredMark
             scrollToFirstError
-            onFinish={this.handleSummitCreateNewCourse}
-            ref={this.formRefCreateNewCourse}
+            onFinish={this.handleSummitUpdateCourse}
+            ref={this.formRefUpdateCourse}
           >
             <Form.Item {...tailFormItemLayout}>
               <Form.Item
@@ -320,8 +285,8 @@ class ManageCourse extends React.Component {
                 ]}
               >
                 <Radio.Group>
-                  <Radio value="true">Công khai</Radio>
-                  <Radio value="false">Bí mật</Radio>
+                  <Radio value="isPublic">Công khai</Radio>
+                  <Radio value="isNotPublic">Bí mật</Radio>
                 </Radio.Group>
               </Form.Item>
               <Button
@@ -334,7 +299,7 @@ class ManageCourse extends React.Component {
               <Button
                 type="primary"
                 style={{ margin: "10px 10px 0px 30%" }}
-                onClick={this.handleResetFormCreateNewCourse}
+                onClick={this.handleResetFormUpdateCourse}
                 htmlType="button"
               >
                 Đặt lại
@@ -342,12 +307,34 @@ class ManageCourse extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>
-          <CourseGrid courseList={this.state.courseList} />
+        <img src={courseDetail.imageUrl} alt={courseDetail.name} />
+        <div style={{ marginLeft: "15px" }}>
+          <div>
+            <h3
+              style={{
+                fontWeight: "600",
+                marginBottom: "12px",
+                marginTop: "10px",
+                color: "#076ac8",
+              }}
+            >
+              {courseDetail.name}
+            </h3>
+          </div>
+          <div>{courseDetail.description}</div>
+          <div>
+            {courseDetail.isPublic === true ? (
+              <Tag color="#55acee">Công khai</Tag>
+            ) : (
+              <Tag color="#00a76a">Không Công khai</Tag>
+            )}
+          </div>
         </div>
       </div>
+    ) : (
+      <div>Loading</div>
     );
   }
 }
 
-export default ManageCourse;
+export default CourseOverview;

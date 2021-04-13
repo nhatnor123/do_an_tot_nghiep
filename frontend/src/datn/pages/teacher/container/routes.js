@@ -12,6 +12,10 @@ const ManageAccount = React.lazy(() =>
   import("../components/manageAccount/ManageAccount")
 );
 
+const CourseDetail = React.lazy(() =>
+  import("../components/courseDetail/CourseDetail")
+);
+
 const ChangePassword = React.lazy(() =>
   import("../components/changePassword/ChangePassword")
 );
@@ -29,6 +33,12 @@ const routes = [
     exact: true,
     name: "Quản lý khóa học của giáo viên",
     component: ManageCourse,
+  },
+  {
+    path: "/teacher/manageCourse/course/:courseId",
+    exact: true,
+    name: "Chi tiết khóa học",
+    component: CourseDetail,
   },
   {
     path: "/teacher/manageAccount",
