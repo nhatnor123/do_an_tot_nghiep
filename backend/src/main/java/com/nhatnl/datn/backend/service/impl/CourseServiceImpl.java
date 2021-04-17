@@ -82,7 +82,6 @@ public class CourseServiceImpl implements CourseService {
                 req.getName(),
                 req.getDescription(),
                 req.getIsPublic(),
-                req.getIsActive(),
                 req.getCreatedAtFrom(),
                 req.getCreatedAtTo(),
                 req.getUpdatedAtFrom(),

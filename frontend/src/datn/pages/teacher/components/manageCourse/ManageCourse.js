@@ -11,7 +11,7 @@ import {
   Col,
 } from "antd";
 import CourseGrid from "../courseGrid/CourseGrid";
-
+import ImgCrop from "antd-img-crop";
 import { PlusOutlined } from "@ant-design/icons";
 
 import courseApi from "../../../../api/CourseApi";
@@ -218,7 +218,7 @@ class ManageCourse extends React.Component {
     return (
       <div>
         <Row>
-          <Col span={5}>
+          <Col span={3}>
             <Button
               type="primary"
               onClick={this.showModalCreateNewCourse}
@@ -227,7 +227,7 @@ class ManageCourse extends React.Component {
               <PlusOutlined /> Thêm mới
             </Button>
           </Col>
-          <Col offset={9}>
+          <Col offset={1}>
             <Input.Search
               placeholder="Tìm kiếm khóa học"
               onSearch={this.handleSearchCourse}
@@ -285,16 +285,19 @@ class ManageCourse extends React.Component {
                 name="imageUrl"
                 label={<div style={labelStyle}>Ảnh đại diện khóa học</div>}
               >
-                <Upload
-                  action={dbFileApi.uploadFileUrl}
-                  listType="picture-card"
-                  fileList={fileList}
-                  beforeUpload={beforeUpload}
-                  onPreview={this.handlePreviewImage}
-                  onChange={this.handleChangeImage}
-                >
-                  {fileList.length >= 1 ? null : uploadButton}
-                </Upload>
+                <ImgCrop rotate={true} aspect={1.5}>
+                  <Upload
+                    action={dbFileApi.uploadFileUrl}
+                    listType="picture-card"
+                    fileList={fileList}
+                    beforeUpload={beforeUpload}
+                    onPreview={this.handlePreviewImage}
+                    onChange={this.handleChangeImage}
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                </ImgCrop>
+
                 <Modal
                   visible={previewVisible}
                   title={previewTitle}

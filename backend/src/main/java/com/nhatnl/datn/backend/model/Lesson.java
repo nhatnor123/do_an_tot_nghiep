@@ -23,9 +23,6 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lessonId;
 
-    @Column(name = "courseId", nullable = false)
-    private Long courseId;
-
     @Column(name = "name", length = 255, nullable = false)
     private String name;
 
@@ -45,9 +42,9 @@ public class Lesson {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "courseId", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "courseId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private Course course;
 
 }

@@ -23,9 +23,6 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-//    @Column(name = "teacherId", nullable = false)
-//    private Long teacherId;
-
     @Column(name = "name", length = 255, nullable = false)
     private String name;
 

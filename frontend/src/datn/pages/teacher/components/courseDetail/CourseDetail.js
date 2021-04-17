@@ -1,10 +1,10 @@
 import React from "react";
 import { Tabs } from "antd";
 
-import CourseOverview from "./CourseOverview";
-import ManageLesson from "./ManageLesson";
-import ManageTest from "./ManageTest";
-import ManageStudentJoinCourse from "./ManageStudentJoinCourse";
+import CourseOverview from "../courseOverview/CourseOverview";
+import ManageLesson from "../manageLesson/ManageLesson";
+import ManageTest from "../manageTest/ManageTest";
+import ManageStudentJoinCourse from "../manageStudentJoinCourse/ManageStudentJoinCourse";
 
 const { TabPane } = Tabs;
 
@@ -23,7 +23,7 @@ class CourseDetail extends React.Component {
       <div>
         <Tabs defaultActiveKey="1" tabPosition="left">
           <TabPane tab="Tổng quan khóa học" key="1">
-            <CourseOverview courseId={courseId} />
+            <CourseOverview courseId={courseId} history={this.props.history} />
           </TabPane>
           <TabPane tab="Bài học" key="2">
             <ManageLesson courseId={courseId} />

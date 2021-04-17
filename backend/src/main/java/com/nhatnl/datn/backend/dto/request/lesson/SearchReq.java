@@ -1,4 +1,4 @@
-package com.nhatnl.datn.backend.dto.request.course;
+package com.nhatnl.datn.backend.dto.request.lesson;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class SearchReq {
+    private Long lessonId;
     private Long courseId;
     private String name;
     private String description;
-    private Boolean isPublic;
+    private String content;
     private Date createdAtFrom;
     private Date createdAtTo;
     private Date updatedAtFrom;

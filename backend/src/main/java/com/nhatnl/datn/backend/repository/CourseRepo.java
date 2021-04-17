@@ -18,7 +18,7 @@ public interface CourseRepo {
     Course getByIdAndTeacherId(Long courseId, Long teacherId);
 
     List<Course> search(Long courseId, Long teacherId, String name, String description, Boolean isPublic,
-                        Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                        Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                         Date updatedAtTo, List<String> fieldList);
 
     void archive(Long courseId, Long teacherId);

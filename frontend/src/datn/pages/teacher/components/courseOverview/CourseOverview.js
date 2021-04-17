@@ -2,7 +2,6 @@ import React from "react";
 import {
   message,
   Tag,
-  Tabs,
   Form,
   Modal,
   Button,
@@ -16,8 +15,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import courseApi from "../../../../api/CourseApi";
 import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
-
-const { TabPane } = Tabs;
 
 const inputStyle = {
   fontSize: "16px",
@@ -39,6 +36,10 @@ const tailFormItemLayout = {
     },
   },
 };
+
+message.config({
+  top: 80,
+});
 
 function beforeUpload(file) {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -94,11 +95,11 @@ class CourseOverview extends React.Component {
         courseDetail: response,
       });
       console.log("this =", this);
-      this.formRefUpdateCourse.current.setFieldsValue({
-        name: response.name,
-        description: response.description,
-        isPublic: response.isPublic,
-      });
+      // this.formRefUpdateCourse.current.setFieldsValue({
+      //   name: response.name,
+      //   description: response.description,
+      //   isPublic: response.isPublic,
+      // });
     } catch (e) {
       console.error(e);
       message.error(
@@ -176,6 +177,26 @@ class CourseOverview extends React.Component {
     }
   };
 
+  handleClickDeleteButton = async () => {
+    var accessToken = getAccessToken();
+
+    try {
+      const response = await courseApi.archive(
+        {
+          courseId: this.state.courseId,
+        },
+        accessToken
+      );
+      console.log("resp = ", response);
+
+      message.success("Xóa khóa học thành công", 3);
+      this.props.history.push("/teacher/manageCourse");
+    } catch (e) {
+      console.error(e);
+      message.error("Xóa khóa học thất bại", 3);
+    }
+  };
+
   render() {
     let courseDetail = this.state.courseDetail ? this.state.courseDetail : null;
 
@@ -198,8 +219,16 @@ class CourseOverview extends React.Component {
             >
               <PlusOutlined /> Sửa
             </Button>
+            <Button
+              type="primary"
+              onClick={this.handleClickDeleteButton}
+              style={{ margin: "1% 0px 1% 1%" }}
+            >
+              <PlusOutlined /> Xóa
+            </Button>
           </Col>
         </Row>
+        <Modal></Modal>
         <Modal
           title="Sửa khóa học"
           width={650}
