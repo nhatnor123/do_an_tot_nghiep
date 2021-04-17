@@ -10,8 +10,10 @@ import {
   Col,
   Input,
   Upload,
+  Popconfirm,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import ImgCrop from "antd-img-crop";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import courseApi from "../../../../api/CourseApi";
 import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
@@ -93,13 +95,16 @@ class CourseOverview extends React.Component {
       console.log("res = ", response);
       this.setState({
         courseDetail: response,
+        fileList: [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: response.imageUrl,
+            response: { fileDownloadUri: response.imageUrl },
+          },
+        ],
       });
-      console.log("this =", this);
-      // this.formRefUpdateCourse.current.setFieldsValue({
-      //   name: response.name,
-      //   description: response.description,
-      //   isPublic: response.isPublic,
-      // });
     } catch (e) {
       console.error(e);
       message.error(
@@ -123,6 +128,12 @@ class CourseOverview extends React.Component {
 
   handleResetFormUpdateCourse = () => {
     this.formRefUpdateCourse.current.resetFields();
+    let courseDetail = this.state.courseDetail;
+    this.formRefUpdateCourse.current.setFieldsValue({
+      name: courseDetail.name,
+      description: courseDetail.description,
+      isPublic: courseDetail.isPublic === true ? "isPublic" : "isNotPublic",
+    });
   };
 
   handleCancelPreviewImage = () => this.setState({ previewVisible: false });
@@ -208,24 +219,27 @@ class CourseOverview extends React.Component {
       </div>
     );
 
-    return this.state.courseDetail ? (
+    return courseDetail ? (
       <div>
-        <Row>
+        <Row justify="end" style={{ marginTop: "10px" }}>
           <Col span={5}>
             <Button
               type="primary"
               onClick={this.showModalUpdateCourse}
               style={{ margin: "1% 0px 1% 1%" }}
             >
-              <PlusOutlined /> Sửa
+              <EditOutlined /> Sửa
             </Button>
-            <Button
-              type="primary"
-              onClick={this.handleClickDeleteButton}
-              style={{ margin: "1% 0px 1% 1%" }}
+            <Popconfirm
+              title="Xác nhận xóa khóa học này ?"
+              cancelText="Hủy"
+              okText="Đồng ý"
+              onConfirm={this.handleClickDeleteButton}
             >
-              <PlusOutlined /> Xóa
-            </Button>
+              <Button type="primary" style={{ margin: "1% 0px 1% 20px" }}>
+                <DeleteOutlined /> Xóa
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
         <Modal></Modal>
@@ -279,16 +293,18 @@ class CourseOverview extends React.Component {
                 name="imageUrl"
                 label={<div style={labelStyle}>Ảnh đại diện khóa học</div>}
               >
-                <Upload
-                  action={dbFileApi.uploadFileUrl}
-                  listType="picture-card"
-                  fileList={fileList}
-                  beforeUpload={beforeUpload}
-                  onPreview={this.handlePreviewImage}
-                  onChange={this.handleChangeImage}
-                >
-                  {fileList.length >= 1 ? null : uploadButton}
-                </Upload>
+                <ImgCrop rotate={true} aspect={1.5}>
+                  <Upload
+                    action={dbFileApi.uploadFileUrl}
+                    listType="picture-card"
+                    fileList={fileList}
+                    beforeUpload={beforeUpload}
+                    onPreview={this.handlePreviewImage}
+                    onChange={this.handleChangeImage}
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                </ImgCrop>
                 <Modal
                   visible={previewVisible}
                   title={previewTitle}
@@ -323,7 +339,7 @@ class CourseOverview extends React.Component {
                 htmlType="submit"
                 style={{ margin: "10px 10px 10px 10%" }}
               >
-                Thêm mới
+                Cập nhật
               </Button>
               <Button
                 type="primary"
@@ -336,22 +352,25 @@ class CourseOverview extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <img src={courseDetail.imageUrl} alt={courseDetail.name} />
+        <img
+          src={courseDetail.imageUrl}
+          alt={courseDetail.name}
+          style={{ width: "50%", height: "auto" }}
+        />
         <div style={{ marginLeft: "15px" }}>
-          <div>
-            <h3
-              style={{
-                fontWeight: "600",
-                marginBottom: "12px",
-                marginTop: "10px",
-                color: "#076ac8",
-              }}
-            >
-              {courseDetail.name}
-            </h3>
+          <div
+            style={{
+              fontWeight: "600",
+              marginBottom: "12px",
+              marginTop: "10px",
+              color: "#076ac8 !important",
+              fontSize: "22px",
+            }}
+          >
+            {courseDetail.name}
           </div>
-          <div>{courseDetail.description}</div>
-          <div>
+          <div style={{ color: "#969696" }}>{courseDetail.description}</div>
+          <div style={{ marginTop: "15px" }}>
             {courseDetail.isPublic === true ? (
               <Tag color="#55acee">Công khai</Tag>
             ) : (

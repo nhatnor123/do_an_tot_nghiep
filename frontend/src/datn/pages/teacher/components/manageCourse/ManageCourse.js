@@ -217,7 +217,7 @@ class ManageCourse extends React.Component {
 
     return (
       <div>
-        <Row>
+        <Row justify="center" style={{ marginTop: "10px" }}>
           <Col span={3}>
             <Button
               type="primary"
@@ -227,7 +227,7 @@ class ManageCourse extends React.Component {
               <PlusOutlined /> Thêm mới
             </Button>
           </Col>
-          <Col offset={1}>
+          <Col offset={1} span={5}>
             <Input.Search
               placeholder="Tìm kiếm khóa học"
               onSearch={this.handleSearchCourse}
@@ -345,7 +345,7 @@ class ManageCourse extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <CourseGrid courseList={this.state.courseList} />
         </div>
       </div>
