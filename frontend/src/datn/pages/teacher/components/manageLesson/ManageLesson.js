@@ -1,6 +1,8 @@
 import React from "react";
-import { Radio, Form, Input, Modal, Button, message, Row, Col } from "antd";
+import { Form, Input, Modal, Button, message, Row, Col } from "antd";
+
 import LessonGrid from "../lessonGrid/LessonGrid";
+import TextEditor from "../richTextEditor/TextEditor";
 
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -166,6 +168,7 @@ class ManageLesson extends React.Component {
             />
           </Col>
         </Row>
+
         <Modal
           title="Thêm mới bài học"
           width={650}
@@ -222,10 +225,7 @@ class ManageLesson extends React.Component {
                   },
                 ]}
               >
-                <Input.TextArea
-                  style={inputStyle}
-                  autoSize={{ minRows: 5, maxRows: 6 }}
-                />
+                <TextEditor />
               </Form.Item>
 
               <Button

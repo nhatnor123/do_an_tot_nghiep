@@ -1,8 +1,21 @@
 import React from "react";
-import { message, Form, Modal, Button, Row, Col, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  message,
+  Form,
+  Modal,
+  Button,
+  Row,
+  Col,
+  Input,
+  Popconfirm,
+} from "antd";
+import Parser from "html-react-parser";
+import TextEditor from "../richTextEditor/TextEditor";
+
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import lessonApi from "../../../../api/LessonApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
+import "./LessonDetail.css";
 
 const inputStyle = {
   fontSize: "16px",
@@ -78,6 +91,12 @@ class LessonDetail extends React.Component {
 
   handleResetFormUpdateLesson = () => {
     this.formRefUpdateLesson.current.resetFields();
+    let lessonDetail = this.state.lessonDetail;
+    this.formRefUpdateLesson.current.setFieldsValue({
+      name: lessonDetail.name,
+      description: lessonDetail.description,
+      content: lessonDetail.content,
+    });
   };
 
   handleSummitUpdateLesson = async (value) => {
@@ -133,24 +152,28 @@ class LessonDetail extends React.Component {
 
     return lessonDetail ? (
       <div>
-        <Row>
+        <Row justify="end" style={{ marginTop: "10px" }}>
           <Col span={5}>
             <Button
               type="primary"
               onClick={this.showModalUpdateLesson}
               style={{ margin: "1% 0px 1% 1%" }}
             >
-              <PlusOutlined /> Sửa
+              <EditOutlined /> Sửa
             </Button>
-            <Button
-              type="primary"
-              onClick={this.handleClickDeleteButton}
-              style={{ margin: "1% 0px 1% 1%" }}
+            <Popconfirm
+              title="Xác nhận xóa bài học này ?"
+              cancelText="Hủy"
+              okText="Đồng ý"
+              onConfirm={this.handleClickDeleteButton}
             >
-              <PlusOutlined /> Xóa
-            </Button>
+              <Button type="primary" style={{ margin: "1% 0px 1% 20px" }}>
+                <DeleteOutlined /> Xóa
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
+
         <Modal></Modal>
         <Modal
           title="Sửa bài học"
@@ -208,10 +231,7 @@ class LessonDetail extends React.Component {
                   },
                 ]}
               >
-                <Input.TextArea
-                  style={inputStyle}
-                  autoSize={{ minRows: 5, maxRows: 6 }}
-                />
+                <TextEditor />
               </Form.Item>
 
               <Button
@@ -224,7 +244,7 @@ class LessonDetail extends React.Component {
               <Button
                 type="primary"
                 style={{ margin: "10px 10px 0px 30%" }}
-                onClick={this.handleResetFormUpdateCourse}
+                onClick={this.handleResetFormUpdateLesson}
                 htmlType="button"
               >
                 Đặt lại
@@ -233,21 +253,27 @@ class LessonDetail extends React.Component {
           </Form>
         </Modal>
 
-        <div style={{ marginLeft: "15px" }}>
+        <div
+          style={{
+            marginLeft: "25px",
+          }}
+        >
           <div>
             <h3
               style={{
                 fontWeight: "600",
                 marginBottom: "12px",
                 marginTop: "10px",
-                color: "#076ac8",
+                fontSize: "25px",
               }}
             >
               {lessonDetail.name}
             </h3>
           </div>
-          <div>{lessonDetail.description}</div>
-          <div>{lessonDetail.content}</div>
+          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+            {lessonDetail.description}
+          </div>
+          {Parser(lessonDetail.content)}
         </div>
       </div>
     ) : (
