@@ -38,7 +38,7 @@ public class AccountRepoImpl implements AccountRepo {
     public void updateAccountInfo(Long accountId, String firstName, String lastName, String phoneNo, String address,
                                   String imageUrl, Date birthday, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("UPDATE Account SET");
+        queryString.append("UPDATE Account SET updatedAt = :updatedAt ,");
         if (fieldList.contains("firstName")) {
             queryString.append(" firstName = :firstName ,");
         }
@@ -55,13 +55,15 @@ public class AccountRepoImpl implements AccountRepo {
             queryString.append(" imageUrl = :imageUrl ,");
         }
         if (fieldList.contains("birthday")) {
-            queryString.append(" birthday = :birthday ");
+            queryString.append(" birthday = :birthday ,");
         }
+        queryString.deleteCharAt(queryString.length() - 1);
         queryString.append(" WHERE accountId=:accountId AND isActive = true");
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Account.class);
 
         query.setParameter("accountId", accountId);
+        query.setParameter("updatedAt", new Date());
         if (fieldList.contains("firstName")) {
             query.setParameter("firstName", firstName);
         }
@@ -215,18 +217,20 @@ public class AccountRepoImpl implements AccountRepo {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void lockAccount(Long accountId) {
-        String queryString = "UPDATE Account SET isActive=false WHERE accountId=:accountId ";
+        String queryString = "UPDATE Account SET isActive=false, updatedAt = :updatedAt WHERE accountId=:accountId ";
         Query query = entityManager.createNativeQuery(queryString, Account.class);
         query.setParameter("accountId", accountId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void unlockAccount(Long accountId) {
-        String queryString = "UPDATE Account SET isActive=true WHERE accountId=:accountId ";
+        String queryString = "UPDATE Account SET isActive=true, updatedAt = :updatedAt WHERE accountId=:accountId ";
         Query query = entityManager.createNativeQuery(queryString, Account.class);
         query.setParameter("accountId", accountId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 

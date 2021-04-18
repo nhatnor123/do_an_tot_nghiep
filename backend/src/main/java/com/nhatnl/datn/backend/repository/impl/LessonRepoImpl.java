@@ -37,7 +37,7 @@ public class LessonRepoImpl implements LessonRepo {
     @Transactional(rollbackFor = Exception.class)
     public void updateLessonInfo(Long lessonId, String name, String description, String content, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("UPDATE Lesson SET");
+        queryString.append("UPDATE Lesson SET updatedAt =:updatedAt ,");
         if (fieldList.contains("name")) {
             queryString.append(" name = :name ,");
         }
@@ -45,13 +45,15 @@ public class LessonRepoImpl implements LessonRepo {
             queryString.append(" description = :description ,");
         }
         if (fieldList.contains("content")) {
-            queryString.append(" content = :content ");
+            queryString.append(" content = :content ,");
         }
+        queryString.deleteCharAt(queryString.length() - 1);
         queryString.append(" WHERE lessonId = :lessonId AND isActive = true");
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Lesson.class);
 
         query.setParameter("lessonId", lessonId);
+        query.setParameter("updatedAt", new Date());
         if (fieldList.contains("name")) {
             query.setParameter("name", name);
         }
@@ -147,18 +149,20 @@ public class LessonRepoImpl implements LessonRepo {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void archive(Long lessonId) {
-        String queryString = "UPDATE Lesson SET isActive=false WHERE lessonId=:lessonId and isActive = true ";
+        String queryString = "UPDATE Lesson SET isActive=false, updatedAt =:updatedAt WHERE lessonId=:lessonId and isActive = true ";
         Query query = entityManager.createNativeQuery(queryString, Lesson.class);
         query.setParameter("lessonId", lessonId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recover(Long lessonId) {
-        String queryString = "UPDATE Lesson SET isActive=true WHERE lessonId=:lessonId and isActive = false";
+        String queryString = "UPDATE Lesson SET isActive=true, updatedAt =:updatedAt WHERE lessonId=:lessonId and isActive = false";
         Query query = entityManager.createNativeQuery(queryString, Lesson.class);
         query.setParameter("lessonId", lessonId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 

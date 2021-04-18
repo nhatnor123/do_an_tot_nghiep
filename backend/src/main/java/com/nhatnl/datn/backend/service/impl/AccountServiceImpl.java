@@ -3,8 +3,10 @@ package com.nhatnl.datn.backend.service.impl;
 import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.account.*;
 import com.nhatnl.datn.backend.model.Account;
+import com.nhatnl.datn.backend.model.Student;
 import com.nhatnl.datn.backend.model.Teacher;
 import com.nhatnl.datn.backend.repository.AccountRepo;
+import com.nhatnl.datn.backend.repository.StudentRepo;
 import com.nhatnl.datn.backend.repository.TeacherRepo;
 import com.nhatnl.datn.backend.service.AccountService;
 import com.nhatnl.datn.backend.util.Mapper;
@@ -25,13 +27,15 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final AccountRepo accountRepo;
     private final TeacherRepo teacherRepo;
+    private final StudentRepo studentRepo;
 
     public AccountServiceImpl(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-                              AccountRepo accountRepo, TeacherRepo teacherRepo) {
+                              AccountRepo accountRepo, TeacherRepo teacherRepo, StudentRepo studentRepo) {
         this.accountRepo = accountRepo;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.teacherRepo = teacherRepo;
+        this.studentRepo = studentRepo;
     }
 
     @Override
@@ -78,7 +82,14 @@ public class AccountServiceImpl implements AccountService {
                             .build()
             );
         } else if (account.getRole() == Account.Role.STUDENT) {
-
+            studentRepo.create(
+                    Student.builder()
+                            .accountId(account.getAccountId())
+                            .displayName("")
+                            .description("")
+                            .isActive(true)
+                            .build()
+            );
         }
 
         return Mapper.accountFromModelToDto(account);
@@ -112,7 +123,12 @@ public class AccountServiceImpl implements AccountService {
                     request.getFieldList()
             );
         } else if (accountDto.getRole() == Account.Role.STUDENT) {
-            //
+            studentRepo.update(
+                    accountDto.getAccountId(),
+                    request.getOtherInfo().getDisplayName(),
+                    request.getOtherInfo().getDescription(),
+                    request.getFieldList()
+            );
         }
 
 

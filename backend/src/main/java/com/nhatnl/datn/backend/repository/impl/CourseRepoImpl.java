@@ -38,7 +38,7 @@ public class CourseRepoImpl implements CourseRepo {
     public void updateCourseInfo(Long courseId, Long teacherId, String name, String description, String imageUrl, String code,
                                  Boolean isPublic, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("UPDATE Course SET");
+        queryString.append("UPDATE Course SET updatedAt = :updatedAt ,");
         if (fieldList.contains("name")) {
             queryString.append(" name = :name ,");
         }
@@ -52,14 +52,16 @@ public class CourseRepoImpl implements CourseRepo {
             queryString.append(" code = :code ,");
         }
         if (fieldList.contains("isPublic")) {
-            queryString.append(" isPublic = :isPublic ");
+            queryString.append(" isPublic = :isPublic ,");
         }
+        queryString.deleteCharAt(queryString.length() - 1);
         queryString.append(" WHERE courseId=:courseId AND teacherId=:teacherId AND isActive = true");
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Course.class);
 
         query.setParameter("courseId", courseId);
         query.setParameter("teacherId", teacherId);
+        query.setParameter("updatedAt", new Date());
         if (fieldList.contains("name")) {
             query.setParameter("name", name);
         }
@@ -178,19 +180,22 @@ public class CourseRepoImpl implements CourseRepo {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void archive(Long courseId, Long teacherId) {
-        String queryString = "UPDATE Course SET isActive=false WHERE courseId=:courseId AND teacherId = :teacherId and isActive = true ";
+        String queryString = "UPDATE Course SET isActive=false, updatedAt=:updatedAt WHERE courseId=:courseId AND teacherId = :teacherId and isActive = true ";
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("courseId", courseId);
         query.setParameter("teacherId", teacherId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recover(Long courseId, Long teacherId) {
-        String queryString = "UPDATE Course SET isActive=true WHERE courseId=:courseId AND teacherId = :teacherId and isActive = false";
+        String queryString = "UPDATE Course SET isActive=true, updatedAt=:updatedAt WHERE courseId=:courseId AND teacherId = :teacherId and isActive = false";
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("courseId", courseId);
+        query.setParameter("teacherId", teacherId);
+        query.setParameter("updatedAt", new Date());
         query.executeUpdate();
     }
 

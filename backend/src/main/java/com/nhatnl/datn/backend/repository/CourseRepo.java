@@ -1,6 +1,7 @@
 package com.nhatnl.datn.backend.repository;
 
 import com.nhatnl.datn.backend.model.Course;
+import com.nhatnl.datn.backend.model.Student;
 
 import java.util.Date;
 import java.util.List;

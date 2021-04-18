@@ -13,7 +13,13 @@ import {
   Popconfirm,
 } from "antd";
 import ImgCrop from "antd-img-crop";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  KeyOutlined,
+  RedoOutlined,
+} from "@ant-design/icons";
 import courseApi from "../../../../api/CourseApi";
 import dbFileApi from "../../../../api/DBFileApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
@@ -71,6 +77,7 @@ class CourseOverview extends React.Component {
     this.state = {
       courseId: props.courseId,
       isModalUpdateCourseVisible: false,
+      isModalCourseCodeVisible: false,
       previewVisible: false,
       previewImage: "",
       previewTitle: "",
@@ -104,6 +111,7 @@ class CourseOverview extends React.Component {
             response: { fileDownloadUri: response.imageUrl },
           },
         ],
+        courseCode: response.code,
       });
     } catch (e) {
       console.error(e);
@@ -123,6 +131,18 @@ class CourseOverview extends React.Component {
   onCloseModalUpdateCourse = () => {
     this.setState({
       isModalUpdateCourseVisible: false,
+    });
+  };
+
+  showModalCourseCode = () => {
+    this.setState({
+      isModalCourseCodeVisible: true,
+    });
+  };
+
+  onCloseModalCourseCode = () => {
+    this.setState({
+      isModalCourseCodeVisible: false,
     });
   };
 
@@ -208,6 +228,32 @@ class CourseOverview extends React.Component {
     }
   };
 
+  handleClickChangeCourseCodeButton = async (value) => {
+    var accessToken = getAccessToken();
+
+    try {
+      const response = await courseApi.updateCourseInfo(
+        {
+          courseId: this.state.courseId,
+          name: "",
+          description: "",
+          isPublic: true,
+          imageUrl: "",
+          fieldList: ["code"],
+        },
+        accessToken
+      );
+      console.log("resp = ", response);
+      this.setState({
+        courseCode: response.code,
+      });
+      message.success("Đổi mã khóa học thành công", 3);
+    } catch (e) {
+      console.error(e);
+      message.error("Cập nhật thông tin khóa học thất bại", 3);
+    }
+  };
+
   render() {
     let courseDetail = this.state.courseDetail ? this.state.courseDetail : null;
 
@@ -222,6 +268,15 @@ class CourseOverview extends React.Component {
     return courseDetail ? (
       <div>
         <Row justify="end" style={{ marginTop: "10px" }}>
+          <Col span={3}>
+            <Button
+              type="primary"
+              onClick={this.showModalCourseCode}
+              style={{ margin: "1% 0px 1% 1%" }}
+            >
+              <KeyOutlined /> Code khóa học
+            </Button>
+          </Col>
           <Col span={5}>
             <Button
               type="primary"
@@ -242,7 +297,31 @@ class CourseOverview extends React.Component {
             </Popconfirm>
           </Col>
         </Row>
-        <Modal></Modal>
+        <Modal
+          title="Mã Code khóa học"
+          width={650}
+          okButtonProps={{ disabled: true }}
+          cancelText={"Thoát"}
+          onCancel={this.onCloseModalCourseCode}
+          visible={this.state.isModalCourseCodeVisible}
+          placement="right"
+        >
+          <div
+            style={{
+              fontSize: "20px",
+              marginBottom: "20px",
+            }}
+          >
+            {this.state.courseCode}
+          </div>
+          <Button
+            type="primary"
+            onClick={this.handleClickChangeCourseCodeButton}
+          >
+            <RedoOutlined />
+            Đổi mã Code
+          </Button>
+        </Modal>
         <Modal
           title="Sửa khóa học"
           width={650}

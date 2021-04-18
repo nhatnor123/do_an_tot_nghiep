@@ -27,7 +27,7 @@ class LessonGrid extends React.Component {
                       marginBottom: "12px",
                       marginTop: "10px",
                       color: "#1890ff !important",
-                      fontSize: "16px",
+                      fontSize: "20px",
                     }}
                     className="link-to-the-lesson"
                   >
