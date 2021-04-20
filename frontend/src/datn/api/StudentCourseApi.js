@@ -24,6 +24,14 @@ const studentCourseApi = {
     const url = `${apiPath}/archive`;
     return axiosClient.post(url, params, setupTokenHeader(token));
   },
+  getStudentsNotJoinCourse: async (params, token) => {
+    const url = `${apiPath}/get-students-not-join-course`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
+  getStudentsJoiningCourse: async (params, token) => {
+    const url = `${apiPath}/get-students-joining-course`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
 };
 
 export default studentCourseApi;

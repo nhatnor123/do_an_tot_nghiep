@@ -8,13 +8,16 @@ import {
   Space,
   Tooltip,
   Popconfirm,
+  Modal,
+  Mentions,
+  Form,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import {
   SearchOutlined,
   PlusOutlined,
-  LockOutlined,
-  UnlockOutlined,
+  DeleteOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 
 import studentCourseApi from "../../../../api/StudentCourseApi";
@@ -22,7 +25,21 @@ import { getAccessToken } from "../../../../api/TokenUtil";
 
 import "./ManageStudentJoinCourse.css";
 
+const { Option } = Mentions;
 const { Content } = Layout;
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 18,
+      offset: 0,
+    },
+    sm: {
+      span: 24,
+      offset: 0,
+    },
+  },
+};
 
 message.config({
   top: 80,
@@ -34,6 +51,7 @@ class ManageStudentJoinCourse extends React.Component {
 
     this.state = {
       dataSource: [],
+      studentsNotJoinCourse: [],
       columns: [
         {
           title: "STT",
@@ -53,12 +71,6 @@ class ManageStudentJoinCourse extends React.Component {
           ...this.getColumnSearchProps("email"),
         },
         {
-          title: "Vai trò",
-          dataIndex: "role",
-          key: "role",
-          ...this.getColumnSearchProps("role"),
-        },
-        {
           title: "Họ",
           dataIndex: "firstName",
           key: "firstName",
@@ -71,27 +83,10 @@ class ManageStudentJoinCourse extends React.Component {
           ...this.getColumnSearchProps("lastName"),
         },
         {
-          title: "SĐT",
-          dataIndex: "phoneNo",
-          key: "phoneNo",
-          ...this.getColumnSearchProps("phoneNo"),
-        },
-        {
-          title: "Địa chỉ",
-          dataIndex: "address",
-          key: "address",
-          ...this.getColumnSearchProps("address"),
-        },
-        {
-          title: "Ngày sinh",
-          dataIndex: "birthday",
-          key: "birthday",
-        },
-        {
           title: "Trạng thái",
-          dataIndex: "isActiveText",
-          key: "isActiveText",
-          ...this.getColumnSearchProps("isActiveText"),
+          dataIndex: "isApprovedText",
+          key: "isApprovedText",
+          ...this.getColumnSearchProps("isApprovedText"),
         },
         {
           title: "Thời điểm tạo",
@@ -108,15 +103,15 @@ class ManageStudentJoinCourse extends React.Component {
           key: "accountId",
           render: (text, record) => (
             <Popconfirm
-              title="Xác nhận khóa tài khoản này ?"
+              title="Xác nhận phê duyệt học viên này tham gia khóa học ?"
               cancelText="Hủy"
               okText="Đồng ý"
-              onConfirm={this.handleLockAccount(record.accountId)}
-              disabled={record.isActive === false}
+              onConfirm={this.handleApproveStudentJoinCourse(record.studentId)}
+              disabled={record.isApproved === true}
             >
-              <Tooltip placement="top" title="Khóa tài khoản">
-                <Button disabled={record.isActive === false}>
-                  <LockOutlined />
+              <Tooltip placement="top" title="Phê duyệt học viên">
+                <Button disabled={record.isApproved === true}>
+                  <CheckOutlined />
                 </Button>
               </Tooltip>
             </Popconfirm>
@@ -127,16 +122,15 @@ class ManageStudentJoinCourse extends React.Component {
           key: "accountId",
           render: (text, record) => (
             <Popconfirm
-              title="Xác nhận mở khóa tài khoản này ?"
+              title="Xác nhận xóa học viên này khỏi khóa học ?"
               cancelText="Hủy"
               okText="Đồng ý"
-              onConfirm={this.handleUnlockAccount(record.accountId)}
-              disabled={record.isActive === true}
+              onConfirm={this.handleDeleteStudentToCourse(record.studentId)}
               placement="topLeft"
             >
-              <Tooltip placement="topLeft" title="Mở khóa tài khoản">
-                <Button disabled={record.isActive === true}>
-                  <UnlockOutlined />
+              <Tooltip placement="topLeft" title="Xóa học viên">
+                <Button>
+                  <DeleteOutlined />
                 </Button>
               </Tooltip>
             </Popconfirm>
@@ -145,11 +139,9 @@ class ManageStudentJoinCourse extends React.Component {
       ],
       searchText: "",
       searchedColumn: "",
-      previewVisible: false,
-      previewImage: "",
-      previewTitle: "",
-      fileList: [],
+      isModalAddNewStudentToCourseVisible: false,
     };
+    this.formRefAddNewStudentToCourse = React.createRef();
   }
 
   getColumnSearchProps = (dataIndex) => ({
@@ -235,35 +227,36 @@ class ManageStudentJoinCourse extends React.Component {
     this.setState({ searchText: "" });
   };
 
-  getAccountList = async () => {
+  getStudentsJoinCourseList = async () => {
     var accessToken = getAccessToken();
     try {
-      const response = await studentCourseApi.search(
+      const response = await studentCourseApi.getStudentsJoiningCourse(
         {
-          studentId: 0,
           courseId: this.props.courseId,
-          email: "",
-          isApproved: false,
-          createdAtFrom: "",
-          createdAtTo: "",
-          updatedAtFrom: "",
-          updatedAtTo: "",
-          fieldList: ["courseId"],
         },
         accessToken
       );
-      console.log("res = ", response);
-      let dataSourceResponsed = response.map((item, index) => {
+      console.log("dataSource = ", response);
+      let dataSourceResponsed = response.students.map((item, index) => {
         return {
           ...item,
-          isActiveText: item.isActive ? "Đang hoạt động" : "Bị khóa",
-          birthday: item.birthday.substring(0, item.birthday.length - 19),
+          isApprovedText: item.isApproved ? "Đã phê duyệt" : "Chờ phê duyệt",
           createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
           updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
           index: index + 1,
         };
       });
-      this.setState({ dataSource: dataSourceResponsed });
+      const result = await studentCourseApi.getStudentsNotJoinCourse(
+        {
+          courseId: this.props.courseId,
+        },
+        accessToken
+      );
+      console.log("studentsNotJoinCourse = ", result);
+      this.setState({
+        dataSource: dataSourceResponsed,
+        studentsNotJoinCourse: result.students,
+      });
     } catch (e) {
       console.error(e);
       message.error("Lấy danh sách tài khoản người dùng thất bại", 3);
@@ -300,69 +293,129 @@ class ManageStudentJoinCourse extends React.Component {
       this.setState({
         visible: false,
       });
-      this.getAccountList();
-      this.handleResetForm();
+      this.getStudentsJoinCourseList();
     } catch (e) {
       console.error(e);
       message.error("Thêm mới tài khoản thất bại", 3);
-      // this.setState({
-      //   visible: false,
-      // });
     }
   };
 
-  handleLockAccount(accountId) {
+  handleApproveStudentJoinCourse(studentId) {
     return async () => {
       var accessToken = getAccessToken();
 
       try {
-        const response = await studentCourseApi.lock(
+        const response = await studentCourseApi.update(
           {
-            accountId,
+            studentId,
+            courseId: this.props.courseId,
+            isApproved: true,
           },
           accessToken
         );
         console.log("res = ", response);
-        this.getAccountList();
-        message.success("Khóa tài khoản thành công", 3);
+        this.getStudentsJoinCourseList();
+        message.success("Phê duyệt học viên tham gia khóa học thành công", 3);
       } catch (e) {
         console.error(e);
-        message.error("Khóa tài khoản thất bại", 3);
+        message.error("Phê duyệt học viên tham gia khóa học thất bại", 3);
       }
     };
   }
 
-  handleUnlockAccount(accountId) {
+  handleDeleteStudentToCourse(studentId) {
     return async () => {
       var accessToken = getAccessToken();
 
       try {
-        const response = await studentCourseApi.unlock(
+        const response = await studentCourseApi.archive(
           {
-            accountId,
+            studentId,
+            courseId: this.props.courseId,
           },
           accessToken
         );
         console.log("res = ", response);
-        this.getAccountList();
-        message.success("Mở khóa tài khoản thành công", 3);
+        this.getStudentsJoinCourseList();
+        message.success("Xóa học viên khỏi khóa học thành công", 3);
       } catch (e) {
         console.error(e);
-        message.error("Mở khóa tài khoản thất bại", 3);
+        message.error("Xóa học viên khỏi khóa học thất bại", 3);
       }
     };
   }
 
-  handleResetForm = () => {
-    this.formRef.current.resetFields();
+  showModalAddNewStudentToCourse = () => {
+    this.setState({
+      isModalAddNewStudentToCourseVisible: true,
+    });
+  };
+
+  onCloseModalAddNewStudentToCourse = () => {
+    this.setState({
+      isModalAddNewStudentToCourseVisible: false,
+    });
+  };
+
+  handleSummitAddNewStudentToCourse = async (value) => {
+    var accessToken = getAccessToken();
+
+    const unique = (value, index, self) => {
+      return self.indexOf(value) === index;
+    };
+    var studentIds = [];
+    var studentUsernames = [];
+    value.name
+      .split(" ")
+      .filter((string) => string.length > 0)
+      .filter(unique)
+      .forEach((string) => {
+        studentUsernames = studentUsernames.concat(
+          string.split("@").filter((string) => string.length > 0)
+        );
+      });
+
+    this.state.studentsNotJoinCourse.forEach((student) => {
+      if (studentUsernames.includes(student.username)) {
+        studentIds.push(student.studentId);
+      }
+    });
+
+    console.log("studentIds =", studentIds);
+
+    if (studentIds.length === 0) {
+      message.error("Học viên không tồn tại trong hệ thống", 3);
+      return;
+    }
+
+    try {
+      const response = await studentCourseApi.create(
+        {
+          courseId: this.props.courseId,
+          studentIds,
+        },
+        accessToken
+      );
+      console.log("resp = ", response);
+
+      message.success("Thêm mới học viên vào khóa học thành công", 3);
+      this.onCloseModalAddNewStudentToCourse();
+      this.getStudentsJoinCourseList();
+      this.formRefAddNewStudentToCourse.current.setFieldsValue({
+        name: "",
+      });
+    } catch (e) {
+      console.error(e);
+      message.error("Thêm mới học viên vào khóa học thất bại", 3);
+    }
   };
 
   componentDidMount() {
-    this.getAccountList();
+    this.getStudentsJoinCourseList();
   }
 
   render() {
-    console.log("render manageUserAccount");
+    console.log("render manageStudentJoinCourse");
 
     return (
       <Layout className="site-layout">
@@ -371,52 +424,65 @@ class ManageStudentJoinCourse extends React.Component {
             <div>
               <Button
                 type="primary"
-                onClick={this.showDrawer}
+                onClick={this.showModalAddNewStudentToCourse}
                 style={{ margin: "1% 0px 1% 1%" }}
               >
-                <PlusOutlined /> Thêm mới
+                <PlusOutlined /> Thêm học viên
               </Button>
             </div>
+            <Modal
+              title="Thêm học viên"
+              width={650}
+              okButtonProps={{ disabled: true }}
+              cancelText={"Thoát"}
+              onCancel={this.onCloseModalAddNewStudentToCourse}
+              visible={this.state.isModalAddNewStudentToCourseVisible}
+              placement="right"
+            >
+              <Form
+                layout="vertical"
+                hideRequiredMark
+                scrollToFirstError
+                onFinish={this.handleSummitAddNewStudentToCourse}
+                ref={this.formRefAddNewStudentToCourse}
+              >
+                <Form.Item {...tailFormItemLayout}>
+                  <Form.Item
+                    name="name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập tên học viên !",
+                      },
+                    ]}
+                  >
+                    <Mentions rows={2} placeholder="Nhập mail của học viên">
+                      {this.state.studentsNotJoinCourse.map((student) => (
+                        <Option value={student.username}>
+                          {student.username} (
+                          {student.displayName.length !== 0
+                            ? student.displayName
+                            : student.firstName + " " + student.lastName}{" "}
+                          - {student.email})
+                        </Option>
+                      ))}
+                    </Mentions>
+                  </Form.Item>
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ margin: "auto" }}
+                  >
+                    Thêm
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Modal>
             <div>
               <Table
                 dataSource={this.state.dataSource}
                 columns={this.state.columns}
-                expandable={{
-                  expandedRowRender: (record) => {
-                    let data;
-                    if (record.role === "TEACHER") {
-                      data = record.teacher;
-                      return data ? (
-                        <div style={{ marginLeft: "40px" }}>
-                          <p>Tên hiển thị: {data.displayName}</p>
-                          <p>Mô tả: {data.description}</p>
-                          <p>
-                            Trạng thái:{" "}
-                            {data.isPublic ? "Công khai" : "Không công khai"}
-                          </p>
-                        </div>
-                      ) : (
-                        <div></div>
-                      );
-                    } else if (record.role === "STUDENT") {
-                      data = record.student;
-                      return data ? (
-                        <div style={{ marginLeft: "40px" }}>
-                          <p>Tên hiển thị {data.displayName}</p>
-                          <p>Mô tả: {data.description}</p>
-                        </div>
-                      ) : (
-                        <div></div>
-                      );
-                    }
-                  },
-                  rowExpandable: (record) => {
-                    return (
-                      (record.role === "TEACHER" && record.teacher) ||
-                      (record.role === "STUDENT" && record.student)
-                    );
-                  },
-                }}
                 scroll={{ x: "calc(100%)" }}
                 pagination={{ position: ["bottomRight"] }}
                 bordered
