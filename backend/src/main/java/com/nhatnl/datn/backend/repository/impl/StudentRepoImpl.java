@@ -90,7 +90,7 @@ public class StudentRepoImpl implements StudentRepo {
 
     @Override
     public List<Student> search(List<Long> studentIds, Long accountId, String displayName, String description,
-                                Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                                Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                 Date updatedAtTo, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
         queryString.append("SELECT * FROM Student WHERE 1=1 AND isActive = true");
@@ -105,9 +105,6 @@ public class StudentRepoImpl implements StudentRepo {
         }
         if (fieldList.contains("description")) {
             queryString.append(" AND UPPER(description) LIKE :description");
-        }
-        if (fieldList.contains("isActive")) {
-            queryString.append(" AND isActive=:isActive");
         }
         if (fieldList.contains("createdAtFrom")) {
             queryString.append(" AND createdAt >= :createdAtFrom");
@@ -134,9 +131,6 @@ public class StudentRepoImpl implements StudentRepo {
         }
         if (fieldList.contains("description")) {
             query.setParameter("description", "%" + description.toUpperCase() + "%");
-        }
-        if (fieldList.contains("isActive")) {
-            query.setParameter("isActive", isActive);
         }
         if (fieldList.contains("createdAtFrom")) {
             query.setParameter("createdAtFrom", createdAtFrom);

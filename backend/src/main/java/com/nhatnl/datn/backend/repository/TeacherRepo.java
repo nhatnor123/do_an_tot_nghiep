@@ -10,14 +10,14 @@ public interface TeacherRepo {
 
     Teacher update(Teacher teacher);
 
-    void updateTeacherInfo(Long accountId, String displayName, String description,Boolean isPublic, List<String> fieldList);
+    void updateTeacherInfo(Long accountId, String displayName, String description, Boolean isPublic, List<String> fieldList);
 
     Teacher getById(Long teacherId);
 
     Teacher getByAccountId(Long accountId);
 
     List<Teacher> search(Long teacherId, Long accountId, String displayName, String description, Boolean isPublic,
-                         Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                         Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                          Date updatedAtTo, List<String> fieldList);
 
     void archiveById(Long teacherId);

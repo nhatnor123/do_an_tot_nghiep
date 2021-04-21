@@ -95,7 +95,7 @@ public class TeacherRepoImpl implements TeacherRepo {
 
     @Override
     public List<Teacher> search(Long teacherId, Long accountId, String displayName, String description, Boolean isPublic,
-                                Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                                Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                 Date updatedAtTo, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
         queryString.append("SELECT * FROM Teacher WHERE 1=1 AND isActive = true");
@@ -113,9 +113,6 @@ public class TeacherRepoImpl implements TeacherRepo {
         }
         if (fieldList.contains("isPublic")) {
             queryString.append(" AND isPublic=:isPublic");
-        }
-        if (fieldList.contains("isActive")) {
-            queryString.append(" AND isActive=:isActive");
         }
         if (fieldList.contains("createdAtFrom")) {
             queryString.append(" AND createdAt >= :createdAtFrom");
@@ -145,9 +142,6 @@ public class TeacherRepoImpl implements TeacherRepo {
         }
         if (fieldList.contains("isPublic")) {
             query.setParameter("isPublic", isPublic);
-        }
-        if (fieldList.contains("isActive")) {
-            query.setParameter("isActive", isActive);
         }
         if (fieldList.contains("createdAtFrom")) {
             query.setParameter("createdAtFrom", createdAtFrom);

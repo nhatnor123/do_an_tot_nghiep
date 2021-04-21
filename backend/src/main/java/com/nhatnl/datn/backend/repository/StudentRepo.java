@@ -18,7 +18,7 @@ public interface StudentRepo {
     Student getByAccountId(Long accountId);
 
     List<Student> search(List<Long> studentIds, Long accountId, String displayName, String description,
-                         Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
+                         Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                          Date updatedAtTo, List<String> fieldList);
 
     void archiveById(Long studentId);

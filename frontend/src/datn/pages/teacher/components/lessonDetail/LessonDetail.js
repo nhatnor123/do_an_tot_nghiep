@@ -12,6 +12,8 @@ import {
 import Parser from "html-react-parser";
 import TextEditor from "../richTextEditor/TextEditor";
 
+import Comment from "../comment/Comment";
+
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import lessonApi from "../../../../api/LessonApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
@@ -54,7 +56,6 @@ class LessonDetail extends React.Component {
   }
 
   componentDidMount() {
-    console.log("State = ", this.state);
     this.getLessonDetail();
   }
 
@@ -274,6 +275,10 @@ class LessonDetail extends React.Component {
             {lessonDetail.description}
           </div>
           {Parser(lessonDetail.content)}
+          <Comment
+            courseId={this.state.courseId}
+            lessonId={this.state.lessonId}
+          />
         </div>
       </div>
     ) : (

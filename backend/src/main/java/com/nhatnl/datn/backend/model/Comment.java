@@ -23,7 +23,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @Column(name = "commentParentId", nullable = false)
+    @Column(name = "commentParentId")
     private Long commentParentId;
 
     @Column(name = "lessonId", nullable = false)
@@ -32,8 +32,8 @@ public class Comment {
     @Column(name = "accountId", nullable = false)
     private Long accountId;
 
-    @Column(name = "description", nullable = false)
-    private String description;
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Column(name = "isActive", nullable = false)
     private Boolean isActive;
@@ -50,7 +50,7 @@ public class Comment {
     @JsonIgnore
     private Lesson lesson;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "accountId", nullable = false, insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore

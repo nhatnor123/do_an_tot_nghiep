@@ -38,7 +38,7 @@ public class StudentCourseServiceImpl implements StudentCourseService {
     @Override
     public List<StudentCourse> create(CreateReq req) {
         List<Student> studentList = studentRepo.search(req.getStudentIds(), null, null, null, null,
-                null, null, null, null, Collections.singletonList("studentId"));
+                null, null, null, Collections.singletonList("studentId"));
 
         List<StudentCourse> studentCourseList = new ArrayList<>();
         for (Student student : studentList) {
