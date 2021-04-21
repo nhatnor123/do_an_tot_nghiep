@@ -137,3 +137,7 @@ ALTER TABLE `Test` ADD CONSTRAINT `Test_fk0` FOREIGN KEY (`courseId`) REFERENCES
 ALTER TABLE `StudentTest` ADD CONSTRAINT `StudentTest_fk0` FOREIGN KEY (`studentId`) REFERENCES `Student`(`studentId`);
 
 ALTER TABLE `StudentTest` ADD CONSTRAINT `StudentTest_fk1` FOREIGN KEY (`testId`) REFERENCES `Test`(`testId`);
+
+ALTER TABLE `StudentTest` ADD CONSTRAINT `unique_key` Unique key (`studentId`, `testId`);
+
+ALTER TABLE `StudentCourse` ADD CONSTRAINT `unique_key` Unique key (`studentId`, `courseId`);

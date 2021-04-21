@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.repository;
 
+import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Student;
 
 import java.util.Date;
@@ -16,7 +17,7 @@ public interface StudentRepo {
 
     Student getByAccountId(Long accountId);
 
-    List<Student> search(Long studentId, Long accountId, String displayName, String description,
+    List<Student> search(List<Long> studentIds, Long accountId, String displayName, String description,
                          Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                          Date updatedAtTo, List<String> fieldList);
 
@@ -27,4 +28,6 @@ public interface StudentRepo {
     void recoverById(Long studentId);
 
     void recoverByAccountId(Long accountId);
+
+    List<Account> getStudentsNotJoinCourse(Long courseId);
 }

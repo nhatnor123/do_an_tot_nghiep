@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.repository.impl;
 
+import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Student;
 import com.nhatnl.datn.backend.repository.StudentRepo;
 import org.springframework.stereotype.Repository;
@@ -88,13 +89,13 @@ public class StudentRepoImpl implements StudentRepo {
     }
 
     @Override
-    public List<Student> search(Long studentId, Long accountId, String displayName, String description,
+    public List<Student> search(List<Long> studentIds, Long accountId, String displayName, String description,
                                 Boolean isActive, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                 Date updatedAtTo, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
         queryString.append("SELECT * FROM Student WHERE 1=1 AND isActive = true");
         if (fieldList.contains("studentId")) {
-            queryString.append(" AND studentId=:studentId");
+            queryString.append(" AND studentId IN :studentIds");
         }
         if (fieldList.contains("accountId")) {
             queryString.append(" AND accountId=:accountId");
@@ -123,7 +124,7 @@ public class StudentRepoImpl implements StudentRepo {
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Student.class);
         if (fieldList.contains("studentId")) {
-            query.setParameter("studentId", studentId);
+            query.setParameter("studentIds", studentIds);
         }
         if (fieldList.contains("accountId")) {
             query.setParameter("accountId", accountId);
@@ -191,5 +192,33 @@ public class StudentRepoImpl implements StudentRepo {
         query.setParameter("accountId", accountId);
         query.setParameter("updatedAt", new Date());
         query.executeUpdate();
+    }
+
+    @Override
+    public List<Account> getStudentsNotJoinCourse(Long courseId) {
+        String queryString = "SELECT \n" +
+                "    Account.*\n" +
+                "FROM\n" +
+                "    Account\n" +
+                "        INNER JOIN\n" +
+                "    Student ON Account.accountId = Student.accountId\n" +
+                "WHERE\n" +
+                "    Account.isActive = TRUE\n" +
+                "        AND studentId NOT IN (SELECT DISTINCT\n" +
+                "            Student.studentId\n" +
+                "        FROM\n" +
+                "            Student\n" +
+                "                INNER JOIN\n" +
+                "            StudentCourse ON Student.studentId = StudentCourse.studentId\n" +
+                "                INNER JOIN\n" +
+                "            Course ON Course.courseId = StudentCourse.courseId\n" +
+                "        WHERE\n" +
+                "            Course.courseId = :courseId\n" +
+                "                AND Student.isActive = TRUE\n" +
+                "                AND Course.isActive = TRUE\n" +
+                "                AND StudentCourse.isActive = TRUE)";
+        Query query = entityManager.createNativeQuery(queryString, Account.class);
+        query.setParameter("courseId", courseId);
+        return query.getResultList();
     }
 }

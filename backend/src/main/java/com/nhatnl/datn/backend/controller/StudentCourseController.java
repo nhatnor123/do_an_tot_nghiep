@@ -53,4 +53,18 @@ public class StudentCourseController {
         return ResponseEntity.ok(studentCourseService.archive(request.getStudentId(), request.getCourseId()));
     }
 
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping(path = "/get-students-not-join-course")
+    public ResponseEntity<?> getStudentsNotJoinCourse(@RequestBody GetStudentsNotJoinCourseReq request) {
+        log.info("getStudentsNotJoinCourse");
+        return ResponseEntity.ok(studentCourseService.getStudentsNotJoinCourse(request.getCourseId()));
+    }
+
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping(path = "/get-students-joining-course")
+    public ResponseEntity<?> getStudentsJoiningCourse(@RequestBody GetStudentsJoiningCourseReq request) {
+        log.info("getStudentsJoiningCourse");
+        return ResponseEntity.ok(studentCourseService.getStudentsJoiningCourse(request.getCourseId()));
+    }
+
 }

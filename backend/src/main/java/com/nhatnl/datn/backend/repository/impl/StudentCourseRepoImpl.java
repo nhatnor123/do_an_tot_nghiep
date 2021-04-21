@@ -110,13 +110,14 @@ public class StudentCourseRepoImpl implements StudentCourseRepo {
             query.setParameter("updatedAtTo", updatedAtTo);
         }
 
-        return (List<StudentCourse>) query.getResultList();
+        List<StudentCourse> result = query.getResultList();
+        return result;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void archive(Long studentId, Long courseId) {
-        String queryString = "UPDATE Lesson SET isActive=false, updatedAt =:updatedAt"
+        String queryString = "UPDATE StudentCourse SET isActive=false, updatedAt =:updatedAt"
                 + " WHERE studentId=:studentId AND courseId=:courseId and isActive = true ";
         Query query = entityManager.createNativeQuery(queryString, StudentCourse.class);
         query.setParameter("studentId", studentId);
@@ -128,7 +129,7 @@ public class StudentCourseRepoImpl implements StudentCourseRepo {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void recover(Long studentId, Long courseId) {
-        String queryString = "UPDATE Lesson SET isActive=true, updatedAt =:updatedAt"
+        String queryString = "UPDATE StudentCourse SET isActive=true, updatedAt =:updatedAt"
                 + " WHERE studentId=:studentId AND courseId=:courseId and isActive = false";
         Query query = entityManager.createNativeQuery(queryString, StudentCourse.class);
         query.setParameter("studentId", studentId);

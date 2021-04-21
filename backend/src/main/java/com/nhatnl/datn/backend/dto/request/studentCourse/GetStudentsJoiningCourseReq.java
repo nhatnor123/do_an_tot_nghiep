@@ -5,13 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateReq {
-    private List<Long> studentIds;
+public class GetStudentsJoiningCourseReq {
     private Long courseId;
 }
