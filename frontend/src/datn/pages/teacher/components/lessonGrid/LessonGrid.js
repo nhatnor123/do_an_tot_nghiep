@@ -13,8 +13,9 @@ class LessonGrid extends React.Component {
       <div>
         <List
           itemLayout="horizontal"
-          style={{ marginTop: "20px" }}
+          style={{ marginTop: "20px", marginBottom: "30px" }}
           dataSource={this.props.lessonList}
+          bordered={true}
           renderItem={(lesson) => (
             <List.Item>
               <List.Item.Meta
@@ -38,8 +39,8 @@ class LessonGrid extends React.Component {
                   <div
                     style={{
                       paddingBottom: "23px",
-                      borderStyle: "groove",
-                      borderWidth: "0 0 0.5px 0",
+                      // borderStyle: "groove",
+                      // borderWidth: "0 0 0.5px 0",
                     }}
                   >
                     {lesson.description}

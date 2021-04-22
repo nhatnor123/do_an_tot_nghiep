@@ -449,7 +449,7 @@ class CourseOverview extends React.Component {
             {courseDetail.name}
           </div>
           <div style={{ color: "#969696" }}>{courseDetail.description}</div>
-          <div style={{ marginTop: "15px" }}>
+          <div style={{ marginTop: "15px", marginBottom: "30px" }}>
             {courseDetail.isPublic === true ? (
               <Tag color="#55acee">Công khai</Tag>
             ) : (

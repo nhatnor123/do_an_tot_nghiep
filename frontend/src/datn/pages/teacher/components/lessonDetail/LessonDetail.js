@@ -281,7 +281,6 @@ class LessonDetail extends React.Component {
             lessonId={this.state.lessonId}
           />
         </div>
-        <BackTop />
       </div>
     ) : (
       <div>Loading</div>

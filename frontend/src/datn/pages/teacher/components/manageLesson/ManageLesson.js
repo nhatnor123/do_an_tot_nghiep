@@ -150,7 +150,7 @@ class ManageLesson extends React.Component {
 
     return (
       <div>
-        <Row>
+        <Row style={{ marginTop: "10px" }}>
           <Col span={5}>
             <Button
               type="primary"

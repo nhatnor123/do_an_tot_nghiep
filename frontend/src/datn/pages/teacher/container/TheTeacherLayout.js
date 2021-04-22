@@ -1,3 +1,4 @@
+import { BackTop } from "antd";
 import React from "react";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
 
@@ -9,6 +10,7 @@ const TheAdminLayout = () => {
         <TheHeader />
         <div className="c-body">
           <TheContent />
+          <BackTop />
         </div>
         {/* <TheFooter /> */}
       </div>

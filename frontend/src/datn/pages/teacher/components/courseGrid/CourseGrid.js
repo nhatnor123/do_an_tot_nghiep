@@ -27,7 +27,11 @@ class CourseGrid extends React.Component {
                     <img
                       src={course.imageUrl}
                       alt={course.name}
-                      style={{ width: "100%", height: "auto" }}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        border: "1px solid #ddd",
+                      }}
                     />
                   </Link>
 
@@ -49,7 +53,10 @@ class CourseGrid extends React.Component {
                         {course.name}
                       </Link>
                     </div>
-                    <div style={{ color: "#969696" }}>{course.description}</div>
+                    <div style={{ color: "#969696" }}>
+                      {course.description.substring(0, 200)}
+                      {course.description.length > 201 ? "..." : ""}
+                    </div>
                     <div style={{ marginTop: "5px" }}>
                       {course.isPublic === true ? (
                         <Tag color="#55acee">Công khai</Tag>

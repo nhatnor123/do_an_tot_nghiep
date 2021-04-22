@@ -391,7 +391,7 @@ class Comment extends React.Component {
     const { comments } = this.state;
 
     return this.state.selfAccountInfo ? (
-      <div>
+      <div style={{ marginTop: "40px" }}>
         <Modal
           title="Sửa bình luận"
           width={650}
