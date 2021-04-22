@@ -13,6 +13,7 @@ import Parser from "html-react-parser";
 import accountApi from "../../../../api/AccountApi";
 import commentApi from "../../../../api/CommentApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
+import Modal from "antd/lib/modal/Modal";
 
 const nestComments = (commentList) => {
   console.log("begin nest comment func =", commentList);
@@ -40,13 +41,20 @@ const nestComments = (commentList) => {
   return result;
 };
 
-const CommentNestedList = ({ comment, handleClickDeleteButton }) => {
+const CommentNestedList = ({
+  comment,
+  handleClickDeleteButton,
+  onOpenModalEditComment,
+  onOpenModalReplyComment,
+}) => {
   console.log("comment before 41", comment, handleClickDeleteButton);
   const nestedComments = (comment.children || []).map((comment) => {
     return (
       <CommentNestedList
         comment={comment}
         handleClickDeleteButton={handleClickDeleteButton}
+        onOpenModalEditComment={onOpenModalEditComment}
+        onOpenModalReplyComment={onOpenModalReplyComment}
       />
     );
   });
@@ -61,14 +69,30 @@ const CommentNestedList = ({ comment, handleClickDeleteButton }) => {
       actions={
         comment.isCommentOfSelfAccount
           ? [
-              <Button type="link" style={{ fontSize: "12px" }}>
-                Reply
+              <Button
+                type="link"
+                style={{ fontSize: "12px" }}
+                onClick={() => {
+                  return onOpenModalReplyComment(comment.commentId);
+                }}
+              >
+                Phản hồi
               </Button>,
-              <Button type="link" style={{ fontSize: "12px" }}>
+              <Button
+                type="link"
+                style={{ fontSize: "12px" }}
+                onClick={() => {
+                  return onOpenModalEditComment(
+                    comment.commentId,
+                    comment.content
+                  );
+                }}
+              >
                 Sửa
               </Button>,
               <Popconfirm
                 title="Xác nhận xóa bình luận này ?"
+                placement="bottomLeft"
                 cancelText="Hủy"
                 okText="Đồng ý"
                 onConfirm={() => {
@@ -151,8 +175,14 @@ class Comment extends React.Component {
       selfAccountInfo: null,
       submitting: false,
       value: "",
+      isModalEditCommentVisible: false,
+      isModalReplyCommentVisible: false,
+      currentCommentId: null,
+      currentCommentContent: null,
     };
     this.formRefAddNewComment = React.createRef();
+    this.formRefEditComment = React.createRef();
+    this.formRefReplyComment = React.createRef();
   }
 
   componentDidMount() {
@@ -236,6 +266,7 @@ class Comment extends React.Component {
         accessToken
       );
       console.log("response = ", response);
+      message.success("Gửi bình luận thành công", 3);
       this.getCommentList();
       this.handleResetFormAddNewComment();
       this.setState({
@@ -256,15 +287,102 @@ class Comment extends React.Component {
     this.formRefAddNewComment.current.resetFields();
   };
 
+  handleResetFormEditComment = () => {
+    this.formRefEditComment.current.resetFields();
+    this.formRefEditComment.current.setFieldsValue({
+      content: this.state.currentCommentContent,
+    });
+  };
+
+  handleResetFormReplyComment = () => {
+    this.formRefReplyComment.current.resetFields();
+    this.formRefReplyComment.current.setFieldsValue({
+      content: "",
+    });
+  };
+
   handleClickDeleteButton = async (commentId) => {
     var accessToken = getAccessToken();
     try {
       const response = await commentApi.archive({ commentId }, accessToken);
       console.log("response = ", response);
       this.getCommentList();
+      message.success("Xóa bình luận thành công", 3);
     } catch (e) {
       console.error(e);
       message.error("Xóa bình luận thất bại", 3);
+    }
+  };
+
+  onOpenModalEditComment = (commentId, content) => {
+    this.setState({
+      isModalEditCommentVisible: true,
+      currentCommentId: commentId,
+      currentCommentContent: content,
+    });
+  };
+
+  onOpenModalReplyComment = (commentId) => {
+    this.setState({
+      isModalReplyCommentVisible: true,
+      currentCommentId: commentId,
+    });
+  };
+
+  onCloseModalEditComment = () => {
+    this.setState({
+      isModalEditCommentVisible: false,
+      currentCommentId: null,
+      currentCommentContent: null,
+    });
+  };
+
+  onCloseModalReplyComment = () => {
+    this.setState({
+      isModalReplyCommentVisible: false,
+      currentCommentId: null,
+      currentCommentContent: null,
+    });
+  };
+
+  onSubmitEditComment = async (value) => {
+    var accessToken = getAccessToken();
+    try {
+      const response = await commentApi.update(
+        { commentId: this.state.currentCommentId, content: value.content },
+        accessToken
+      );
+      console.log("response = ", response);
+      message.success("Sửa bình luận thành công", 3);
+      this.getCommentList();
+      this.onCloseModalEditComment();
+      this.handleResetFormEditComment();
+    } catch (e) {
+      console.error(e);
+      message.error("Sửa bình luận thất bại", 3);
+    }
+  };
+
+  onSubmitReplyComment = async (value) => {
+    var accessToken = getAccessToken();
+    try {
+      const response = await commentApi.create(
+        {
+          commentParentId: this.state.currentCommentId,
+          lessonId: this.props.lessonId,
+          accountId: this.state.selfAccountInfo.accountId,
+          content: value.content,
+        },
+        accessToken
+      );
+      console.log("response = ", response);
+      message.success("Thêm bình luận thành công", 3);
+      this.getCommentList();
+      this.onCloseModalReplyComment();
+      this.handleResetFormReplyComment();
+    } catch (e) {
+      console.error(e);
+      message.error("Thêm bình luận thành công", 3);
     }
   };
 
@@ -274,12 +392,109 @@ class Comment extends React.Component {
 
     return this.state.selfAccountInfo ? (
       <div>
+        <Modal
+          title="Sửa bình luận"
+          width={650}
+          okButtonProps={{ disabled: true }}
+          cancelText={"Thoát"}
+          onCancel={this.onCloseModalEditComment}
+          visible={this.state.isModalEditCommentVisible}
+          placement="right"
+        >
+          <Form
+            layout="vertical"
+            hideRequiredMark
+            scrollToFirstError
+            onFinish={this.onSubmitEditComment}
+            ref={this.formRefEditComment}
+          >
+            <Form.Item>
+              <Form.Item
+                name="content"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền nội dung bình luận !",
+                  },
+                ]}
+              >
+                <TextEditor />
+              </Form.Item>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ margin: "10px 10px 10px 0px" }}
+              >
+                Cập nhật
+              </Button>
+              <Button
+                type="primary"
+                style={{ margin: "10px 10px 0px 15%" }}
+                onClick={this.handleResetFormEditComment}
+                htmlType="button"
+              >
+                Đặt lại
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="Phản hồi bình luận"
+          width={650}
+          okButtonProps={{ disabled: true }}
+          cancelText={"Thoát"}
+          onCancel={this.onCloseModalReplyComment}
+          visible={this.state.isModalReplyCommentVisible}
+          placement="right"
+        >
+          <Form
+            layout="vertical"
+            hideRequiredMark
+            scrollToFirstError
+            onFinish={this.onSubmitReplyComment}
+            ref={this.formRefReplyComment}
+          >
+            <Form.Item>
+              <Form.Item
+                name="content"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền nội dung bình luận !",
+                  },
+                ]}
+              >
+                <TextEditor />
+              </Form.Item>
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ margin: "10px 10px 10px 0px" }}
+              >
+                Thêm
+              </Button>
+              <Button
+                type="primary"
+                style={{ margin: "10px 10px 0px 15%" }}
+                onClick={this.handleResetFormReplyComment}
+                htmlType="button"
+              >
+                Đặt lại
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <div>{comments.length} bình luận</div>
         {comments.length > 0 &&
           comments.map((comment) => {
             return (
               <CommentNestedList
                 comment={comment}
                 handleClickDeleteButton={this.handleClickDeleteButton}
+                onOpenModalEditComment={this.onOpenModalEditComment}
+                onOpenModalReplyComment={this.onOpenModalReplyComment}
               />
             );
           })}

@@ -8,6 +8,7 @@ import {
   Col,
   Input,
   Popconfirm,
+  BackTop,
 } from "antd";
 import Parser from "html-react-parser";
 import TextEditor from "../richTextEditor/TextEditor";
@@ -280,6 +281,7 @@ class LessonDetail extends React.Component {
             lessonId={this.state.lessonId}
           />
         </div>
+        <BackTop />
       </div>
     ) : (
       <div>Loading</div>
