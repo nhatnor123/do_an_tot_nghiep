@@ -41,7 +41,7 @@ const formats = [
 
 const TextEditor = ({ value, onChange, placeholder }) => {
   return (
-    <div>
+    <div style={{ backgroundColor: "white" }}>
       <ReactQuill
         theme="snow"
         value={value || ""}
