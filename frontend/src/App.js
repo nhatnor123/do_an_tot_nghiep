@@ -5,6 +5,7 @@ import "./scss/style.scss";
 
 import TheAdminLayout from "./datn/pages/admin/container/TheAdminLayout";
 import TheTeacherLayout from "./datn/pages/teacher/container/TheTeacherLayout";
+import TheStudentLayout from "./datn/pages/student/container/TheStudentLayout";
 
 const loading = (
   <div className="pt-3 text-center">
@@ -64,6 +65,11 @@ class App extends Component {
               path="/teacher"
               component={TheTeacherLayout}
               role={"TEACHER"}
+            />
+            <AuthRoute
+              path="/student"
+              component={TheStudentLayout}
+              role={"STUDENT"}
             />
             <Route
               exact
