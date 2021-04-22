@@ -41,13 +41,24 @@ const nestComments = (commentList) => {
   return result;
 };
 
+const getNumberOfComments = (commentsList) => {
+  let numberOfComments = 0;
+  for (let comment of commentsList) {
+    numberOfComments++;
+    if (comment.children) {
+      numberOfComments =
+        numberOfComments + getNumberOfComments(comment.children);
+    }
+  }
+  return numberOfComments;
+};
+
 const CommentNestedList = ({
   comment,
   handleClickDeleteButton,
   onOpenModalEditComment,
   onOpenModalReplyComment,
 }) => {
-  console.log("comment before 41", comment, handleClickDeleteButton);
   const nestedComments = (comment.children || []).map((comment) => {
     return (
       <CommentNestedList
@@ -179,6 +190,7 @@ class Comment extends React.Component {
       isModalReplyCommentVisible: false,
       currentCommentId: null,
       currentCommentContent: null,
+      numbersOfComments: 0,
     };
     this.formRefAddNewComment = React.createRef();
     this.formRefEditComment = React.createRef();
@@ -222,6 +234,7 @@ class Comment extends React.Component {
       console.log("nestComments(temp_1) =", temp_2);
       this.setState({
         comments: temp_2,
+        numbersOfComments: getNumberOfComments(temp_2),
       });
     } catch (e) {
       console.error(e);
@@ -486,7 +499,7 @@ class Comment extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>{comments.length} bình luận</div>
+        <div>{this.state.numbersOfComments} bình luận</div>
         {comments.length > 0 &&
           comments.map((comment) => {
             return (
