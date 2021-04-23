@@ -67,4 +67,11 @@ public class StudentCourseController {
         return ResponseEntity.ok(studentCourseService.getStudentsJoiningCourse(request.getCourseId()));
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping(path = "/leave-course")
+    public ResponseEntity<?> leaveCourse(@RequestBody LeaveCourseReq request) {
+        log.info("getStudentsJoiningCourse");
+        return ResponseEntity.ok(studentCourseService.leaveCourse(request.getCourseId()));
+    }
+
 }

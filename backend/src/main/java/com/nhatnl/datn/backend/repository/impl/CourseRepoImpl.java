@@ -199,4 +199,45 @@ public class CourseRepoImpl implements CourseRepo {
         query.executeUpdate();
     }
 
+    @Override
+    public List<Course> getCoursesStudentJoining(Long studentId){
+        String queryString = "SELECT \n" +
+                "    Course.*\n" +
+                "FROM\n" +
+                "    StudentCourse\n" +
+                "        JOIN\n" +
+                "    Course ON StudentCourse.courseId = Course.courseId\n" +
+                "WHERE\n" +
+                "    Course.isActive = TRUE\n" +
+                "        AND StudentCourse.isActive = TRUE\n" +
+                "        AND StudentCourse.studentId = :studentId";
+        Query query = entityManager.createNativeQuery(queryString, Course.class);
+        query.setParameter("studentId", studentId);
+        return query.getResultList();
+    }
+
+
+    @Override
+    public List<Course> getCoursesStudentCanJoin(Long studentId){
+        String queryString = "SELECT \n" +
+                "    *\n" +
+                "FROM\n" +
+                "    Course\n" +
+                "WHERE\n" +
+                "    isActive = TRUE\n" +
+                "        AND courseId NOT IN (SELECT \n" +
+                "            Course.courseId\n" +
+                "        FROM\n" +
+                "            Course\n" +
+                "                JOIN\n" +
+                "            StudentCourse ON Course.courseId = StudentCourse.courseId\n" +
+                "        WHERE\n" +
+                "            Course.isActive = TRUE\n" +
+                "                AND StudentCourse.isActive = TRUE\n" +
+                "                AND StudentCourse.studentId = :studentId)";
+        Query query = entityManager.createNativeQuery(queryString, Course.class);
+        query.setParameter("studentId", studentId);
+        return query.getResultList();
+    }
+
 }

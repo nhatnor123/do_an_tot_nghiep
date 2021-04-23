@@ -176,7 +176,6 @@ class LessonDetail extends React.Component {
           </Col>
         </Row>
 
-        <Modal></Modal>
         <Modal
           title="Sửa bài học"
           width={650}

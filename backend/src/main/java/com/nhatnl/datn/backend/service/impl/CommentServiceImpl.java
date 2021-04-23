@@ -70,13 +70,13 @@ public class CommentServiceImpl implements CommentService {
                 if (account.getTeacher().getDescription().length() == 0) {
                     name = account.getFirstName() + " " + account.getLastName();
                 } else {
-                    name = account.getTeacher().getDescription();
+                    name = account.getTeacher().getDisplayName();
                 }
             } else if (account.getRole() == Account.Role.STUDENT) {
                 if (account.getStudent().getDescription().length() == 0) {
                     name = account.getFirstName() + " " + account.getLastName();
                 } else {
-                    name = account.getStudent().getDescription();
+                    name = account.getStudent().getDisplayName();
                 }
             }
 

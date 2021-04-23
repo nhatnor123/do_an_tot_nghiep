@@ -11,7 +11,6 @@ class CourseGrid extends React.Component {
       <div>
         <Row>
           {this.props.courseList.map((course) => {
-            console.log("Course =", course);
             return (
               <Col span={6} className="course">
                 <div
@@ -23,7 +22,7 @@ class CourseGrid extends React.Component {
                     alignItems: "center",
                   }}
                 >
-                  <Link to={`/teacher/manageCourse/course/${course.courseId}`}>
+                  <Link to={`/student/manageCourse/course/${course.courseId}`}>
                     <img
                       src={course.imageUrl}
                       alt={course.name}

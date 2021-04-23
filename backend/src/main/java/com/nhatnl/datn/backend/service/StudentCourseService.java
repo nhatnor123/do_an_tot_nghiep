@@ -19,6 +19,8 @@ public interface StudentCourseService {
 
     StudentCourse archive(Long studentId, Long courseId);
 
+    StudentCourse leaveCourse(Long courseId);
+
     GetStudentsNotJoinCourseResp getStudentsNotJoinCourse(Long courseId);
 
     GetStudentsJoiningCourseResp getStudentsJoiningCourse(Long courseId);

@@ -4,6 +4,7 @@ import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.course.CreateReq;
 import com.nhatnl.datn.backend.dto.request.course.SearchReq;
 import com.nhatnl.datn.backend.dto.request.course.UpdateCourseInfoReq;
+import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.repository.CourseRepo;
 import com.nhatnl.datn.backend.service.AccountService;
@@ -64,6 +65,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getById(Long courseId) {
+        AccountDto accountDto = accountService.getSelfAccount();
+        if (accountDto.getRole() == Account.Role.STUDENT) {
+            return courseRepo.getById(courseId);
+        }
         Long currentTeacherId = accountService.getSelfAccount().getTeacher().getTeacherId();
         return this.getByIdAndTeacherId(courseId, currentTeacherId);
     }
@@ -95,6 +100,18 @@ public class CourseServiceImpl implements CourseService {
         Long currentTeacherId = accountService.getSelfAccount().getTeacher().getTeacherId();
         courseRepo.archive(courseId, currentTeacherId);
         return getByIdAndTeacherId(courseId, currentTeacherId);
+    }
+
+    @Override
+    public List<Course> getCoursesStudentJoining() {
+        Long studentId = accountService.getSelfAccount().getStudent().getStudentId();
+        return courseRepo.getCoursesStudentJoining(studentId);
+    }
+
+    @Override
+    public List<Course> getCoursesStudentCanJoin() {
+        Long studentId = accountService.getSelfAccount().getStudent().getStudentId();
+        return courseRepo.getCoursesStudentCanJoin(studentId);
     }
 
 }

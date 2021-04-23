@@ -118,8 +118,14 @@ const CommentNestedList = ({
               </Popconfirm>,
             ]
           : [
-              <Button type="link" style={{ fontSize: "12px" }}>
-                Reply
+              <Button
+                type="link"
+                style={{ fontSize: "12px" }}
+                onClick={() => {
+                  return onOpenModalReplyComment(comment.commentId);
+                }}
+              >
+                Phản hồi
               </Button>,
             ]
       }

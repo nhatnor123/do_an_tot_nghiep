@@ -21,4 +21,8 @@ public interface CourseService {
 
     Course archive(Long courseId);
 
+    List<Course> getCoursesStudentJoining();
+
+    List<Course> getCoursesStudentCanJoin();
+
 }

@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.service.impl;
 
+import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.studentCourse.*;
 import com.nhatnl.datn.backend.dto.response.studentCourse.GetStudentsJoiningCourseResp;
 import com.nhatnl.datn.backend.dto.response.studentCourse.GetStudentsNotJoinCourseResp;
@@ -86,6 +87,12 @@ public class StudentCourseServiceImpl implements StudentCourseService {
     public StudentCourse archive(Long studentId, Long courseId) {
         studentCourseRepo.archive(studentId, courseId);
         return this.getById(studentId, courseId);
+    }
+
+    @Override
+    public StudentCourse leaveCourse(Long courseId) {
+        AccountDto accountDto = accountService.getSelfAccount();
+        return this.archive(accountDto.getStudent().getStudentId(), courseId);
     }
 
     @Override

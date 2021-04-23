@@ -197,7 +197,7 @@ public class StudentRepoImpl implements StudentRepo {
                 "        INNER JOIN\n" +
                 "    Student ON Account.accountId = Student.accountId\n" +
                 "WHERE\n" +
-                "    Account.isActive = TRUE\n" +
+                "    Account.isActive = TRUE AND Student.isActive = TRUE \n" +
                 "        AND studentId NOT IN (SELECT DISTINCT\n" +
                 "            Student.studentId\n" +
                 "        FROM\n" +

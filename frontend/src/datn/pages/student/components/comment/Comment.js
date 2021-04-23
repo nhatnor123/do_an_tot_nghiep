@@ -118,8 +118,14 @@ const CommentNestedList = ({
               </Popconfirm>,
             ]
           : [
-              <Button type="link" style={{ fontSize: "12px" }}>
-                Reply
+              <Button
+                type="link"
+                style={{ fontSize: "12px" }}
+                onClick={() => {
+                  return onOpenModalReplyComment(comment.commentId);
+                }}
+              >
+                Phản hồi
               </Button>,
             ]
       }
@@ -251,8 +257,8 @@ class Comment extends React.Component {
         selfAccountInfo: {
           ...response,
           name:
-            response.teacher.displayName.length !== 0
-              ? response.teacher.displayName
+            response.student.displayName.length !== 0
+              ? response.student.displayName
               : response.firstName + " " + response.lastName,
         },
       });

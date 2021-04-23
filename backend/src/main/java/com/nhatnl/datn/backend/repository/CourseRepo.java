@@ -26,4 +26,8 @@ public interface CourseRepo {
 
     void recover(Long courseId, Long teacherId);
 
+    List<Course> getCoursesStudentJoining(Long studentId);
+
+    List<Course> getCoursesStudentCanJoin(Long studentId);
+
 }

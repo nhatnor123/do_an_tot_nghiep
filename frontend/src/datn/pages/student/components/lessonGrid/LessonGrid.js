@@ -21,7 +21,7 @@ class LessonGrid extends React.Component {
               <List.Item.Meta
                 title={
                   <Link
-                    to={`/teacher/manageCourse/course/${courseId}/lesson/${lesson.lessonId}`}
+                    to={`/student/manageCourse/course/${courseId}/lesson/${lesson.lessonId}`}
                     style={{
                       textDecoration: "none",
                       fontWeight: "600",

@@ -32,7 +32,7 @@ public class CourseController {
         return ResponseEntity.ok(courseService.updateCourseInfo(request));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/get-by-id")
     public ResponseEntity<?> getById(@RequestBody GetByIdReq request) {
         log.info("getById");
@@ -52,5 +52,20 @@ public class CourseController {
         log.info("archive");
         return ResponseEntity.ok(courseService.archive(request.getCourseId()));
     }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping(path = "/get-courses-joining")
+    public ResponseEntity<?> getCoursesStudentJoining() {
+        log.info("getCoursesStudentJoining");
+        return ResponseEntity.ok(courseService.getCoursesStudentJoining());
+    }
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping(path = "/get-courses-can-join")
+    public ResponseEntity<?> getCoursesStudentCanJoin() {
+        log.info("getCoursesStudentCanJoin");
+        return ResponseEntity.ok(courseService.getCoursesStudentCanJoin());
+    }
+
 
 }

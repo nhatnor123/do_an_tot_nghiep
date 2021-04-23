@@ -24,6 +24,14 @@ const courseApi = {
     const url = `${courseApiPath}/archive`;
     return axiosClient.post(url, params, setupTokenHeader(token));
   },
+  getCoursesStudentJoining: async (token) => {
+    const url = `${courseApiPath}/get-courses-joining`;
+    return axiosClient.get(url, setupTokenHeader(token));
+  },
+  getCoursesStudentCanJoin: async (token) => {
+    const url = `${courseApiPath}/get-courses-can-join`;
+    return axiosClient.get(url, setupTokenHeader(token));
+  },
 };
 
 export default courseApi;

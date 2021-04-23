@@ -32,6 +32,10 @@ const studentCourseApi = {
     const url = `${apiPath}/get-students-joining-course`;
     return axiosClient.post(url, params, setupTokenHeader(token));
   },
+  leaveCourse: async (params, token) => {
+    const url = `${apiPath}/leave-course`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
 };
 
 export default studentCourseApi;

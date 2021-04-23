@@ -18,35 +18,35 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/create")
     public ResponseEntity<?> create(@RequestBody CreateReq request) {
         log.info("create");
         return ResponseEntity.ok(commentService.create(request));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/update")
     public ResponseEntity<?> update(@RequestBody UpdateReq request) {
         log.info("update");
         return ResponseEntity.ok(commentService.update(request));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/get-by-id")
     public ResponseEntity<?> getById(@RequestBody GetByIdReq request) {
         log.info("getById");
         return ResponseEntity.ok(commentService.getById(request.getCommentId()));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/search")
     public ResponseEntity<?> search(@RequestBody SearchReq request) {
         log.info("search");
         return ResponseEntity.ok(commentService.search(request));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/archive")
     public ResponseEntity<?> archive(@RequestBody ArchiveReq request) {
         log.info("archive");

@@ -32,14 +32,14 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.updateLesson(request));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/get-by-id")
     public ResponseEntity<?> getById(@RequestBody GetByIdReq request) {
         log.info("getById");
         return ResponseEntity.ok(lessonService.getById(request.getLessonId()));
     }
 
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/search")
     public ResponseEntity<?> search(@RequestBody SearchReq request) {
         log.info("search");
