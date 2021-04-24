@@ -113,12 +113,9 @@ public class CourseRepoImpl implements CourseRepo {
                                Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                Date updatedAtTo, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("SELECT * FROM Course WHERE 1=1 AND isActive = true ");
+        queryString.append("SELECT * FROM Course WHERE 1=1 AND isActive = true AND teacherId=:teacherId ");
         if (fieldList.contains("courseId")) {
             queryString.append(" AND courseId=:courseId");
-        }
-        if (fieldList.contains("teacherId")) {
-            queryString.append(" AND teacherId=:teacherId");
         }
         if (fieldList.contains("name")) {
             queryString.append(" AND UPPER(name) LIKE :name");
@@ -146,11 +143,9 @@ public class CourseRepoImpl implements CourseRepo {
         }
 
         Query query = entityManager.createNativeQuery(queryString.toString(), Course.class);
+        query.setParameter("teacherId", teacherId);
         if (fieldList.contains("courseId")) {
             query.setParameter("courseId", courseId);
-        }
-        if (fieldList.contains("teacherId")) {
-            query.setParameter("teacherId", teacherId);
         }
         if (fieldList.contains("name")) {
             query.setParameter("name", "%" + name.toUpperCase() + "%");

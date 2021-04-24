@@ -12,6 +12,10 @@ const CourseOverview = React.lazy(() =>
   import("../components/discoverNewCourses/courseOverview/CourseOverview")
 );
 
+const DiscoverTeacher = React.lazy(() =>
+  import("../components/discoverTeacher/DiscoverTeacher")
+);
+
 const ManageCourse = React.lazy(() =>
   import("../components/manageCourse/ManageCourse")
 );
@@ -51,6 +55,12 @@ const routes = [
     exact: true,
     name: "Chi tiết khóa học",
     component: CourseOverview,
+  },
+  {
+    path: "/student/discoverTeachers",
+    exact: true,
+    name: "Khám phá giáo viên",
+    component: DiscoverTeacher,
   },
   {
     path: "/student/manageCourse",

@@ -21,7 +21,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Giáo viên",
-    to: "/student/manageCourse",
+    to: "/student/discoverTeachers",
     icon: "cil-star",
   },
   {
