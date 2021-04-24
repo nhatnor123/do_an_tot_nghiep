@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  message,
-  Form,
-  Modal,
-  Button,
-  Row,
-  Col,
-  Input,
-  Popconfirm,
-} from "antd";
+import { message } from "antd";
 import Parser from "html-react-parser";
 
 import Comment from "../comment/Comment";

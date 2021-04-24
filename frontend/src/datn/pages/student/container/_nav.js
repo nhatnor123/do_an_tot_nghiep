@@ -10,11 +10,27 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavTitle",
+    _children: ["Khám phá"],
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Khóa học mới",
+    to: "/student/discoverNewCourses",
+    icon: "cil-calculator",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Giáo viên",
+    to: "/student/manageCourse",
+    icon: "cil-star",
+  },
+  {
+    _tag: "CSidebarNavTitle",
     _children: ["Quản lý"],
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Khóa học",
+    name: "Khóa học đang tham gia",
     to: "/student/manageCourse",
     icon: "cil-pencil",
   },

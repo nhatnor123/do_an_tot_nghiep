@@ -36,6 +36,18 @@ const studentCourseApi = {
     const url = `${apiPath}/leave-course`;
     return axiosClient.post(url, params, setupTokenHeader(token));
   },
+  requestToJoinCourse: async (params, token) => {
+    const url = `${apiPath}/request-join-course`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
+  cancelRequestToJoinCourse: async (params, token) => {
+    const url = `${apiPath}/cancel-request-join-course`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
+  checkIfJoiningCourse: async (params, token) => {
+    const url = `${apiPath}/check-if-joining`;
+    return axiosClient.post(url, params, setupTokenHeader(token));
+  },
 };
 
 export default studentCourseApi;

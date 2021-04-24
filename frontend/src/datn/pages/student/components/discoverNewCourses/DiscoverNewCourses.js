@@ -1,13 +1,13 @@
 import React from "react";
 import { Input, message, Row, Col } from "antd";
-import CourseGrid from "../courseGrid/CourseGrid";
+import CourseGrid from "./courseGrid/CourseGrid";
 
 import courseApi from "../../../../api/CourseApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
-import "./ManageCourse.css";
+import "./DiscoverNewCourses.css";
 
-class ManageCourse extends React.Component {
+class DiscoverNewCourses extends React.Component {
   constructor(props) {
     super(props);
     this.formRefCreateNewCourse = React.createRef();
@@ -24,7 +24,7 @@ class ManageCourse extends React.Component {
   getCourseList = async () => {
     var accessToken = getAccessToken();
     try {
-      const response = await courseApi.getCoursesStudentJoining(accessToken);
+      const response = await courseApi.getCoursesStudentCanJoin(accessToken);
       console.log("res = ", response);
       this.setState({
         courseList: response,
@@ -32,7 +32,7 @@ class ManageCourse extends React.Component {
       });
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách khóa học của học viên thất bại", 3);
+      message.error("Lấy danh sách khóa học thất bại", 3);
     }
   };
 
@@ -67,4 +67,4 @@ class ManageCourse extends React.Component {
   }
 }
 
-export default ManageCourse;
+export default DiscoverNewCourses;

@@ -345,7 +345,7 @@ class ManageCourse extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: "20px", marginBottom: "30px" }}>
           <CourseGrid courseList={this.state.courseList} />
         </div>
       </div>

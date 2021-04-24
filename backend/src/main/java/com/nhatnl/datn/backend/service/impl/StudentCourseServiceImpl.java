@@ -16,7 +16,6 @@ import com.nhatnl.datn.backend.service.StudentCourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @Service
@@ -150,5 +149,38 @@ public class StudentCourseServiceImpl implements StudentCourseService {
                 .build();
     }
 
+    @Override
+    public StudentCourse requestToJoinCourse(Long courseId, String code) {
+        AccountDto accountDto = accountService.getSelfAccount();
+        Long studentId = accountDto.getStudent().getStudentId();
+        boolean isApproved = false;
+        if (code != null && !code.isEmpty()) {
+            Course course = courseService.getById(courseId);
+            if (code.equals(course.getCode())) {
+                isApproved = true;
+            }
+        }
 
+        return studentCourseRepo.update(
+                StudentCourse.builder()
+                        .studentId(studentId)
+                        .courseId(courseId)
+                        .isApproved(isApproved)
+                        .isActive(true)
+                        .createdAt(new Date())
+                        .build()
+        );
+    }
+
+    @Override
+    public StudentCourse cancelRequestToJoinCourse(Long courseId) {
+        return this.leaveCourse(courseId);
+    }
+
+    @Override
+    public StudentCourse checkIfJoiningCourse(Long courseId) {
+        AccountDto accountDto = accountService.getSelfAccount();
+        Long studentId = accountDto.getStudent().getStudentId();
+        return this.getById(studentId, courseId);
+    }
 }

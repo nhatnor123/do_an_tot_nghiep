@@ -4,6 +4,14 @@ const Dashboard = React.lazy(() =>
   import("../../../../views/dashboard/Dashboard")
 );
 
+const DiscoverNewCourses = React.lazy(() =>
+  import("../components/discoverNewCourses/DiscoverNewCourses")
+);
+
+const CourseOverview = React.lazy(() =>
+  import("../components/discoverNewCourses/courseOverview/CourseOverview")
+);
+
 const ManageCourse = React.lazy(() =>
   import("../components/manageCourse/ManageCourse")
 );
@@ -31,6 +39,18 @@ const routes = [
     exact: true,
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/student/discoverNewCourses",
+    exact: true,
+    name: "Khóa học mới",
+    component: DiscoverNewCourses,
+  },
+  {
+    path: "/student/discoverNewCourses/course/:courseId",
+    exact: true,
+    name: "Chi tiết khóa học",
+    component: CourseOverview,
   },
   {
     path: "/student/manageCourse",

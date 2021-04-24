@@ -224,7 +224,7 @@ public class CourseRepoImpl implements CourseRepo {
                 "FROM\n" +
                 "    Course\n" +
                 "WHERE\n" +
-                "    isActive = TRUE\n" +
+                "    isActive = TRUE AND isPublic = TRUE\n" +
                 "        AND courseId NOT IN (SELECT \n" +
                 "            Course.courseId\n" +
                 "        FROM\n" +
@@ -234,7 +234,7 @@ public class CourseRepoImpl implements CourseRepo {
                 "        WHERE\n" +
                 "            Course.isActive = TRUE\n" +
                 "                AND StudentCourse.isActive = TRUE\n" +
-                "                AND StudentCourse.studentId = :studentId)";
+                "                AND StudentCourse.studentId = :studentId AND StudentCourse.isApproved = TRUE )";
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("studentId", studentId);
         return query.getResultList();

@@ -22,7 +22,9 @@ class CourseGrid extends React.Component {
                     alignItems: "center",
                   }}
                 >
-                  <Link to={`/student/manageCourse/course/${course.courseId}`}>
+                  <Link
+                    to={`/student/discoverNewCourses/course/${course.courseId}`}
+                  >
                     <img
                       src={course.imageUrl}
                       alt={course.name}
@@ -45,7 +47,7 @@ class CourseGrid extends React.Component {
                       }}
                     >
                       <Link
-                        to={`/student/manageCourse/course/${course.courseId}`}
+                        to={`/student/discoverNewCourses/course/${course.courseId}`}
                         style={{ textDecoration: "none" }}
                         className="link-to-the-course"
                       >
