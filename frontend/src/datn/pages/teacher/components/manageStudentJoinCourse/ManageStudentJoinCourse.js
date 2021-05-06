@@ -9,8 +9,9 @@ import {
   Tooltip,
   Popconfirm,
   Modal,
-  Mentions,
   Form,
+  Select,
+  Tag,
 } from "antd";
 import Highlighter from "react-highlight-words";
 import {
@@ -25,8 +26,26 @@ import { getAccessToken } from "../../../../api/TokenUtil";
 
 import "./ManageStudentJoinCourse.css";
 
-const { Option } = Mentions;
 const { Content } = Layout;
+
+function tagRender(props) {
+  const { value, closable, onClose } = props;
+  const onPreventMouseDown = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <Tag
+      color={"green"}
+      onMouseDown={onPreventMouseDown}
+      closable={closable}
+      onClose={onClose}
+      style={{ marginRight: 3 }}
+    >
+      {value}
+    </Tag>
+  );
+}
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -360,20 +379,9 @@ class ManageStudentJoinCourse extends React.Component {
   handleSummitAddNewStudentToCourse = async (value) => {
     var accessToken = getAccessToken();
 
-    const unique = (value, index, self) => {
-      return self.indexOf(value) === index;
-    };
+    console.log("value=", value);
     var studentIds = [];
-    var studentUsernames = [];
-    value.name
-      .split(" ")
-      .filter((string) => string.length > 0)
-      .filter(unique)
-      .forEach((string) => {
-        studentUsernames = studentUsernames.concat(
-          string.split("@").filter((string) => string.length > 0)
-        );
-      });
+    var studentUsernames = value.name;
 
     this.state.studentsNotJoinCourse.forEach((student) => {
       if (studentUsernames.includes(student.username)) {
@@ -456,17 +464,30 @@ class ManageStudentJoinCourse extends React.Component {
                       },
                     ]}
                   >
-                    <Mentions rows={2} placeholder="Nhập mail của học viên">
-                      {this.state.studentsNotJoinCourse.map((student) => (
-                        <Option value={student.username}>
-                          {student.username} (
-                          {student.displayName.length !== 0
-                            ? student.displayName
-                            : student.firstName + " " + student.lastName}{" "}
-                          - {student.email})
-                        </Option>
-                      ))}
-                    </Mentions>
+                    <Select
+                      mode="multiple"
+                      showArrow
+                      tagRender={tagRender}
+                      style={{ width: "100%" }}
+                      options={this.state.studentsNotJoinCourse.map(
+                        (student) => {
+                          return {
+                            value: student.username,
+                            label:
+                              student.username +
+                              " (" +
+                              (student.displayName.length !== 0
+                                ? student.displayName
+                                : student.firstName) +
+                              " " +
+                              student.lastName +
+                              " - " +
+                              student.email +
+                              ")",
+                          };
+                        }
+                      )}
+                    />
                   </Form.Item>
 
                   <Button
