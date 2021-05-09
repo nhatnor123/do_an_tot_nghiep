@@ -57,7 +57,7 @@ public class Test {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "courseId", nullable = false, insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private Course course;
 
 }

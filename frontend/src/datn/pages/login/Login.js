@@ -23,6 +23,10 @@ import { message } from "antd";
 import authenticationApi from "../../../datn/api/AuthenticationApi";
 import { setAccessToken } from "../../../datn/api/TokenUtil";
 
+message.config({
+  top: 80,
+});
+
 const Login = (props) => {
   let [username, setUserName] = useState("");
   let [password, setPassword] = useState("");
