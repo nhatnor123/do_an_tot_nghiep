@@ -15,7 +15,7 @@ import {
 import LessonGrid from "../lessonGrid/LessonGrid";
 import TextEditor from "../richTextEditor/TextEditor";
 
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 import LessonApi from "../../../../api/LessonApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
@@ -330,179 +330,222 @@ class ManageTest extends React.Component {
                 />
               </Form.Item>
 
-              <Form.Item
+              <Form.List
+                name="content"
                 label={
                   <div style={{ fontSize: "19px" }}>Nội dung bài kiểm tra</div>
                 }
               >
-                {this.state.testData.map((test, index) => {
-                  console.log("test = ", test);
+                {(questions, { add, remove }) => {
+                  return (
+                    <div>
+                      {questions.map((question, index) => {
+                        return (
+                          <div style={{ marginTop: "10px" }}>
+                            <Form.Item
+                              name={[index, "question"]}
+                              label={
+                                <div style={{ fontSize: "17px" }}>
+                                  <b>{"Câu hỏi " + (index + 1)}</b>
+                                </div>
+                              }
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng điền nội dung câu hỏi !",
+                                },
+                              ]}
+                            >
+                              <Input.TextArea
+                                style={inputStyle}
+                                autoSize={{ minRows: 3, maxRows: 6 }}
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              name={[index, "score"]}
+                              label={
+                                <div style={{ fontSize: "17px" }}>Điểm</div>
+                              }
+                              rules={[
+                                {
+                                  required: true,
+                                  message:
+                                    "Vui lòng điền số điểm của câu hỏi !",
+                                },
+                              ]}
+                            >
+                              <InputNumber
+                                size="large"
+                                min={1}
+                                max={99}
+                                defaultValue={1}
+                              />
+                            </Form.Item>
 
-                  if (test.type === "MULTI_CHOICE_ONE") {
-                    return (
-                      <Form.Item name={"TEST-" + (index + 1)}>
-                        <Form.Item
-                          name={"QUESTION-" + (index + 1)}
-                          label={
-                            <div style={{ fontSize: "17px" }}>
-                              <b>{"Câu hỏi " + (index + 1)}</b>
-                            </div>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              message: "Vui lòng điền nội dung câu hỏi !",
-                            },
-                          ]}
-                        >
-                          <Input.TextArea
-                            style={inputStyle}
-                            autoSize={{ minRows: 3, maxRows: 6 }}
-                          />
-                        </Form.Item>
-                        <Form.Item
-                          name={"QUESTION-" + (index + 1) + "-SCORE"}
-                          label={<div style={{ fontSize: "17px" }}>Điểm</div>}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Vui lòng điền số điểm của câu hỏi !",
-                            },
-                          ]}
-                        >
-                          <InputNumber
-                            size="large"
-                            min={1}
-                            max={99}
-                            defaultValue={1}
-                          />
-                        </Form.Item>
+                            <Form.Item
+                              name={[index, "type"]}
+                              label={<div style={labelStyle}>Kiểu câu hỏi</div>}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng chọn kiểu câu hỏi",
+                                },
+                              ]}
+                            >
+                              <Radio.Group>
+                                <Space direction="vertical">
+                                  <Radio value="MULTI_CHOICE_ONE">
+                                    Trắc nghiệm 1 đáp án đúng
+                                  </Radio>
+                                  <Radio value="MULTI_CHOICE_MULTI">
+                                    Trắc nghiệm nhiều đáp án đúng
+                                  </Radio>
+                                  <Radio value="TEXT">Tự luận</Radio>
+                                </Space>
+                              </Radio.Group>
+                            </Form.Item>
+                            <Form.Item
+                              name={[index, "autoCheck"]}
+                              label={
+                                <div style={labelStyle}>Tự động chấm điểm</div>
+                              }
+                              rules={[
+                                {
+                                  required: true,
+                                  message:
+                                    "Vui lòng chọn trạng thái của chế độ tự động chấm điểm",
+                                },
+                              ]}
+                            >
+                              <Radio.Group>
+                                <Radio value="true">Bật</Radio>
+                                <Radio value="false">Tắt</Radio>
+                              </Radio.Group>
+                            </Form.Item>
 
-                        <Form.Item
-                          name="type"
-                          label={<div style={labelStyle}>Kiểu câu hỏi</div>}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Vui lòng chọn kiểu câu hỏi",
-                            },
-                          ]}
-                        >
-                          <Radio.Group defaultValue={"MULTI_CHOICE_ONE"}>
-                            <Space direction="vertical">
-                              <Radio value="MULTI_CHOICE_ONE">
-                                Trắc nghiệm 1 đáp án đúng
-                              </Radio>
-                              <Radio value="MULTI_CHOICE_MULTI">
-                                Trắc nghiệm nhiều đáp án đúng
-                              </Radio>
-                              <Radio value="TEXT">Tự luận</Radio>
-                            </Space>
-                          </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                          name="autoCheck"
-                          label={
-                            <div style={labelStyle}>Tự động chấm điểm</div>
-                          }
-                          rules={[
-                            {
-                              required: true,
-                              message:
-                                "Vui lòng chọn trạng thái của chế độ tự động chấm điểm",
-                            },
-                          ]}
-                        >
-                          <Radio.Group defaultValue={"true"}>
-                            <Radio value="true">Bật</Radio>
-                            <Radio value="false">Tắt</Radio>
-                          </Radio.Group>
-                        </Form.Item>
+                            <Form.List
+                              name={[index, "option"]}
+                              label={
+                                <div style={{ fontSize: "19px" }}>
+                                  Nội dung bài kiểm tra
+                                </div>
+                              }
+                            >
+                              {(options, { add, remove }) => {
+                                return (
+                                  <div>
+                                    {options.map((option, optionIndex) => {
+                                      return (
+                                        <div style={{ marginTop: "10px" }}>
+                                          <Form.Item
+                                            name={[optionIndex, "option"]}
+                                            label={
+                                              <div style={{ fontSize: "17px" }}>
+                                                <b>
+                                                  {"Đáp án " +
+                                                    (optionIndex + 1)}
+                                                </b>
+                                              </div>
+                                            }
+                                            rules={[
+                                              {
+                                                required: true,
+                                                message:
+                                                  "Vui lòng điền đáp án !",
+                                              },
+                                            ]}
+                                          >
+                                            <Input.TextArea
+                                              style={inputStyle}
+                                              autoSize={{
+                                                minRows: 2,
+                                                maxRows: 3,
+                                              }}
+                                            />
+                                          </Form.Item>
+                                          <Form.Item
+                                            name={[optionIndex, "isTrueAnswer"]}
+                                            label={
+                                              <div style={labelStyle}>
+                                                Là đáp án đúng
+                                              </div>
+                                            }
+                                            rules={[
+                                              {
+                                                required: true,
+                                                message:
+                                                  "Vui lòng chọn trạng thái của đáp án",
+                                              },
+                                            ]}
+                                          >
+                                            <Radio.Group>
+                                              <Radio value="true">Đúng</Radio>
+                                              <Radio value="false">Sai</Radio>
+                                            </Radio.Group>
+                                          </Form.Item>
 
-                        <Form.Item
-                          label={<b style={{ fontSize: "17px" }}>Đáp án</b>}
-                        >
-                          {test.option.map((option, optionIndex) => {
-                            console.log("option =", option);
-                            return (
-                              <Form.Item>
-                                <Form.Item
-                                  name={
-                                    "QUESTION-" +
-                                    (index + 1) +
-                                    "-ANSWER-" +
-                                    (optionIndex + 1)
-                                  }
-                                  label={
-                                    <i style={{ fontSize: "16px" }}>
-                                      {"Đáp án " + (optionIndex + 1)}
-                                    </i>
-                                  }
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message:
-                                        "Vui lòng điền nội dung của đáp án !",
-                                    },
-                                  ]}
-                                >
-                                  <Input.TextArea
-                                    style={inputStyle}
-                                    autoSize={{ minRows: 1, maxRows: 2 }}
-                                  />
-                                </Form.Item>
-                                <Button
-                                  type="primary"
-                                  style={{ margin: "10px 10px 0px 30%" }}
-                                  onClick={() => {
-                                    this.handleDeleteOption(index, optionIndex);
-                                  }}
-                                  htmlType="button"
-                                >
-                                  Xóa đáp án này
-                                </Button>
-                              </Form.Item>
-                            );
-                          })}
-                        </Form.Item>
-                        <Button
-                          type="primary"
-                          style={{ marginLeft: "20px" }}
-                          onClick={() => {
-                            this.handleAddNewOption(index);
-                          }}
-                          htmlType="button"
-                        >
-                          Thêm đáp án
-                        </Button>
-                        <Button
-                          type="primary"
-                          style={{ marginLeft: "20px" }}
-                          onClick={() => {
-                            this.handleDeleteQuestion(index);
-                          }}
-                          htmlType="button"
-                        >
-                          Xóa câu hỏi này
-                        </Button>
-                      </Form.Item>
-                    );
-                  }
-                })}
-                <Button
-                  type="primary"
-                  style={{ marginLeft: "20px" }}
-                  onClick={this.handleAddNewQuestion}
-                  htmlType="button"
-                >
-                  Thêm câu hỏi
-                </Button>
-              </Form.Item>
+                                          <Button
+                                            type="danger"
+                                            style={{
+                                              marginLeft: "20px",
+                                              marginTop: "10px",
+                                            }}
+                                            onClick={() => remove(option.name)}
+                                            icon={<MinusCircleOutlined />}
+                                          >
+                                            Xóa đáp án này
+                                          </Button>
+                                        </div>
+                                      );
+                                    })}
+                                    <Button
+                                      type="dashed"
+                                      style={{
+                                        marginLeft: "20px",
+                                        marginTop: "30px",
+                                      }}
+                                      onClick={() => {
+                                        add();
+                                      }}
+                                      htmlType="button"
+                                    >
+                                      <PlusOutlined /> Thêm đáp án
+                                    </Button>
+                                  </div>
+                                );
+                              }}
+                            </Form.List>
+
+                            <Button
+                              type="danger"
+                              style={{ marginLeft: "20px", marginTop: "10px" }}
+                              onClick={() => remove(question.name)}
+                              icon={<MinusCircleOutlined />}
+                            >
+                              Xóa câu hỏi này
+                            </Button>
+                          </div>
+                        );
+                      })}
+                      <Button
+                        type="dashed"
+                        style={{ marginLeft: "20px", marginTop: "30px" }}
+                        onClick={() => {
+                          add();
+                        }}
+                        htmlType="button"
+                      >
+                        <PlusOutlined /> Thêm câu hỏi
+                      </Button>
+                    </div>
+                  );
+                }}
+              </Form.List>
 
               <Button
                 type="primary"
                 htmlType="submit"
-                style={{ margin: "10px 10px 10px 10%" }}
+                style={{ margin: "40px 10px 0px 20px" }}
               >
                 Đồng ý
               </Button>
