@@ -10,14 +10,15 @@ import {
   Radio,
   Space,
   InputNumber,
+  DatePicker,
+  TimePicker,
 } from "antd";
 
 import LessonGrid from "../lessonGrid/LessonGrid";
-import TextEditor from "../richTextEditor/TextEditor";
 
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
-import LessonApi from "../../../../api/LessonApi";
+import TestApi from "../../../../api/TestApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 
 const inputStyle = {
@@ -76,14 +77,18 @@ class ManageTest extends React.Component {
   getTestList = async () => {
     var accessToken = getAccessToken();
     try {
-      const response = await LessonApi.search(
+      const response = await TestApi.search(
         {
-          lessonId: 0,
+          testId: 0,
           courseId: this.props.courseId,
           name: "",
           description: "",
           content: "",
-          isActive: false,
+          answer: "",
+          dateTimeStartFrom: "",
+          dateTimeStartTo: "",
+          dateTimeEndFrom: "",
+          dateTimeEndTo: "",
           createdAtFrom: "",
           createdAtTo: "",
           updatedAtFrom: "",
@@ -98,7 +103,7 @@ class ManageTest extends React.Component {
       });
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách bài học thất bại", 3);
+      message.error("Lấy danh sách bài kiểm tra thất bại", 3);
     }
   };
 
@@ -119,44 +124,73 @@ class ManageTest extends React.Component {
   };
 
   handleSubmitCreateNewTest = async (value) => {
-    // var accessToken = getAccessToken();
+    var accessToken = getAccessToken();
 
-    // console.log("value =", value);
-    // try {
-    //   const response = await LessonApi.create(
-    //     {
-    //       courseId: this.props.courseId,
-    //       name: value.name,
-    //       description: value.description,
-    //       content: value.content,
-    //     },
-    //     accessToken
-    //   );
-    //   console.log("resp = ", response);
+    var answer = [];
 
-    //   message.success("Thêm mới bài học thành công", 3);
-    //   this.onCloseModalCreateNewTest();
-    //   this.getTestList();
-    //   this.handleResetFormCreateNewTest();
-    // } catch (e) {
-    //   console.error(e);
-    //   message.error("Thêm mới bài học thất bại", 3);
-    // }
+    var content = value.content.map((content) => {
+      let trueAnswer = [];
+      let response = {
+        question: content.question,
+        option: content.option.map((option, optionIndex) => {
+          if (option.isTrueAnswer === "true") {
+            trueAnswer.push(optionIndex);
+          }
+          return {
+            value: option.value,
+          };
+        }),
+        type: content.type,
+        autoCheck: content.autoCheck === "true" ? true : false,
+        score: content.score,
+      };
+      answer.push(trueAnswer);
 
-    console.log("value of Test is ", value);
+      return response;
+    });
+
+    var req = {
+      courseId: this.props.courseId,
+      name: value.name,
+      description: value.description,
+      content: JSON.stringify(content),
+      answer: JSON.stringify(answer),
+      dateTimeStart:
+        value.dateStart.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+        value.timeStart.format("YYYY-MM-DD HH:mm:ss").substring(11, 19),
+      dateTimeEnd:
+        value.dateEnd.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+        value.timeEnd.format("YYYY-MM-DD HH:mm:ss").substring(11, 19),
+    };
+    console.log(req);
+    try {
+      const response = await TestApi.create(req, accessToken);
+      console.log("resp = ", response);
+      message.success("Thêm mới bài kiểm tra thành công", 3);
+      this.onCloseModalCreateNewTest();
+      this.getTestList();
+      this.handleResetFormCreateNewTest();
+    } catch (e) {
+      console.error(e);
+      message.error("Thêm mới bài kiểm tra thất bại", 3);
+    }
   };
 
   handleSearchTest = async (value, event) => {
     var accessToken = getAccessToken();
     try {
-      const response = await LessonApi.search(
+      const response = await TestApi.search(
         {
-          lessonId: 0,
+          testId: 0,
           courseId: this.props.courseId,
           name: value,
           description: "",
           content: "",
-          isActive: false,
+          answer: "",
+          dateTimeStartFrom: "",
+          dateTimeStartTo: "",
+          dateTimeEndFrom: "",
+          dateTimeEndTo: "",
           createdAtFrom: "",
           createdAtTo: "",
           updatedAtFrom: "",
@@ -175,24 +209,7 @@ class ManageTest extends React.Component {
     }
   };
 
-  // defaultTestData: [
-  //   {
-  //     type: "MULTI_CHOICE_ONE",
-  //     autoCheck: true,
-  //     score: 1,
-  //     question: "",
-  //     option: [
-  //       {
-  //         content: "",
-  //       },
-  //     ],
-  //     answer: [0],
-  //   },
-  // ],
-
   handleAddNewOption(testIdx) {
-    console.log("state AHIHI = ", this.state);
-
     var testData = this.state.testData;
 
     this.setState({
@@ -330,6 +347,58 @@ class ManageTest extends React.Component {
                 />
               </Form.Item>
 
+              <Form.Item
+                name="dateStart"
+                label={<div style={{ fontSize: "18px" }}>Ngày bắt đầu</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền ngày bắt đầu của bài kiểm tra !",
+                  },
+                ]}
+              >
+                <DatePicker size="middle" />
+              </Form.Item>
+
+              <Form.Item
+                name="timeStart"
+                label={<div style={{ fontSize: "18px" }}>Giờ bắt đầu</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền giờ bắt đầu của bài kiểm tra !",
+                  },
+                ]}
+              >
+                <TimePicker size="middle" />
+              </Form.Item>
+
+              <Form.Item
+                name="dateEnd"
+                label={<div style={{ fontSize: "18px" }}>Ngày kết thúc</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền ngày kết thúc của bài kiểm tra !",
+                  },
+                ]}
+              >
+                <DatePicker size="middle" />
+              </Form.Item>
+
+              <Form.Item
+                name="timeEnd"
+                label={<div style={{ fontSize: "18px" }}>Giờ kết thúc</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng điền giờ kết thúc của bài kiểm tra !",
+                  },
+                ]}
+              >
+                <TimePicker size="middle" />
+              </Form.Item>
+
               <Form.List
                 name="content"
                 label={
@@ -438,7 +507,7 @@ class ManageTest extends React.Component {
                                       return (
                                         <div style={{ marginTop: "10px" }}>
                                           <Form.Item
-                                            name={[optionIndex, "option"]}
+                                            name={[optionIndex, "value"]}
                                             label={
                                               <div style={{ fontSize: "17px" }}>
                                                 <b>
@@ -458,7 +527,7 @@ class ManageTest extends React.Component {
                                             <Input.TextArea
                                               style={inputStyle}
                                               autoSize={{
-                                                minRows: 2,
+                                                minRows: 1,
                                                 maxRows: 3,
                                               }}
                                             />
