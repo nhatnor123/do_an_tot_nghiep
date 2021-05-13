@@ -22,7 +22,7 @@ class TestGrid extends React.Component {
               <List.Item.Meta
                 title={
                   <Link
-                    to={`/teacher/manageCourse/course/${courseId}/test/${test.testId}`}
+                    to={`/student/manageCourse/course/${courseId}/test/${test.testId}`}
                     style={{
                       textDecoration: "none",
                       fontWeight: "600",
@@ -39,7 +39,7 @@ class TestGrid extends React.Component {
                 description={
                   <div
                     style={{
-                      paddingBottom: "10px",
+                      paddingBottom: "23px",
                       // borderStyle: "groove",
                       // borderWidth: "0 0 0.5px 0",
                     }}
@@ -48,7 +48,7 @@ class TestGrid extends React.Component {
                     <br></br>
                     {"Thời gian: " +
                       test.dateTimeStart.substring(0, 19) +
-                      " ---> " +
+                      " -> " +
                       test.dateTimeEnd.substring(0, 19)}
                   </div>
                 }

@@ -559,13 +559,13 @@ class ManageTest extends React.Component {
                                           <Button
                                             type="danger"
                                             style={{
-                                              marginLeft: "20px",
+                                              marginLeft: "40%",
                                               marginTop: "10px",
                                             }}
                                             onClick={() => remove(option.name)}
                                             icon={<MinusCircleOutlined />}
                                           >
-                                            Xóa đáp án này
+                                            Xóa đáp án {optionIndex + 1}
                                           </Button>
                                         </div>
                                       );
@@ -573,7 +573,7 @@ class ManageTest extends React.Component {
                                     <Button
                                       type="dashed"
                                       style={{
-                                        marginLeft: "20px",
+                                        marginLeft: "40%",
                                         marginTop: "30px",
                                       }}
                                       onClick={() => {
@@ -590,18 +590,18 @@ class ManageTest extends React.Component {
 
                             <Button
                               type="danger"
-                              style={{ marginLeft: "20px", marginTop: "10px" }}
+                              style={{ marginLeft: "40%", marginTop: "30px" }}
                               onClick={() => remove(question.name)}
                               icon={<MinusCircleOutlined />}
                             >
-                              Xóa câu hỏi này
+                              Xóa câu hỏi {index + 1}
                             </Button>
                           </div>
                         );
                       })}
                       <Button
                         type="dashed"
-                        style={{ marginLeft: "20px", marginTop: "30px" }}
+                        style={{ marginLeft: "40%", marginTop: "30px" }}
                         onClick={() => {
                           add();
                         }}
