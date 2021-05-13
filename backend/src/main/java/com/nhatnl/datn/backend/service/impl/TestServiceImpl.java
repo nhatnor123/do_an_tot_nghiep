@@ -44,7 +44,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public Test update(UpdateReq req) {
+    public Test update(UpdateReq req) throws ParseException {
 
         testRepo.update(
                 req.getTestId(),
@@ -52,8 +52,8 @@ public class TestServiceImpl implements TestService {
                 req.getDescription(),
                 req.getContent(),
                 req.getAnswer(),
-                req.getDateTimeStart(),
-                req.getDateTimeEnd(),
+                DateTimeUtil.parseISODate(req.getDateTimeStart()),
+                DateTimeUtil.parseISODate(req.getDateTimeEnd()),
                 req.getFieldList()
         );
 

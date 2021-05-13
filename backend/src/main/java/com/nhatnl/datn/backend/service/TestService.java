@@ -10,7 +10,7 @@ public interface TestService {
 
     Test create(CreateReq req) throws ParseException;
 
-    Test update(UpdateReq req);
+    Test update(UpdateReq req) throws ParseException;
 
     Test getById(Long testId);
 

@@ -1,25 +1,31 @@
 import React from "react";
 import {
+  message,
   Form,
-  Input,
   Modal,
   Button,
-  message,
   Row,
   Col,
-  Radio,
+  Input,
+  Popconfirm,
   Space,
+  Radio,
   InputNumber,
   DatePicker,
   TimePicker,
 } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
+import moment from "moment";
 
-import TestGrid from "../testGrid/TestGrid";
-
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-
-import TestApi from "../../../../api/TestApi";
+import testApi from "../../../../api/TestApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
+import "./TestDetail.css";
+import Checkbox from "antd/lib/checkbox/Checkbox";
 
 const inputStyle = {
   fontSize: "16px",
@@ -42,88 +48,76 @@ const tailFormItemLayout = {
   },
 };
 
-class ManageTest extends React.Component {
+message.config({
+  top: 80,
+});
+
+class TestDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.formRefCreateNewTest = React.createRef();
+    this.formRefUpdateTest = React.createRef();
     this.state = {
-      isModalCreateNewTestVisible: false,
-      testList: [],
-      defaultTestData: [
-        {
-          type: "MULTI_CHOICE_ONE",
-          autoCheck: true,
-          score: 1,
-          question: "",
-          option: [
-            {
-              content: "",
-            },
-          ],
-          answer: [0],
-        },
-      ],
-      testData: [],
+      courseId: props.match.params.courseId,
+      testId: props.match.params.testId,
+      isModalUpdateTestVisible: false,
     };
   }
 
   componentDidMount() {
-    this.getTestList();
-    this.setState({
-      testData: this.state.defaultTestData,
-    });
+    this.getTestDetail();
   }
 
-  getTestList = async () => {
+  getTestDetail = async () => {
     var accessToken = getAccessToken();
     try {
-      const response = await TestApi.search(
+      const response = await testApi.getById(
         {
-          testId: 0,
-          courseId: this.props.courseId,
-          name: "",
-          description: "",
-          content: "",
-          answer: "",
-          dateTimeStartFrom: "",
-          dateTimeStartTo: "",
-          dateTimeEndFrom: "",
-          dateTimeEndTo: "",
-          createdAtFrom: "",
-          createdAtTo: "",
-          updatedAtFrom: "",
-          updatedAtTo: "",
-          fieldList: ["courseId"],
+          testId: this.state.testId,
         },
         accessToken
       );
-      console.log("res = ", response);
+      console.log("response = ", response);
       this.setState({
-        testList: response,
+        testDetail: {
+          ...response,
+          modifiedContent: JSON.parse(response.content).modifiedContent,
+          originContent: JSON.parse(response.content).originContent,
+          answer: JSON.parse(response.answer),
+        },
       });
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách bài kiểm tra thất bại", 3);
+      message.error("Lấy thông tin chi tiết bài học thất bại", 3);
     }
   };
 
-  showModalCreateNewTest = () => {
+  showModalUpdateTest = () => {
     this.setState({
-      isModalCreateNewTestVisible: true,
+      isModalUpdateTestVisible: true,
     });
   };
 
-  onCloseModalCreateNewTest = () => {
+  onCloseModalUpdateTest = () => {
     this.setState({
-      isModalCreateNewTestVisible: false,
+      isModalUpdateTestVisible: false,
     });
   };
 
-  handleResetFormCreateNewTest = () => {
-    this.formRefCreateNewTest.current.resetFields();
+  handleResetFormUpdateTest = () => {
+    this.formRefUpdateTest.current.resetFields();
+    let testDetail = this.state.testDetail;
+    this.formRefUpdateTest.current.setFieldsValue({
+      name: testDetail.name,
+      description: testDetail.description,
+      content: [...testDetail.originContent],
+      dateStart: moment(testDetail.dateTimeStart),
+      timeStart: moment(testDetail.dateTimeStart),
+      dateEnd: moment(testDetail.dateTimeEnd),
+      timeEnd: moment(testDetail.dateTimeEnd),
+    });
   };
 
-  handleSubmitCreateNewTest = async (value) => {
+  handleSubmitUpdateTest = async (value) => {
     var accessToken = getAccessToken();
 
     var answer = [];
@@ -150,7 +144,7 @@ class ManageTest extends React.Component {
     });
 
     var req = {
-      courseId: this.props.courseId,
+      testId: this.state.testId,
       name: value.name,
       description: value.description,
       content: JSON.stringify({
@@ -164,161 +158,97 @@ class ManageTest extends React.Component {
       dateTimeEnd:
         value.dateEnd.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
         value.timeEnd.format("YYYY-MM-DD HH:mm:ss").substring(11, 19),
+      fieldList: [
+        "name",
+        "description",
+        "content",
+        "answer",
+        "dateTimeStart",
+        "dateTimeEnd",
+      ],
     };
     console.log(req);
+
     try {
-      const response = await TestApi.create(req, accessToken);
+      const response = await testApi.update(req, accessToken);
       console.log("resp = ", response);
-      message.success("Thêm mới bài kiểm tra thành công", 3);
-      this.onCloseModalCreateNewTest();
-      this.getTestList();
-      this.handleResetFormCreateNewTest();
+
+      message.success("Cập nhật thông tin bài kiểm tra thành công", 3);
+      this.onCloseModalUpdateTest();
+      this.getTestDetail();
+      this.handleResetFormUpdateTest();
     } catch (e) {
       console.error(e);
-      message.error("Thêm mới bài kiểm tra thất bại", 3);
+      message.error("Cập nhật thông tin bài kiểm tra thất bại", 3);
     }
   };
 
-  handleSearchTest = async (value, event) => {
+  handleClickDeleteButton = async () => {
     var accessToken = getAccessToken();
+
     try {
-      const response = await TestApi.search(
+      const response = await testApi.archive(
         {
-          testId: 0,
-          courseId: this.props.courseId,
-          name: value,
-          description: "",
-          content: "",
-          answer: "",
-          dateTimeStartFrom: "",
-          dateTimeStartTo: "",
-          dateTimeEndFrom: "",
-          dateTimeEndTo: "",
-          createdAtFrom: "",
-          createdAtTo: "",
-          updatedAtFrom: "",
-          updatedAtTo: "",
-          fieldList: ["courseId", "name"],
+          testId: this.state.testId,
         },
         accessToken
       );
-      console.log("res = ", response);
-      this.setState({
-        testList: response,
-      });
+      console.log("resp = ", response);
+
+      message.success("Xóa bài kiểm tra thành công", 3);
+      this.props.history.push(
+        `/teacher/manageCourse/course/${this.state.courseId}`
+      );
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách bài học của giáo viên thất bại", 3);
+      message.error("Xóa bài kiểm tra thất bại", 3);
     }
   };
 
-  handleAddNewOption(testIdx) {
-    var testData = this.state.testData;
-
-    this.setState({
-      testData: [
-        ...testData.slice(0, testIdx),
-        {
-          ...testData[testIdx],
-          option: [...testData[testIdx].option, { content: "" }],
-        },
-        ...testData.slice(testIdx + 1, testData.length),
-      ],
-    });
-  }
-
-  handleDeleteOption(testIdx, optionIdx) {
-    var testData = this.state.testData;
-
-    this.setState({
-      testData: [
-        ...testData.slice(0, testIdx),
-        {
-          ...testData[testIdx],
-          option: [
-            ...testData[testIdx].option.slice(0, optionIdx),
-            ...testData[testIdx].option.slice(
-              optionIdx + 1,
-              testData[testIdx].option.length
-            ),
-          ],
-        },
-        ...testData.slice(testIdx + 1, testData.length),
-      ],
-    });
-  }
-
-  handleAddNewQuestion = () => {
-    this.setState({
-      testData: [
-        ...this.state.testData,
-        {
-          type: "MULTI_CHOICE_ONE",
-          autoCheck: true,
-          score: 1,
-          question: "",
-          option: [
-            {
-              content: "",
-            },
-          ],
-          answer: [0],
-        },
-      ],
-    });
-  };
-
-  handleDeleteQuestion = (index) => {
-    var testData = this.state.testData;
-
-    this.setState({
-      testData: [
-        ...testData.slice(0, index - 1),
-        ...testData.slice(index + 1, testData.length),
-      ],
-    });
-  };
-
   render() {
-    console.log("render manageTest");
-    console.log("state =", this.state);
+    console.log("current state =", this.state);
 
-    return (
+    let testDetail = this.state.testDetail ? this.state.testDetail : null;
+
+    return testDetail ? (
       <div>
-        <Row style={{ marginTop: "10px" }}>
+        <Row justify="end" style={{ marginTop: "10px" }}>
           <Col span={5}>
             <Button
               type="primary"
-              onClick={this.showModalCreateNewTest}
+              onClick={this.showModalUpdateTest}
               style={{ margin: "1% 0px 1% 1%" }}
             >
-              <PlusOutlined /> Thêm mới
+              <EditOutlined /> Sửa
             </Button>
-          </Col>
-          <Col offset={9}>
-            <Input.Search
-              placeholder="Tìm kiếm bài kiểm tra"
-              onSearch={this.handleSearchTest}
-              enterButton
-            />
+            <Popconfirm
+              title="Xác nhận xóa bài kiểm tra này ?"
+              cancelText="Hủy"
+              okText="Đồng ý"
+              onConfirm={this.handleClickDeleteButton}
+            >
+              <Button type="primary" style={{ margin: "1% 0px 1% 20px" }}>
+                <DeleteOutlined /> Xóa
+              </Button>
+            </Popconfirm>
           </Col>
         </Row>
 
         <Modal
-          title="Thêm mới bài kiểm tra"
+          title="Sửa bài kiểm tra"
           width={850}
           okButtonProps={{ disabled: true }}
           cancelText={"Thoát"}
-          onCancel={this.onCloseModalCreateNewTest}
-          visible={this.state.isModalCreateNewTestVisible}
+          onCancel={this.onCloseModalUpdateTest}
+          visible={this.state.isModalUpdateTestVisible}
           placement="right"
         >
           <Form
             layout="vertical"
             hideRequiredMark
             scrollToFirstError
-            onFinish={this.handleSubmitCreateNewTest}
-            ref={this.formRefCreateNewTest}
+            onFinish={this.handleSubmitUpdateTest}
+            ref={this.formRefUpdateTest}
           >
             <Form.Item {...tailFormItemLayout}>
               <Form.Item
@@ -621,18 +551,87 @@ class ManageTest extends React.Component {
               >
                 Đồng ý
               </Button>
+              <Button
+                type="primary"
+                style={{ margin: "10px 10px 0px 30%" }}
+                onClick={this.handleResetFormUpdateTest}
+                htmlType="button"
+              >
+                Đặt lại
+              </Button>
             </Form.Item>
           </Form>
         </Modal>
-        <div>
-          <TestGrid
-            courseId={this.props.courseId}
-            testList={this.state.testList}
-          />
-        </div>
+
+        <Row>
+          <Col offset={3}>
+            <div
+              style={{
+                marginLeft: "25px",
+              }}
+            >
+              <div>
+                <h3
+                  style={{
+                    fontWeight: "600",
+                    marginBottom: "12px",
+                    marginTop: "10px",
+                    fontSize: "25px",
+                  }}
+                >
+                  {testDetail.name}
+                </h3>
+              </div>
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                {testDetail.description}
+              </div>
+              <div>
+                {"Thời gian: " +
+                  testDetail.dateTimeStart.substring(0, 19) +
+                  " -> " +
+                  testDetail.dateTimeEnd.substring(0, 19)}
+              </div>
+              <div>
+                {testDetail.modifiedContent.map((question, questionIndex) => {
+                  console.log("question ", questionIndex, " =", question);
+                  let trueAnswers = testDetail.answer[questionIndex];
+                  console.log("trueAnswer =", trueAnswers);
+                  return (
+                    <div>
+                      <div>
+                        {"Câu " +
+                          (questionIndex + 1) +
+                          ": " +
+                          question.question}
+                      </div>
+                      <div>
+                        <Space direction="vertical">
+                          {question.option.map((answer, answerIndex) => {
+                            return (
+                              <Checkbox
+                                defaultChecked={trueAnswers.includes(
+                                  answerIndex
+                                )}
+                                disabled={true}
+                              >
+                                {answer.value}
+                              </Checkbox>
+                            );
+                          })}
+                        </Space>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
+    ) : (
+      <div>Loading</div>
     );
   }
 }
 
-export default ManageTest;
+export default TestDetail;

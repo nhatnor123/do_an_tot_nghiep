@@ -30,7 +30,7 @@ public class TestController {
 
     @PreAuthorize("hasRole('TEACHER')")
     @PostMapping(path = "/update")
-    public ResponseEntity<?> update(@RequestBody UpdateReq request) {
+    public ResponseEntity<?> update(@RequestBody UpdateReq request) throws ParseException {
         log.info("update");
         return ResponseEntity.ok(testService.update(request));
     }

@@ -18,7 +18,7 @@ public class UpdateReq {
     private String description;
     private String content;
     private String answer;
-    private Date dateTimeStart;
-    private Date dateTimeEnd;
+    private String dateTimeStart;
+    private String dateTimeEnd;
     private List<String> fieldList;
 }
