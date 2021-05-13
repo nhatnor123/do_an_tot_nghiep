@@ -571,24 +571,30 @@ class TestDetail extends React.Component {
               }}
             >
               <div>
-                <h3
+                <div
                   style={{
                     fontWeight: "600",
                     marginBottom: "12px",
                     marginTop: "10px",
-                    fontSize: "25px",
+                    fontSize: "35px",
                   }}
                 >
                   {testDetail.name}
-                </h3>
+                </div>
               </div>
-              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                {testDetail.description}
+              <div
+                style={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  fontSize: "16px",
+                }}
+              >
+                <i>{testDetail.description}</i>
               </div>
-              <div>
+              <div style={{ marginBottom: "13px", fontSize: "16px" }}>
                 {"Thời gian: " +
                   testDetail.dateTimeStart.substring(0, 19) +
-                  " -> " +
+                  " ----> " +
                   testDetail.dateTimeEnd.substring(0, 19)}
               </div>
               <div>
@@ -597,8 +603,8 @@ class TestDetail extends React.Component {
                   let trueAnswers = testDetail.answer[questionIndex];
                   console.log("trueAnswer =", trueAnswers);
                   return (
-                    <div>
-                      <div>
+                    <div style={{ color: "black", marginTop: "15px" }}>
+                      <div style={{ fontSize: "18px" }}>
                         {"Câu " +
                           (questionIndex + 1) +
                           ": " +
@@ -609,10 +615,10 @@ class TestDetail extends React.Component {
                           {question.option.map((answer, answerIndex) => {
                             return (
                               <Checkbox
-                                defaultChecked={trueAnswers.includes(
-                                  answerIndex
-                                )}
-                                disabled={true}
+                                style={{
+                                  marginTop: "5px",
+                                  fontSize: "15px",
+                                }}
                               >
                                 {answer.value}
                               </Checkbox>

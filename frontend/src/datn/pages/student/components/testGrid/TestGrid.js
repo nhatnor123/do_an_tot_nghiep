@@ -48,7 +48,7 @@ class TestGrid extends React.Component {
                     <br></br>
                     {"Thời gian: " +
                       test.dateTimeStart.substring(0, 19) +
-                      " -> " +
+                      " ---> " +
                       test.dateTimeEnd.substring(0, 19)}
                   </div>
                 }
