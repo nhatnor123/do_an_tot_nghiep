@@ -28,6 +28,9 @@ public class StudentTest {
     @Column(name = "testId", nullable = false)
     private Long testId;
 
+    @Column(name = "content", nullable = false)
+    private String content;
+
     @Column(name = "score", length = 255, nullable = false)
     private String score;
 
@@ -43,14 +46,14 @@ public class StudentTest {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "testId", nullable = false, insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private Test test;
 
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "studentId", nullable = false, insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @JsonIgnore
     private Student student;
 
 

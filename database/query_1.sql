@@ -108,6 +108,7 @@ CREATE TABLE `Test` (
 CREATE TABLE `StudentTest` (
 	`studentId` INT NOT NULL,
 	`testId` INT NOT NULL,
+    `content` LONGBLOB NOT NULL,
 	`score` varchar(255) NOT NULL,
 	`feedback` TEXT NOT NULL,
 	`doAt` DATETIME NOT NULL,

@@ -605,10 +605,8 @@ class TestDetail extends React.Component {
                   return (
                     <div style={{ color: "black", marginTop: "15px" }}>
                       <div style={{ fontSize: "18px" }}>
-                        {"Câu " +
-                          (questionIndex + 1) +
-                          ": " +
-                          question.question}
+                        <b>{"Câu " + (questionIndex + 1)}</b>
+                        {" (" + question.score + " đ) : " + question.question}
                       </div>
                       <div>
                         <Space direction="vertical">
