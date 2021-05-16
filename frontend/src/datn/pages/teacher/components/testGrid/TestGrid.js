@@ -1,7 +1,7 @@
 import React from "react";
-import { List } from "antd";
-
+import { List, Tag } from "antd";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 import "./TestGrid.css";
 
@@ -50,6 +50,16 @@ class TestGrid extends React.Component {
                       test.dateTimeStart.substring(0, 19) +
                       " ---> " +
                       test.dateTimeEnd.substring(0, 19)}
+
+                    <div style={{ marginTop: "5px" }}>
+                      {moment().isBefore(moment(test.dateTimeStart)) ? (
+                        <Tag color="#55acee">Chưa diễn ra</Tag>
+                      ) : moment().isBefore(moment(test.dateTimeEnd)) ? (
+                        <Tag color="#00a76a">Đang diễn ra</Tag>
+                      ) : (
+                        <Tag color="#00a76a">Đã kết thúc</Tag>
+                      )}
+                    </div>
                   </div>
                 }
               />
