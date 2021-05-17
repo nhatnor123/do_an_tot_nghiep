@@ -278,7 +278,7 @@ class ManageStudentJoinCourse extends React.Component {
       });
     } catch (e) {
       console.error(e);
-      message.error("Lấy danh sách tài khoản người dùng thất bại", 3);
+      message.error("Lấy danh sách tài khoản học viên thất bại", 3);
     }
   };
 
