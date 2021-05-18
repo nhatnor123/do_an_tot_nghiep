@@ -14,6 +14,8 @@ import {
 import Highlighter from "react-highlight-words";
 import { SearchOutlined, SnippetsOutlined } from "@ant-design/icons";
 
+import TextEditor from "../../richTextEditor/TextEditor";
+
 import studentCourseApi from "../../../../../api/StudentCourseApi";
 import studentTestApi from "../../../../../api/StudentTestApi";
 import testApi from "../../../../../api/TestApi";
@@ -71,6 +73,13 @@ class ManageStudentJoinCourse extends React.Component {
           ...this.getColumnSearchProps("isTestDidText"),
         },
         {
+          title: "Điểm số",
+          key: "score",
+          render: (text, record) => {
+            return record.testDetail ? record.testDetail.score : "";
+          },
+        },
+        {
           title: "Thời điểm làm bài",
           dataIndex: "doAt",
           key: "doAt",
@@ -99,7 +108,7 @@ class ManageStudentJoinCourse extends React.Component {
       searchedColumn: "",
       isModalVisible: false,
     };
-    this.formRefAddNewStudentToCourse = React.createRef();
+    this.formRef = React.createRef();
   }
 
   handleViewTest = (record) => {
@@ -129,6 +138,7 @@ class ManageStudentJoinCourse extends React.Component {
             content: JSON.parse(resp_2.content),
           },
         });
+        this.handleResetForm();
       } catch (e) {
         console.error(e);
         message.error("Lấy thông tin chi tiết bài học thất bại", 3);
@@ -271,100 +281,43 @@ class ManageStudentJoinCourse extends React.Component {
     }
   };
 
-  handleSummitCreateNewAccount = async (value) => {
+  handleSubmit = async (value) => {
     var accessToken = getAccessToken();
-
-    if (!this.state.fileList[0]) {
-      message.error("Vui lòng gửi ảnh đại diện lên !");
-      return;
-    }
+    console.log("value ===", value);
 
     try {
-      const response = await studentCourseApi.create(
+      const response = await studentTestApi.update(
         {
-          username: value.username,
-          password: value.password,
-          email: value.email,
-          firstName: value.firstName,
-          lastName: value.lastName,
-          role: value.role,
-          phoneNo: value.phoneNo,
-          address: value.address,
-          imageUrl: this.state.fileList[0].response.fileDownloadUri,
-          birthday: value.birthday,
+          testId: this.state.studentTest.testId,
+          studentId: this.state.studentTest.studentId,
+          feedback: value.feedback,
+          fieldList: ["feedback"],
         },
         accessToken
       );
       console.log("resp = ", response);
 
-      message.success("Thêm mới tài khoản thành công", 3);
-      this.setState({
-        visible: false,
-      });
+      message.success("Nhận xét bài kiểm tra thành công", 3);
+      this.onClose();
       this.getStudentsJoinCourseList();
     } catch (e) {
       console.error(e);
-      message.error("Thêm mới tài khoản thất bại", 3);
-    }
-  };
-
-  showModalAddNewStudentToCourse = () => {
-    this.setState({
-      isModalAddNewStudentToCourseVisible: true,
-    });
-  };
-
-  onCloseModalAddNewStudentToCourse = () => {
-    this.setState({
-      isModalAddNewStudentToCourseVisible: false,
-    });
-  };
-
-  handleSummitAddNewStudentToCourse = async (value) => {
-    var accessToken = getAccessToken();
-
-    console.log("value=", value);
-    var studentIds = [];
-    var studentUsernames = value.name;
-
-    this.state.studentsNotJoinCourse.forEach((student) => {
-      if (studentUsernames.includes(student.username)) {
-        studentIds.push(student.studentId);
-      }
-    });
-
-    console.log("studentIds =", studentIds);
-
-    if (studentIds.length === 0) {
-      message.error("Học viên không tồn tại trong hệ thống", 3);
-      return;
-    }
-
-    try {
-      const response = await studentCourseApi.create(
-        {
-          courseId: this.props.courseId,
-          studentIds,
-        },
-        accessToken
-      );
-      console.log("resp = ", response);
-
-      message.success("Thêm mới học viên vào khóa học thành công", 3);
-      this.onCloseModalAddNewStudentToCourse();
-      this.getStudentsJoinCourseList();
-      this.formRefAddNewStudentToCourse.current.setFieldsValue({
-        name: "",
-      });
-    } catch (e) {
-      console.error(e);
-      message.error("Thêm mới học viên vào khóa học thất bại", 3);
+      message.error("Nhận xét bài kiểm tra thất bại", 3);
     }
   };
 
   onClose = () => {
     this.setState({
       isModalVisible: false,
+    });
+  };
+
+  handleResetForm = () => {
+    console.log("handle reset form");
+    console.log("this feedback ", this.state.studentTest.feedback);
+    this.formRef.current.resetFields();
+    this.formRef.current.setFieldsValue({
+      feedback: this.state.studentTest.feedback,
     });
   };
 
@@ -397,7 +350,7 @@ class ManageStudentJoinCourse extends React.Component {
                     layout="vertical"
                     hideRequiredMark
                     scrollToFirstError
-                    onFinish={this.handleSummitCreateNewAccount}
+                    onFinish={this.handleSubmit}
                     ref={this.formRef}
                   >
                     <Form.Item>
@@ -421,26 +374,15 @@ class ManageStudentJoinCourse extends React.Component {
                                   " đ) : " +
                                   question.question}
                               </div>
-                              <Form.Item
-                                name={questionIndex.toString()}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Vui lòng chọn đáp án đúng !",
-                                  },
-                                ]}
-                              >
-                                <Checkbox.Group
-                                  options={question.option.map(
-                                    (ques, index) => {
-                                      return {
-                                        label: ques.value,
-                                        value: index.toString(),
-                                      };
-                                    }
-                                  )}
-                                />
-                              </Form.Item>
+
+                              <Checkbox.Group
+                                options={question.option.map((ques, index) => {
+                                  return {
+                                    label: ques.value,
+                                    value: index.toString(),
+                                  };
+                                })}
+                              />
                             </div>
                           ) : (
                             <div>
@@ -489,20 +431,39 @@ class ManageStudentJoinCourse extends React.Component {
                       )}
 
                       {this.state.studentTest == null ? (
-                        <Button
-                          type="primary"
-                          htmlType="submit"
-                          style={{ marginLeft: "20%", marginTop: "30px" }}
-                          size="large"
-                        >
-                          Nộp bài
-                        </Button>
+                        <div></div>
                       ) : (
                         <div style={{ fontSize: "18px", marginTop: "90px" }}>
                           <b>Kết quả : {this.state.studentTest.score} điểm</b>
                           <br></br>
                           <b>Nhận xét của giáo viên: </b>
-                          <div>{this.state.studentTest.feedback}</div>
+                          <Form.Item
+                            name="feedback"
+                            rules={[
+                              {
+                                required: true,
+                                message: "Vui lòng điền nhận xét !",
+                              },
+                            ]}
+                          >
+                            <TextEditor />
+                          </Form.Item>
+                          <Button
+                            type="primary"
+                            htmlType="submit"
+                            style={{ marginLeft: "20%", marginTop: "30px" }}
+                            size="middle"
+                          >
+                            Nhận xét
+                          </Button>
+                          <Button
+                            type="primary"
+                            style={{ margin: "10px 10px 0px 30%" }}
+                            onClick={this.handleResetForm}
+                            htmlType="button"
+                          >
+                            Đặt lại
+                          </Button>
                         </div>
                       )}
                     </Form.Item>
