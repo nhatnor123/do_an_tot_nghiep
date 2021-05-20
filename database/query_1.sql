@@ -90,6 +90,18 @@ CREATE TABLE `StudentCourse` (
 	`updatedAt` DATETIME NOT NULL
 );
 
+CREATE TABLE `CourseFile` (
+    `courseFileId` INT NOT NULL,
+    `courseId` INT NOT NULL,
+    `link` TEXT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT NOT NULL,
+    `isActive` BOOLEAN NOT NULL,
+    `createdAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME NOT NULL,
+    PRIMARY KEY (`fileId`)
+);
+
 CREATE TABLE `Test` (
 	`testId` INT NOT NULL AUTO_INCREMENT,
 	`courseId` INT NOT NULL,

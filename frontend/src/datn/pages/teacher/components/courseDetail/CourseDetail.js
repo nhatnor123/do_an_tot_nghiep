@@ -5,6 +5,7 @@ import CourseOverview from "../courseOverview/CourseOverview";
 import ManageLesson from "../manageLesson/ManageLesson";
 import ManageTest from "../manageTest/ManageTest";
 import ManageStudentJoinCourse from "../manageStudentJoinCourse/ManageStudentJoinCourse";
+import ManageCourseFile from "../manageCourseFile/ManageCourseFile";
 
 const { TabPane } = Tabs;
 
@@ -33,6 +34,9 @@ class CourseDetail extends React.Component {
           </TabPane>
           <TabPane tab="Học viên" key="4">
             <ManageStudentJoinCourse courseId={courseId} />
+          </TabPane>
+          <TabPane tab="Tài liệu học tập" key="5">
+            <ManageCourseFile courseId={courseId} />
           </TabPane>
         </Tabs>
       </div>
