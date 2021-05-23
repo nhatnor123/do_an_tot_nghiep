@@ -38,12 +38,12 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavTitle",
-    _children: ["Thống kê"],
+    _children: ["Chức năng khác"],
   },
   {
     _tag: "CSidebarNavItem",
-    name: "Thống kê",
-    to: "/teacher/viewStats",
+    name: "Khiếu nại",
+    to: "/teacher/complaint",
     icon: "cil-chart-pie",
   },
   {

@@ -1,6 +1,6 @@
 package com.nhatnl.datn.backend.service.impl;
 
-import com.nhatnl.datn.backend.constant.Constant;
+import com.nhatnl.datn.backend.constant.ConfigConstant;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.repository.AccountRepo;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,7 +35,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private List<GrantedAuthority> getAuthority(Account account) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(Constant.ROLE_PREFIX + account.getRole()));
+        authorities.add(new SimpleGrantedAuthority(ConfigConstant.ROLE_PREFIX + account.getRole()));
         return authorities;
     }
 

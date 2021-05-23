@@ -95,9 +95,6 @@ class ManageCourseFile extends React.Component {
   };
 
   showModalUpdate = (courseFile) => {
-    setTimeout(() => {
-      this.handleResetFormUpdateCourse();
-    }, 3000);
     return () => {
       this.setState({
         isModalUpdateCourseFileVisible: true,

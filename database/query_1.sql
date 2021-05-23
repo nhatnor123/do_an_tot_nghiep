@@ -91,7 +91,7 @@ CREATE TABLE `StudentCourse` (
 );
 
 CREATE TABLE `CourseFile` (
-    `courseFileId` INT NOT NULL,
+    `courseFileId` INT NOT NULL AUTO_INCREMENT,
     `courseId` INT NOT NULL,
     `link` TEXT NOT NULL,
     `name` VARCHAR(255) NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE `CourseFile` (
     `isActive` BOOLEAN NOT NULL,
     `createdAt` DATETIME NOT NULL,
     `updatedAt` DATETIME NOT NULL,
-    PRIMARY KEY (`fileId`)
+    PRIMARY KEY (`courseFileId`)
 );
 
 CREATE TABLE `Test` (
@@ -125,6 +125,20 @@ CREATE TABLE `StudentTest` (
 	`feedback` TEXT NOT NULL,
 	`doAt` DATETIME NOT NULL,
 	`feedbackAt` DATETIME NOT NULL
+);
+
+CREATE TABLE `Complaint` (
+    `complaintId` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `content` LONGBLOB NOT NULL,
+    `replyContent` LONGBLOB,
+    `type` VARCHAR(255) NOT NULL,
+    `fromAccountId` INT NOT NULL,
+    `toAccountId` INT,
+    `isActive` BOOLEAN NOT NULL,
+    `createdAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME NOT NULL,
+    PRIMARY KEY (`complaintId`)
 );
 
 ALTER TABLE `Comment` ADD CONSTRAINT `Comment_fk0` FOREIGN KEY (`commentParentId`) REFERENCES `Comment`(`commentId`);

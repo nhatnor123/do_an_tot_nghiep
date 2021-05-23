@@ -1,7 +1,7 @@
 package com.nhatnl.datn.backend.controller;
 
 import com.nhatnl.datn.backend.config.jwtConfig.JwtTokenUtil;
-import com.nhatnl.datn.backend.constant.Constant;
+import com.nhatnl.datn.backend.constant.ConfigConstant;
 import com.nhatnl.datn.backend.dto.request.authentication.GetJwtTokenReq;
 import com.nhatnl.datn.backend.dto.request.authentication.CheckJwtReq;
 import com.nhatnl.datn.backend.dto.response.authentication.AuthenticateResp;
@@ -42,7 +42,7 @@ public class JwtAuthenticationController {
         final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
         for (GrantedAuthority grantedAuthority : userDetails.getAuthorities()) {
-            if (grantedAuthority.getAuthority().equals(Constant.ROLE_PREFIX + authenticationRequest.getRole().name())) {
+            if (grantedAuthority.getAuthority().equals(ConfigConstant.ROLE_PREFIX + authenticationRequest.getRole().name())) {
                 final String token = jwtTokenUtil.generateToken(userDetails);
                 return ResponseEntity.ok(new AuthenticateResp(token));
             }
@@ -69,7 +69,7 @@ public class JwtAuthenticationController {
                 = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         for (GrantedAuthority grantedAuthority : user.getAuthorities()) {
-            if (grantedAuthority.getAuthority().equals(Constant.ROLE_PREFIX + request.getRole().name())) {
+            if (grantedAuthority.getAuthority().equals(ConfigConstant.ROLE_PREFIX + request.getRole().name())) {
                 return ResponseEntity.ok(true);
             }
         }

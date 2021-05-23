@@ -1,0 +1,24 @@
+package com.nhatnl.datn.backend.repository;
+
+import com.nhatnl.datn.backend.model.Complaint;
+
+import java.util.Date;
+import java.util.List;
+
+public interface ComplaintRepo {
+    Complaint create(Complaint complaint);
+
+    Complaint update(Complaint complaint);
+
+    void update(Long complaintId, String replyContent);
+
+    Complaint getById(Long complaintId);
+
+    List<Complaint> search(Long complaintId, String name, String content, String replyContent, String type, Long fromAccountId,
+                           Long toAccountId, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom, Date updatedAtTo, List<String> fieldList);
+
+    void archive(Long complaintId);
+
+    void recover(Long complaintId);
+
+}
