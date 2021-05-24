@@ -17,7 +17,7 @@ public class SearchReq {
     private String name;
     private String content;
     private String replyContent;
-    private String type;
+    private List<String> type;
     private Long fromAccountId;
     private Long toAccountId;
     private Date createdAtFrom;

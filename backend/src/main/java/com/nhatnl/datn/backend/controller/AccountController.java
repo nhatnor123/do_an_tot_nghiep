@@ -45,7 +45,7 @@ public class AccountController {
         return ResponseEntity.ok(accountService.updateSelfAccount(request));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')" + "|| hasRole('TEACHER')" + "|| hasRole('STUDENT')")
     @PostMapping(path = "/get-by-id")
     public ResponseEntity<?> getById(@RequestBody GetByIdReq request) {
         log.info("getById");

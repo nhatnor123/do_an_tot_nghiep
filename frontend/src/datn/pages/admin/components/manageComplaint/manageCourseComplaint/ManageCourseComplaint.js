@@ -9,33 +9,24 @@ import {
   Form,
   Tooltip,
   Popconfirm,
-  Radio,
   Modal,
-  Select,
 } from "antd";
-import TextEditor from "../richTextEditor/TextEditor";
+import TextEditor from "../../richTextEditor/TextEditor";
 import Highlighter from "react-highlight-words";
 import Parser from "html-react-parser";
 import {
   SearchOutlined,
-  PlusOutlined,
   FileSearchOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 
-import accountApi from "../../../../api/AccountApi";
-import ComplaintApi from "../../../../api/ComplaintApi";
-import CourseApi from "../../../../api/CourseApi";
-import { getAccessToken } from "../../../../api/TokenUtil";
+import accountApi from "../../../../../api/AccountApi";
+import ComplaintApi from "../../../../../api/ComplaintApi";
+import { getAccessToken } from "../../../../../api/TokenUtil";
 
-import "./ManageComplaint.css";
+import "./ManageCourseComplaint.css";
 
-const { Option } = Select;
 const { Content } = Layout;
-
-const inputStyle = {
-  fontSize: "16px",
-};
 
 const labelStyle = {
   fontSize: "14px",
@@ -140,12 +131,29 @@ class ManageComplaint extends React.Component {
   }
 
   handleViewComplaint = (complaint) => {
-    return () => {
+    return async () => {
       console.log("complaint will be viewd  = ", complaint);
-      this.setState({
-        complantViewed: complaint,
-        isModalViewVisible: true,
-      });
+
+      var accessToken = getAccessToken();
+
+      try {
+        const response = await accountApi.getById(
+          {
+            accountId: complaint.fromAccountId,
+          },
+          accessToken
+        );
+        console.log("resp = ", response);
+
+        this.setState({
+          complaintViewed: complaint,
+          fromAccount: response,
+          isModalViewVisible: true,
+        });
+      } catch (e) {
+        console.error(e);
+        message.error("Lấy chi tiết khiếu nại thất bại", 3);
+      }
     };
   };
 
@@ -256,13 +264,10 @@ class ManageComplaint extends React.Component {
       const getSelfAccountResp = await accountApi.getSelfAccount(accessToken);
       console.log("getSelfAccountResp = ", getSelfAccountResp);
 
-      const coursesResp = await CourseApi.getCoursesStudentJoining(accessToken);
-      console.log("coursesJoiningResp = ", coursesResp);
-
       const response = await ComplaintApi.search(
         {
-          fromAccountId: getSelfAccountResp.accountId,
-          fieldList: ["fromAccountId"],
+          type: ["STUDENT_TO_ADMIN", "TEACHER_TO_ADMIN"],
+          fieldList: ["type"],
         },
         accessToken
       );
@@ -290,7 +295,6 @@ class ManageComplaint extends React.Component {
       this.setState({
         dataSource: dataSourceResponsed,
         selfAccount: getSelfAccountResp,
-        coursesJoining: coursesResp,
       });
     } catch (e) {
       console.error(e);
@@ -302,29 +306,26 @@ class ManageComplaint extends React.Component {
     var accessToken = getAccessToken();
 
     console.log("value form =", value);
-
+    let complaintViewed = this.state.complaintViewed;
+    console.log("this.state =", this.state, complaintViewed);
     try {
-      const response = await ComplaintApi.create(
+      const response = await ComplaintApi.update(
         {
-          name: value.name,
-          content: value.content,
-          type: value.type,
-          fromAccountId: this.state.selfAccount.accountId,
-          toAccountId: value.toAccountId.split("-")[0],
+          complaintId: complaintViewed.complaintId,
+          replyContent: value.replyContent,
         },
         accessToken
       );
       console.log("resp = ", response);
 
-      message.success("Gửi khiếu nại thành công", 3);
+      message.success("Gửi phản hồi khiếu nại thành công", 3);
       this.setState({
         visible: false,
       });
       this.getComplaintList();
-      this.handleResetForm();
     } catch (e) {
       console.error(e);
-      message.error("Gửi khiếu nại thất bại", 3);
+      message.error("Gửi phản hồi khiếu nại thất bại", 3);
     }
   };
 
@@ -351,6 +352,9 @@ class ManageComplaint extends React.Component {
 
   handleResetForm = () => {
     this.formRef.current.resetFields();
+    this.formRef.current.setFieldsValue({
+      replyContent: this.state.complaintViewed.replyContent,
+    });
   };
 
   componentDidMount() {
@@ -361,27 +365,21 @@ class ManageComplaint extends React.Component {
     console.log("render manageComplaint");
     console.log("state = ", this.state);
 
-    let complantViewed = this.state.complantViewed;
+    let complaintViewed = this.state.complaintViewed;
+    let fromAccount = this.state.fromAccount;
 
     return (
       <Layout className="site-layout">
         <Content style={{ overflow: "initial" }}>
           <div className="site-layout-background">
             <div>
-              <Button
-                type="primary"
-                onClick={this.showDrawer}
-                style={{ margin: "1% 0px 1% 1%" }}
-              >
-                <PlusOutlined /> Gửi khiếu nại mới
-              </Button>
               <Modal
-                title="Gửi khiếu nại"
+                title="Chi tiết khiếu nại"
                 width={750}
                 okButtonProps={{ disabled: true }}
                 cancelText={"Thoát"}
-                onCancel={this.onClose}
-                visible={this.state.visible}
+                onCancel={this.onCloseModalViewComplaint}
+                visible={this.state.isModalViewVisible}
                 placement="right"
               >
                 <Form
@@ -392,89 +390,33 @@ class ManageComplaint extends React.Component {
                   ref={this.formRef}
                 >
                   <Form.Item {...tailFormItemLayout}>
-                    <Form.Item
-                      name="name"
-                      label={<div style={labelStyle}>Tiêu đề</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng điền tiêu đề !",
-                        },
-                      ]}
-                    >
-                      <Input style={inputStyle} />
-                    </Form.Item>
+                    {complaintViewed ? (
+                      <div>
+                        <div>
+                          Người gửi:{" "}
+                          {fromAccount.firstName +
+                            " " +
+                            fromAccount.lastName +
+                            " (" +
+                            fromAccount.email +
+                            ")"}
+                        </div>
+                        <div>Tên: {complaintViewed.name}</div>
+                        <div>Nội dung : {Parser(complaintViewed.content)}</div>
+                      </div>
+                    ) : null}
 
                     <Form.Item
-                      name="content"
-                      label={<div style={labelStyle}>Nội dung</div>}
+                      name="replyContent"
+                      label={<div style={labelStyle}>Nội dung phản hồi</div>}
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng nhập nội dung !",
+                          message: "Vui lòng nhập nội dung phản hồi !",
                         },
                       ]}
                     >
                       <TextEditor />
-                    </Form.Item>
-
-                    <Form.Item
-                      name="type"
-                      label={<div style={labelStyle}>Loại khiếu nại</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng chọn vai trò để đăng ký",
-                        },
-                      ]}
-                    >
-                      <Radio.Group>
-                        <Radio value="STUDENT_TO_TEACHER">
-                          Gửi đến giáo viên
-                        </Radio>
-                        <Radio value="STUDENT_TO_ADMIN">
-                          Gửi đến quản trị viên
-                        </Radio>
-                      </Radio.Group>
-                    </Form.Item>
-
-                    <Form.Item
-                      name="toAccountId"
-                      label={
-                        <div style={labelStyle}>Khiếu nại đến khóa học</div>
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng chọn khóa học muốn khiếu nại",
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        style={{ width: "70%" }}
-                        placeholder="Chọn khóa học"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        {this.state.coursesJoining
-                          ? this.state.coursesJoining.map((course) => (
-                              <Option
-                                value={
-                                  course.account.accountId +
-                                  "-" +
-                                  course.course.courseId
-                                }
-                              >
-                                {course.course.name}
-                              </Option>
-                            ))
-                          : null}
-                      </Select>
                     </Form.Item>
 
                     <Button
@@ -495,24 +437,8 @@ class ManageComplaint extends React.Component {
                   </Form.Item>
                 </Form>
               </Modal>
-              <Modal
-                title="Gửi khiếu nại"
-                width={750}
-                okButtonProps={{ disabled: true }}
-                cancelText={"Thoát"}
-                onCancel={this.onCloseModalViewComplaint}
-                visible={this.state.isModalViewVisible}
-                placement="right"
-              >
-                {complantViewed ? (
-                  <div>
-                    <div>Tên: {complantViewed.name}</div>
-                    <div>Nội dung : {Parser(complantViewed.content)}</div>
-                  </div>
-                ) : null}
-              </Modal>
             </div>
-            <div>
+            <div style={{}}>
               <Table
                 dataSource={this.state.dataSource}
                 columns={this.state.columns}

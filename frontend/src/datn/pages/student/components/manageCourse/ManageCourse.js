@@ -39,7 +39,7 @@ class ManageCourse extends React.Component {
   handleSearchCourse = async (value, event) => {
     this.setState({
       courseListResult: this.state.courseList.filter((course) => {
-        return course.name.toUpperCase().includes(value.toUpperCase());
+        return course.course.name.toUpperCase().includes(value.toUpperCase());
       }),
     });
   };

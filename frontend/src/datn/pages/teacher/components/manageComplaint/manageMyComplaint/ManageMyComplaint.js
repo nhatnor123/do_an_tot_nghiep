@@ -13,7 +13,7 @@ import {
   Modal,
   Select,
 } from "antd";
-import TextEditor from "../richTextEditor/TextEditor";
+import TextEditor from "../../richTextEditor/TextEditor";
 import Highlighter from "react-highlight-words";
 import Parser from "html-react-parser";
 import {
@@ -23,12 +23,12 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-import accountApi from "../../../../api/AccountApi";
-import ComplaintApi from "../../../../api/ComplaintApi";
-import CourseApi from "../../../../api/CourseApi";
-import { getAccessToken } from "../../../../api/TokenUtil";
+import accountApi from "../../../../../api/AccountApi";
+import ComplaintApi from "../../../../../api/ComplaintApi";
+import CourseApi from "../../../../../api/CourseApi";
+import { getAccessToken } from "../../../../../api/TokenUtil";
 
-import "./ManageComplaint.css";
+import "./ManageMyComplaint.css";
 
 const { Option } = Select;
 const { Content } = Layout;
@@ -256,9 +256,6 @@ class ManageComplaint extends React.Component {
       const getSelfAccountResp = await accountApi.getSelfAccount(accessToken);
       console.log("getSelfAccountResp = ", getSelfAccountResp);
 
-      const coursesResp = await CourseApi.getCoursesStudentJoining(accessToken);
-      console.log("coursesJoiningResp = ", coursesResp);
-
       const response = await ComplaintApi.search(
         {
           fromAccountId: getSelfAccountResp.accountId,
@@ -290,7 +287,6 @@ class ManageComplaint extends React.Component {
       this.setState({
         dataSource: dataSourceResponsed,
         selfAccount: getSelfAccountResp,
-        coursesJoining: coursesResp,
       });
     } catch (e) {
       console.error(e);
@@ -310,7 +306,7 @@ class ManageComplaint extends React.Component {
           content: value.content,
           type: value.type,
           fromAccountId: this.state.selfAccount.accountId,
-          toAccountId: value.toAccountId.split("-")[0],
+          toAccountId: value.toAccountId,
         },
         accessToken
       );
@@ -429,52 +425,10 @@ class ManageComplaint extends React.Component {
                       ]}
                     >
                       <Radio.Group>
-                        <Radio value="STUDENT_TO_TEACHER">
-                          Gửi đến giáo viên
-                        </Radio>
                         <Radio value="STUDENT_TO_ADMIN">
                           Gửi đến quản trị viên
                         </Radio>
                       </Radio.Group>
-                    </Form.Item>
-
-                    <Form.Item
-                      name="toAccountId"
-                      label={
-                        <div style={labelStyle}>Khiếu nại đến khóa học</div>
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng chọn khóa học muốn khiếu nại",
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        style={{ width: "70%" }}
-                        placeholder="Chọn khóa học"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        {this.state.coursesJoining
-                          ? this.state.coursesJoining.map((course) => (
-                              <Option
-                                value={
-                                  course.account.accountId +
-                                  "-" +
-                                  course.course.courseId
-                                }
-                              >
-                                {course.course.name}
-                              </Option>
-                            ))
-                          : null}
-                      </Select>
                     </Form.Item>
 
                     <Button

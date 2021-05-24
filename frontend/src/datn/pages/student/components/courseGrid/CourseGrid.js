@@ -10,7 +10,9 @@ class CourseGrid extends React.Component {
     return (
       <div>
         <Row>
-          {this.props.courseList.map((course) => {
+          {this.props.courseList.map((courseAndTeacher) => {
+            let course = courseAndTeacher.course;
+
             return (
               <Col span={6} className="course">
                 <div

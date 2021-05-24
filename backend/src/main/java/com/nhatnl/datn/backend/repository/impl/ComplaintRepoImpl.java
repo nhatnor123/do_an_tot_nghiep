@@ -61,7 +61,7 @@ public class ComplaintRepoImpl implements ComplaintRepo {
     }
 
     @Override
-    public List<Complaint> search(Long complaintId, String name, String content, String replyContent, String type,
+    public List<Complaint> search(Long complaintId, String name, String content, String replyContent, List<String> type,
                                   Long fromAccountId, Long toAccountId, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom,
                                   Date updatedAtTo, List<String> fieldList) {
         StringBuilder queryString = new StringBuilder();
@@ -79,7 +79,7 @@ public class ComplaintRepoImpl implements ComplaintRepo {
             queryString.append(" AND UPPER(replyContent) LIKE :replyContent");
         }
         if (fieldList.contains("type")) {
-            queryString.append(" AND type = :type");
+            queryString.append(" AND type IN :type");
         }
         if (fieldList.contains("fromAccountId")) {
             queryString.append(" AND fromAccountId = :fromAccountId");

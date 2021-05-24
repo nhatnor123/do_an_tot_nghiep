@@ -4,6 +4,7 @@ import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.course.CreateReq;
 import com.nhatnl.datn.backend.dto.request.course.SearchReq;
 import com.nhatnl.datn.backend.dto.request.course.UpdateCourseInfoReq;
+import com.nhatnl.datn.backend.dto.response.course.CourseAndTeacher;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.repository.CourseRepo;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -103,9 +105,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getCoursesStudentJoining() {
+    public List<CourseAndTeacher> getCoursesStudentJoining() {
         Long studentId = accountService.getSelfAccount().getStudent().getStudentId();
-        return courseRepo.getCoursesStudentJoining(studentId);
+        List<Course> courses = courseRepo.getCoursesStudentJoining(studentId);
+        return courses.stream().map(
+                course -> new CourseAndTeacher(course.getTeacher().getAccount(), course)
+        ).collect(Collectors.toList());
     }
 
     @Override

@@ -8,6 +8,10 @@ const ManageCourse = React.lazy(() =>
   import("../components/manageCourse/ManageCourse")
 );
 
+const ManageComplaint = React.lazy(() =>
+  import("../components/manageComplaint/ManageComplaint")
+);
+
 const ManageAccount = React.lazy(() =>
   import("../components/manageAccount/ManageAccount")
 );
@@ -71,6 +75,12 @@ const routes = [
     exact: true,
     name: "Thay đổi mật khẩu",
     component: ChangePassword,
+  },
+  {
+    path: "/teacher/manageComplaint",
+    exact: true,
+    name: "Quản lý khiếu nại",
+    component: ManageComplaint,
   },
 ];
 

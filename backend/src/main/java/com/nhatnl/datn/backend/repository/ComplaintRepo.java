@@ -14,7 +14,7 @@ public interface ComplaintRepo {
 
     Complaint getById(Long complaintId);
 
-    List<Complaint> search(Long complaintId, String name, String content, String replyContent, String type, Long fromAccountId,
+    List<Complaint> search(Long complaintId, String name, String content, String replyContent, List<String> type, Long fromAccountId,
                            Long toAccountId, Date createdAtFrom, Date createdAtTo, Date updatedAtFrom, Date updatedAtTo, List<String> fieldList);
 
     void archive(Long complaintId);

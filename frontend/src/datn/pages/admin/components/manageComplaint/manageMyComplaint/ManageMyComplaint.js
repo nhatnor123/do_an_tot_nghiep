@@ -13,7 +13,7 @@ import {
   Modal,
   Select,
 } from "antd";
-import TextEditor from "../richTextEditor/TextEditor";
+import TextEditor from "../../richTextEditor/TextEditor";
 import Highlighter from "react-highlight-words";
 import Parser from "html-react-parser";
 import {
@@ -23,12 +23,12 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 
-import accountApi from "../../../../api/AccountApi";
-import ComplaintApi from "../../../../api/ComplaintApi";
-import CourseApi from "../../../../api/CourseApi";
-import { getAccessToken } from "../../../../api/TokenUtil";
+import accountApi from "../../../../../api/AccountApi";
+import ComplaintApi from "../../../../../api/ComplaintApi";
+import CourseApi from "../../../../../api/CourseApi";
+import { getAccessToken } from "../../../../../api/TokenUtil";
 
-import "./ManageComplaint.css";
+import "./ManageMyComplaint.css";
 
 const { Option } = Select;
 const { Content } = Layout;
@@ -107,25 +107,6 @@ class ManageComplaint extends React.Component {
                 <FileSearchOutlined />
               </Button>
             </Tooltip>
-          ),
-        },
-        {
-          title: "",
-          key: "complaintId",
-          render: (text, record) => (
-            <Popconfirm
-              title="Xác nhận xóa khiếu nại này ?"
-              cancelText="Hủy"
-              okText="Đồng ý"
-              onConfirm={this.handleDeleteComplaint(record.complaintId)}
-              disabled={record.isActive === false}
-            >
-              <Tooltip placement="top" title="Xóa khiếu nại">
-                <Button disabled={record.isActive === false}>
-                  <DeleteOutlined />
-                </Button>
-              </Tooltip>
-            </Popconfirm>
           ),
         },
       ],
@@ -256,13 +237,10 @@ class ManageComplaint extends React.Component {
       const getSelfAccountResp = await accountApi.getSelfAccount(accessToken);
       console.log("getSelfAccountResp = ", getSelfAccountResp);
 
-      const coursesResp = await CourseApi.getCoursesStudentJoining(accessToken);
-      console.log("coursesJoiningResp = ", coursesResp);
-
       const response = await ComplaintApi.search(
         {
-          fromAccountId: getSelfAccountResp.accountId,
-          fieldList: ["fromAccountId"],
+          type: ["STUDENT_TO_TEACHER"],
+          fieldList: ["type"],
         },
         accessToken
       );
@@ -290,7 +268,6 @@ class ManageComplaint extends React.Component {
       this.setState({
         dataSource: dataSourceResponsed,
         selfAccount: getSelfAccountResp,
-        coursesJoining: coursesResp,
       });
     } catch (e) {
       console.error(e);
@@ -310,7 +287,7 @@ class ManageComplaint extends React.Component {
           content: value.content,
           type: value.type,
           fromAccountId: this.state.selfAccount.accountId,
-          toAccountId: value.toAccountId.split("-")[0],
+          toAccountId: value.toAccountId,
         },
         accessToken
       );
@@ -368,135 +345,8 @@ class ManageComplaint extends React.Component {
         <Content style={{ overflow: "initial" }}>
           <div className="site-layout-background">
             <div>
-              <Button
-                type="primary"
-                onClick={this.showDrawer}
-                style={{ margin: "1% 0px 1% 1%" }}
-              >
-                <PlusOutlined /> Gửi khiếu nại mới
-              </Button>
               <Modal
-                title="Gửi khiếu nại"
-                width={750}
-                okButtonProps={{ disabled: true }}
-                cancelText={"Thoát"}
-                onCancel={this.onClose}
-                visible={this.state.visible}
-                placement="right"
-              >
-                <Form
-                  layout="vertical"
-                  hideRequiredMark
-                  scrollToFirstError
-                  onFinish={this.handleSubmitCreateNewComplaint}
-                  ref={this.formRef}
-                >
-                  <Form.Item {...tailFormItemLayout}>
-                    <Form.Item
-                      name="name"
-                      label={<div style={labelStyle}>Tiêu đề</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng điền tiêu đề !",
-                        },
-                      ]}
-                    >
-                      <Input style={inputStyle} />
-                    </Form.Item>
-
-                    <Form.Item
-                      name="content"
-                      label={<div style={labelStyle}>Nội dung</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng nhập nội dung !",
-                        },
-                      ]}
-                    >
-                      <TextEditor />
-                    </Form.Item>
-
-                    <Form.Item
-                      name="type"
-                      label={<div style={labelStyle}>Loại khiếu nại</div>}
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng chọn vai trò để đăng ký",
-                        },
-                      ]}
-                    >
-                      <Radio.Group>
-                        <Radio value="STUDENT_TO_TEACHER">
-                          Gửi đến giáo viên
-                        </Radio>
-                        <Radio value="STUDENT_TO_ADMIN">
-                          Gửi đến quản trị viên
-                        </Radio>
-                      </Radio.Group>
-                    </Form.Item>
-
-                    <Form.Item
-                      name="toAccountId"
-                      label={
-                        <div style={labelStyle}>Khiếu nại đến khóa học</div>
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng chọn khóa học muốn khiếu nại",
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        style={{ width: "70%" }}
-                        placeholder="Chọn khóa học"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          option.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        {this.state.coursesJoining
-                          ? this.state.coursesJoining.map((course) => (
-                              <Option
-                                value={
-                                  course.account.accountId +
-                                  "-" +
-                                  course.course.courseId
-                                }
-                              >
-                                {course.course.name}
-                              </Option>
-                            ))
-                          : null}
-                      </Select>
-                    </Form.Item>
-
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      style={{ margin: "10px 10px 10px 10%" }}
-                    >
-                      Gửi
-                    </Button>
-                    <Button
-                      type="primary"
-                      style={{ margin: "10px 10px 30px 30%" }}
-                      onClick={this.handleResetForm}
-                      htmlType="button"
-                    >
-                      Đặt lại
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Modal>
-              <Modal
-                title="Gửi khiếu nại"
+                title="Chi tiết khiếu nại"
                 width={750}
                 okButtonProps={{ disabled: true }}
                 cancelText={"Thoát"}

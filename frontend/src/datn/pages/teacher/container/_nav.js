@@ -43,7 +43,7 @@ const _nav = [
   {
     _tag: "CSidebarNavItem",
     name: "Khiếu nại",
-    to: "/teacher/complaint",
+    to: "/teacher/manageComplaint",
     icon: "cil-chart-pie",
   },
   {

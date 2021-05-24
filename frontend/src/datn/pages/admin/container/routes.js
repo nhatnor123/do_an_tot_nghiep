@@ -16,6 +16,10 @@ const ChangePassword = React.lazy(() =>
   import("../components/changePassword/ChangePassword")
 );
 
+const ManageComplaint = React.lazy(() =>
+  import("../components/manageComplaint/ManageComplaint")
+);
+
 const routes = [
   { path: "/admin", exact: true, name: "Trang chủ" },
   { path: "/admin/home", exact: true, name: "Dashboard", component: Dashboard },
@@ -36,6 +40,12 @@ const routes = [
     exact: true,
     name: "Thay đổi mật khẩu",
     component: ChangePassword,
+  },
+  {
+    path: "/admin/manageComplaint",
+    exact: true,
+    name: "Quản lý khiếu nại",
+    component: ManageComplaint,
   },
 ];
 

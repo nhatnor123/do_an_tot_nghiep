@@ -42,7 +42,7 @@ public class Teacher {
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "accountId", nullable = false, insertable = false, updatable = false)
     @JsonIgnore
     private Account account;

@@ -38,13 +38,19 @@ const _nav = [
   },
   {
     _tag: "CSidebarNavTitle",
-    _children: ["Thống kê"],
+    _children: ["Chức năng khác"],
   },
   {
     _tag: "CSidebarNavItem",
     name: "Thống kê",
     to: "/admin/viewStats",
     icon: "cil-chart-pie",
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Khiếu nại",
+    to: "/admin/manageComplaint",
+    icon: "cil-star",
   },
   {
     _tag: "CSidebarNavDivider",

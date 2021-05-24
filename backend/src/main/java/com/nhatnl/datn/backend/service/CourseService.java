@@ -3,6 +3,7 @@ package com.nhatnl.datn.backend.service;
 import com.nhatnl.datn.backend.dto.request.course.CreateReq;
 import com.nhatnl.datn.backend.dto.request.course.SearchReq;
 import com.nhatnl.datn.backend.dto.request.course.UpdateCourseInfoReq;
+import com.nhatnl.datn.backend.dto.response.course.CourseAndTeacher;
 import com.nhatnl.datn.backend.model.Course;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface CourseService {
 
     Course archive(Long courseId);
 
-    List<Course> getCoursesStudentJoining();
+    List<CourseAndTeacher> getCoursesStudentJoining();
 
     List<Course> getCoursesStudentCanJoin();
 

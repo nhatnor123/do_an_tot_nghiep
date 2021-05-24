@@ -47,7 +47,7 @@ public class Course {
     @Column(name = "updatedAt", nullable = false)
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "teacherId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
