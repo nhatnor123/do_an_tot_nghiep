@@ -2,6 +2,7 @@ package com.nhatnl.datn.backend.service;
 
 import com.nhatnl.datn.backend.dto.request.comment.*;
 import com.nhatnl.datn.backend.dto.response.comment.CommentResp;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
 import com.nhatnl.datn.backend.model.Comment;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface CommentService {
     List<CommentResp> search(SearchReq req);
 
     Comment archive(Long commentId);
+
+    CommonStatistic getStatistic();
 
 }

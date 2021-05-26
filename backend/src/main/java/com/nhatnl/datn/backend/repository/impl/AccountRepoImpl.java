@@ -1,5 +1,7 @@
 package com.nhatnl.datn.backend.repository.impl;
 
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.repository.AccountRepo;
 import org.springframework.stereotype.Repository;
@@ -242,4 +244,34 @@ public class AccountRepoImpl implements AccountRepo {
         return this.update(account);
     }
 
+    @Override
+    public GetTotalNumberResp getTotalActive(String role) {
+        String queryString = "SELECT \n" +
+                "    COUNT(*) AS quantity\n" +
+                "FROM\n" +
+                "    Account\n" +
+                "WHERE\n" +
+                "    isActive = TRUE AND role = :role";
+        Query query = entityManager.createNativeQuery(queryString, GetTotalNumberResp.class);
+        query.setParameter("role", role);
+        List<GetTotalNumberResp> resultList = query.getResultList();
+
+        return resultList.get(0);
+    }
+
+    @Override
+    public List<GetDateTimeAndQuantityResp> getDetailStatistic(String role) {
+        String queryString = "SELECT \n" +
+                "    DATE(createdAt) AS dateTime, COUNT(*) AS quantity\n" +
+                "FROM\n" +
+                "    Account\n" +
+                "WHERE\n" +
+                "    isActive = TRUE AND role = :role\n" +
+                "GROUP BY DATE(createdAt)";
+        Query query = entityManager.createNativeQuery(queryString, GetDateTimeAndQuantityResp.class);
+        query.setParameter("role", role);
+        List<GetDateTimeAndQuantityResp> resultList = query.getResultList();
+
+        return resultList;
+    }
 }

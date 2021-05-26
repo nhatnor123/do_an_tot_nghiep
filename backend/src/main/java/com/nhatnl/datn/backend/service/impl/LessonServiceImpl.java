@@ -1,6 +1,9 @@
 package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.request.lesson.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.model.Lesson;
 import com.nhatnl.datn.backend.repository.LessonRepo;
@@ -79,6 +82,17 @@ public class LessonServiceImpl implements LessonService {
     public Lesson archive(Long lessonId) {
         lessonRepo.archive(lessonId);
         return this.getById(lessonId);
+    }
+
+    @Override
+    public CommonStatistic getStatistic() {
+        GetTotalNumberResp totalAdmin = lessonRepo.getTotalActive();
+        List<GetDateTimeAndQuantityResp> detailStatistic = lessonRepo.getDetailStatistic();
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
     }
 
 }

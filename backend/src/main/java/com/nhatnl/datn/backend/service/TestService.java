@@ -1,6 +1,7 @@
 package com.nhatnl.datn.backend.service;
 
 import com.nhatnl.datn.backend.dto.request.test.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
 import com.nhatnl.datn.backend.model.Test;
 
 import java.text.ParseException;
@@ -17,5 +18,7 @@ public interface TestService {
     List<Test> search(SearchReq req);
 
     Test archive(Long testId);
+
+    CommonStatistic getStatistic();
 
 }

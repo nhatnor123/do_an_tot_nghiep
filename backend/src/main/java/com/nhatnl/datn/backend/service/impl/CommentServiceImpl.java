@@ -2,6 +2,9 @@ package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.request.comment.*;
 import com.nhatnl.datn.backend.dto.response.comment.CommentResp;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Comment;
 import com.nhatnl.datn.backend.repository.CommentRepo;
@@ -101,4 +104,14 @@ public class CommentServiceImpl implements CommentService {
         return this.getById(commentId);
     }
 
+    @Override
+    public CommonStatistic getStatistic() {
+        GetTotalNumberResp totalAdmin = commentRepo.getTotalActive();
+        List<GetDateTimeAndQuantityResp> detailStatistic = commentRepo.getDetailStatistic();
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
+    }
 }

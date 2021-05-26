@@ -1,6 +1,7 @@
 package com.nhatnl.datn.backend.service;
 
 import com.nhatnl.datn.backend.dto.request.courseFile.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
 import com.nhatnl.datn.backend.model.CourseFile;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface CourseFileService {
     List<CourseFile> search(SearchReq req);
 
     CourseFile archive(Long courseFileId);
+
+    CommonStatistic getStatistic();
 
 }

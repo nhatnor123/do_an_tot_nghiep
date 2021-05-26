@@ -1,5 +1,7 @@
 package com.nhatnl.datn.backend.repository;
 
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Account;
 
 import java.util.Date;
@@ -27,5 +29,9 @@ public interface AccountRepo {
     void unlockAccount(Long accountId);
 
     Account changePassword(String username, String newPassword);
+
+    GetTotalNumberResp getTotalActive(String role);
+
+    List<GetDateTimeAndQuantityResp> getDetailStatistic(String role);
 
 }

@@ -1,6 +1,9 @@
 package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.request.test.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.model.Test;
 import com.nhatnl.datn.backend.repository.TestRepo;
@@ -91,6 +94,17 @@ public class TestServiceImpl implements TestService {
     public Test archive(Long testId) {
         testRepo.archive(testId);
         return this.getById(testId);
+    }
+
+    @Override
+    public CommonStatistic getStatistic() {
+        GetTotalNumberResp totalAdmin = testRepo.getTotalActive();
+        List<GetDateTimeAndQuantityResp> detailStatistic = testRepo.getDetailStatistic();
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
     }
 
 }

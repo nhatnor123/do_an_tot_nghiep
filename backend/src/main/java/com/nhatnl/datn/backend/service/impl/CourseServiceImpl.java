@@ -5,6 +5,7 @@ import com.nhatnl.datn.backend.dto.request.course.CreateReq;
 import com.nhatnl.datn.backend.dto.request.course.SearchReq;
 import com.nhatnl.datn.backend.dto.request.course.UpdateCourseInfoReq;
 import com.nhatnl.datn.backend.dto.response.course.CourseAndTeacher;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.repository.CourseRepo;
@@ -119,4 +120,8 @@ public class CourseServiceImpl implements CourseService {
         return courseRepo.getCoursesStudentCanJoin(studentId);
     }
 
+    @Override
+    public CommonStatistic getStatistic() {
+        return null;
+    }
 }

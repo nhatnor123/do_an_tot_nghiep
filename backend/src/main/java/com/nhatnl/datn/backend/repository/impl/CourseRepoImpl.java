@@ -1,5 +1,7 @@
 package com.nhatnl.datn.backend.repository.impl;
 
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Course;
 import com.nhatnl.datn.backend.repository.CourseRepo;
 import org.springframework.stereotype.Repository;
@@ -233,6 +235,36 @@ public class CourseRepoImpl implements CourseRepo {
         Query query = entityManager.createNativeQuery(queryString, Course.class);
         query.setParameter("studentId", studentId);
         return query.getResultList();
+    }
+
+
+    @Override
+    public GetTotalNumberResp getTotalActive() {
+        String queryString = "SELECT \n" +
+                "    COUNT(*) AS quantity\n" +
+                "FROM\n" +
+                "    Course\n" +
+                "WHERE\n" +
+                "    isActive = TRUE";
+        Query query = entityManager.createNativeQuery(queryString, GetTotalNumberResp.class);
+        List<GetTotalNumberResp> resultList = query.getResultList();
+
+        return resultList.get(0);
+    }
+
+    @Override
+    public List<GetDateTimeAndQuantityResp> getDetailStatistic() {
+        String queryString = "SELECT \n" +
+                "    DATE(createdAt) AS dateTime, COUNT(*) AS quantity\n" +
+                "FROM\n" +
+                "    Course\n" +
+                "WHERE\n" +
+                "    isActive = TRUE\n" +
+                "GROUP BY DATE(createdAt)";
+        Query query = entityManager.createNativeQuery(queryString, GetDateTimeAndQuantityResp.class);
+        List<GetDateTimeAndQuantityResp> resultList = query.getResultList();
+
+        return resultList;
     }
 
 }

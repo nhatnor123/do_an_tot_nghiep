@@ -1,5 +1,7 @@
 package com.nhatnl.datn.backend.repository;
 
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.CourseFile;
 
 import java.util.Date;
@@ -20,5 +22,9 @@ public interface CourseFileRepo {
     void archive(Long courseFileId);
 
     void recover(Long courseFileId);
+
+    GetTotalNumberResp getTotalActive();
+
+    List<GetDateTimeAndQuantityResp> getDetailStatistic();
 
 }

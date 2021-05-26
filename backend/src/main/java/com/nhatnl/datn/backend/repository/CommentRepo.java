@@ -1,5 +1,7 @@
 package com.nhatnl.datn.backend.repository;
 
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Comment;
 
 import java.util.Date;
@@ -21,5 +23,8 @@ public interface CommentRepo {
 
     void recover(Long commentId);
 
+    GetTotalNumberResp getTotalActive();
+
+    List<GetDateTimeAndQuantityResp> getDetailStatistic();
 
 }

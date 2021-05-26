@@ -2,6 +2,9 @@ package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.entity.AccountDto;
 import com.nhatnl.datn.backend.dto.request.account.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Student;
 import com.nhatnl.datn.backend.model.Teacher;
@@ -193,6 +196,17 @@ public class AccountServiceImpl implements AccountService {
                 passwordEncoder.encode(req.getNewPassword())
         );
         return Mapper.accountFromModelToDto(account);
+    }
+
+    @Override
+    public CommonStatistic getStatisticByRole(Account.Role role) {
+        GetTotalNumberResp totalAdmin = accountRepo.getTotalActive(role.name());
+        List<GetDateTimeAndQuantityResp> detailStatistic = accountRepo.getDetailStatistic(role.name());
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
     }
 
     private User getCurrentUser() {

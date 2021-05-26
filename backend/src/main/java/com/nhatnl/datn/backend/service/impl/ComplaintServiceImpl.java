@@ -1,6 +1,9 @@
 package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.request.complaint.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.Complaint;
 import com.nhatnl.datn.backend.repository.ComplaintRepo;
 import com.nhatnl.datn.backend.service.AccountService;
@@ -75,6 +78,17 @@ public class ComplaintServiceImpl implements ComplaintService {
     public Complaint archive(Long complaintId) {
         complaintRepo.archive(complaintId);
         return this.getById(complaintId);
+    }
+
+    @Override
+    public CommonStatistic getStatistic() {
+        GetTotalNumberResp totalAdmin = complaintRepo.getTotalActive();
+        List<GetDateTimeAndQuantityResp> detailStatistic = complaintRepo.getDetailStatistic();
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
     }
 
 }

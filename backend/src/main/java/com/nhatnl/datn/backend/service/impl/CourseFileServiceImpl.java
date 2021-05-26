@@ -1,6 +1,9 @@
 package com.nhatnl.datn.backend.service.impl;
 
 import com.nhatnl.datn.backend.dto.request.courseFile.*;
+import com.nhatnl.datn.backend.dto.response.statistic.CommonStatistic;
+import com.nhatnl.datn.backend.dto.response.statistic.GetDateTimeAndQuantityResp;
+import com.nhatnl.datn.backend.dto.response.statistic.GetTotalNumberResp;
 import com.nhatnl.datn.backend.model.CourseFile;
 import com.nhatnl.datn.backend.repository.CourseFileRepo;
 import com.nhatnl.datn.backend.service.CourseFileService;
@@ -71,6 +74,17 @@ public class CourseFileServiceImpl implements CourseFileService {
     public CourseFile archive(Long courseFileId) {
         courseFileRepo.archive(courseFileId);
         return this.getById(courseFileId);
+    }
+
+    @Override
+    public CommonStatistic getStatistic() {
+        GetTotalNumberResp totalAdmin = courseFileRepo.getTotalActive();
+        List<GetDateTimeAndQuantityResp> detailStatistic = courseFileRepo.getDetailStatistic();
+
+        return CommonStatistic.builder()
+                .total(totalAdmin.getQuantity())
+                .detail(detailStatistic)
+                .build();
     }
 
 }
