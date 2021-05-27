@@ -47,6 +47,12 @@ const routes = [
     name: "Quản lý khiếu nại",
     component: ManageComplaint,
   },
+  {
+    path: "/admin/viewStats",
+    exact: true,
+    name: "Thống kê",
+    component: Dashboard,
+  },
 ];
 
 export default routes;
