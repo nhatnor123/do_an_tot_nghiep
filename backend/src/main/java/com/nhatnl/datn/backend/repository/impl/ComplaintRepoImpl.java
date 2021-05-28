@@ -37,12 +37,19 @@ public class ComplaintRepoImpl implements ComplaintRepo {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(Long complaintId, String replyContent) {
-        String queryString = "UPDATE Complaint SET updatedAt =:updatedAt , replyContent = :replyContent" +
-                " WHERE complaintId = :complaintId AND isActive = true";
-        Query query = entityManager.createNativeQuery(queryString, Complaint.class);
+    public void update(Long complaintId, String replyContent, Long toAccountId) {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("UPDATE Complaint SET updatedAt =:updatedAt , replyContent = :replyContent");
+        if (toAccountId != null) {
+            queryString.append(" , toAccountId = :toAccountId ");
+        }
+        queryString.append(" WHERE complaintId = :complaintId AND isActive = true");
+        Query query = entityManager.createNativeQuery(queryString.toString(), Complaint.class);
 
         query.setParameter("complaintId", complaintId);
+        if (toAccountId != null) {
+            query.setParameter("toAccountId", toAccountId);
+        }
         query.setParameter("replyContent", replyContent);
         query.setParameter("updatedAt", new Date());
 

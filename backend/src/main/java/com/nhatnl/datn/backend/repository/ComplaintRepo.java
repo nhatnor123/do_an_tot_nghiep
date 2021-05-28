@@ -12,7 +12,7 @@ public interface ComplaintRepo {
 
     Complaint update(Complaint complaint);
 
-    void update(Long complaintId, String replyContent);
+    void update(Long complaintId, String replyContent, Long toAccountId);
 
     Complaint getById(Long complaintId);
 

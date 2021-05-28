@@ -14,4 +14,5 @@ import java.util.List;
 public class UpdateReq {
     private Long complaintId;
     private String replyContent;
+    private Long toAccountId;
 }

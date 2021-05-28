@@ -313,6 +313,7 @@ class ManageComplaint extends React.Component {
         {
           complaintId: complaintViewed.complaintId,
           replyContent: value.replyContent,
+          toAccountId: this.state.selfAccount.accountId,
         },
         accessToken
       );
@@ -392,23 +393,35 @@ class ManageComplaint extends React.Component {
                   <Form.Item {...tailFormItemLayout}>
                     {complaintViewed ? (
                       <div>
-                        <div>
-                          Người gửi:{" "}
-                          {fromAccount.firstName +
+                        <h2>{complaintViewed.name}</h2>
+                        <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                          <div>
+                            <h5 style={{ fontWeight: 600 }}>
+                              Loại khiếu nại:{" "}
+                              {complaintViewed.type === "STUDENT_TO_ADMIN"
+                                ? "Học viên gửi đến Admin"
+                                : "Giáo viên gửi đến Admin"}
+                            </h5>
+                          </div>
+                          {"Từ: " +
+                            fromAccount.firstName +
                             " " +
                             fromAccount.lastName +
                             " (" +
                             fromAccount.email +
                             ")"}
                         </div>
-                        <div>Tên: {complaintViewed.name}</div>
-                        <div>Nội dung : {Parser(complaintViewed.content)}</div>
+
+                        <h5 style={{ fontWeight: 600 }}>Nội dung : </h5>
+                        {Parser(complaintViewed.content)}
                       </div>
                     ) : null}
 
                     <Form.Item
                       name="replyContent"
-                      label={<div style={labelStyle}>Nội dung phản hồi</div>}
+                      label={
+                        <h5 style={{ fontWeight: 600 }}>Nội dung phản hồi</h5>
+                      }
                       rules={[
                         {
                           required: true,

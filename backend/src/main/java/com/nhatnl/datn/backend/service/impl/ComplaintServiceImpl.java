@@ -44,7 +44,8 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         complaintRepo.update(
                 req.getComplaintId(),
-                req.getReplyContent()
+                req.getReplyContent(),
+                req.getToAccountId()
         );
 
         return this.getById(req.getComplaintId());

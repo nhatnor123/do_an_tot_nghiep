@@ -140,12 +140,39 @@ class ManageComplaint extends React.Component {
   }
 
   handleViewComplaint = (complaint) => {
-    return () => {
+    return async () => {
       console.log("complaint will be viewd  = ", complaint);
-      this.setState({
-        complantViewed: complaint,
-        isModalViewVisible: true,
-      });
+      try {
+        var accessToken = getAccessToken();
+        const response_1 = await accountApi.getById(
+          {
+            accountId: complaint.fromAccountId,
+          },
+          accessToken
+        );
+        let response_2;
+        if (complaint.toAccountId) {
+          response_2 = await accountApi.getById(
+            {
+              accountId: complaint.toAccountId,
+            },
+            accessToken
+          );
+        }
+
+        console.log("response_1 = ", response_1);
+        console.log("response_2 = ", response_2);
+
+        this.setState({
+          complantViewed: complaint,
+          fromAccount: response_1,
+          toAccount: response_2,
+          isModalViewVisible: true,
+        });
+      } catch (e) {
+        console.error(e);
+        message.error("Lấy chi tiết khiếu nại thất bại", 3);
+      }
     };
   };
 
@@ -362,6 +389,8 @@ class ManageComplaint extends React.Component {
     console.log("state = ", this.state);
 
     let complantViewed = this.state.complantViewed;
+    let fromAccount = this.state.fromAccount;
+    let toAccount = this.state.toAccount;
 
     return (
       <Layout className="site-layout">
@@ -506,8 +535,60 @@ class ManageComplaint extends React.Component {
               >
                 {complantViewed ? (
                   <div>
-                    <div>Tên: {complantViewed.name}</div>
-                    <div>Nội dung : {Parser(complantViewed.content)}</div>
+                    <h2>{complantViewed.name}</h2>
+                    <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                      <div>
+                        <h5 style={{ fontWeight: 600 }}>
+                          Loại khiếu nại:{" "}
+                          {complantViewed.type === "STUDENT_TO_TEACHER"
+                            ? "Học viên gửi đến giáo viên"
+                            : "Học viên gửi đến Admin"}
+                        </h5>
+                      </div>
+                      {"Từ: " +
+                        fromAccount.firstName +
+                        " " +
+                        fromAccount.lastName +
+                        " (" +
+                        fromAccount.email +
+                        ")"}
+                    </div>
+                    {complantViewed.type === "STUDENT_TO_TEACHER" ? (
+                      <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                        {"Gửi đến: " +
+                          toAccount.firstName +
+                          " " +
+                          toAccount.lastName +
+                          " (" +
+                          toAccount.email +
+                          ")"}
+                      </div>
+                    ) : complantViewed.toAccountId ? (
+                      <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                        {"Người trả lời: " +
+                          toAccount.firstName +
+                          " " +
+                          toAccount.lastName +
+                          " (" +
+                          toAccount.email +
+                          ")"}
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
+
+                    <h5 style={{ fontWeight: 600 }}>Nội dung : </h5>
+                    {complantViewed.content ? (
+                      Parser(complantViewed.content)
+                    ) : (
+                      <div></div>
+                    )}
+                    <h5 style={{ fontWeight: 600 }}>Phản hồi : </h5>
+                    {complantViewed.replyContent ? (
+                      Parser(complantViewed.replyContent)
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                 ) : null}
               </Modal>

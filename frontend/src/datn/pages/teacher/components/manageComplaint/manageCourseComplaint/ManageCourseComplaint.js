@@ -148,11 +148,18 @@ class ManageComplaint extends React.Component {
           },
           accessToken
         );
+        const response_2 = await accountApi.getById(
+          {
+            accountId: complaint.toAccountId,
+          },
+          accessToken
+        );
         console.log("resp = ", response);
 
         this.setState({
           complaintViewed: complaint,
           fromAccount: response,
+          toAccount: response_2,
           isModalViewVisible: true,
         });
       } catch (e) {
@@ -372,6 +379,7 @@ class ManageComplaint extends React.Component {
 
     let complaintViewed = this.state.complaintViewed;
     let fromAccount = this.state.fromAccount;
+    let toAccount = this.state.toAccount;
 
     return (
       <Layout className="site-layout">
@@ -397,23 +405,41 @@ class ManageComplaint extends React.Component {
                   <Form.Item {...tailFormItemLayout}>
                     {complaintViewed ? (
                       <div>
-                        <div>
-                          Người gửi:{" "}
-                          {fromAccount.firstName +
+                        <h2>{complaintViewed.name}</h2>
+                        <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                          <div>
+                            <h5 style={{ fontWeight: 600 }}>
+                              Loại khiếu nại: Học viên gửi đến giáo viên
+                            </h5>
+                          </div>
+                          {"Từ: " +
+                            fromAccount.firstName +
                             " " +
                             fromAccount.lastName +
                             " (" +
                             fromAccount.email +
                             ")"}
                         </div>
-                        <div>Tên: {complaintViewed.name}</div>
-                        <div>Nội dung : {Parser(complaintViewed.content)}</div>
+                        <div style={{ marginTop: "5px", marginBottom: "10px" }}>
+                          {"Đến: " +
+                            toAccount.firstName +
+                            " " +
+                            toAccount.lastName +
+                            " (" +
+                            toAccount.email +
+                            ")"}
+                        </div>
+
+                        <h5 style={{ fontWeight: 600 }}>Nội dung : </h5>
+                        {Parser(complaintViewed.content)}
                       </div>
                     ) : null}
 
                     <Form.Item
                       name="replyContent"
-                      label={<div style={labelStyle}>Nội dung phản hồi</div>}
+                      label={
+                        <h5 style={{ fontWeight: 600 }}>Nội dung phản hồi</h5>
+                      }
                       rules={[
                         {
                           required: true,
