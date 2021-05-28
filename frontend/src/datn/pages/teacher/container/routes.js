@@ -1,9 +1,5 @@
 import React from "react";
 
-const Dashboard = React.lazy(() =>
-  import("../../../../views/dashboard/Dashboard")
-);
-
 const ManageCourse = React.lazy(() =>
   import("../components/manageCourse/ManageCourse")
 );
@@ -37,8 +33,8 @@ const routes = [
   {
     path: "/teacher/home",
     exact: true,
-    name: "Dashboard",
-    component: Dashboard,
+    name: "",
+    component: ManageCourse,
   },
   {
     path: "/teacher/manageCourse",

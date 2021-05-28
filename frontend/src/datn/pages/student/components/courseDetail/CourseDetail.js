@@ -4,6 +4,7 @@ import { Tabs } from "antd";
 import CourseOverview from "../courseOverview/CourseOverview";
 import ManageLesson from "../manageLesson/ManageLesson";
 import ManageTest from "../manageTest/ManageTest";
+import ManageCourseFile from "../manageCourseFile/ManageCourseFile";
 
 const { TabPane } = Tabs;
 
@@ -29,6 +30,9 @@ class CourseDetail extends React.Component {
           </TabPane>
           <TabPane tab="Bài kiểm tra" key="3">
             <ManageTest courseId={courseId} />
+          </TabPane>
+          <TabPane tab="Tài liệu học tập" key="4">
+            <ManageCourseFile courseId={courseId} />
           </TabPane>
         </Tabs>
       </div>
