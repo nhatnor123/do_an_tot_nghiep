@@ -49,8 +49,8 @@ const routes = [
   {
     path: "/student/home",
     exact: true,
-    name: "Dashboard",
-    component: Dashboard,
+    name: "",
+    component: DiscoverNewCourses,
   },
   {
     path: "/student/discoverNewCourses",
