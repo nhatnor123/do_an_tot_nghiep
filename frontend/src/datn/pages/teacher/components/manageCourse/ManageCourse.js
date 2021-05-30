@@ -222,15 +222,16 @@ class ManageCourse extends React.Component {
             <Button
               type="primary"
               onClick={this.showModalCreateNewCourse}
-              style={{ margin: "1% 0px 1% 1%" }}
+              style={{ margin: "1% 0px 1% 15px" }}
             >
               <PlusOutlined /> Thêm mới
             </Button>
           </Col>
-          <Col span={5}>
+          <Col span={5} offset={4}>
             <Input.Search
               placeholder="Tìm kiếm khóa học"
               onSearch={this.handleSearchCourse}
+              size="large"
               enterButton
             />
           </Col>
@@ -345,7 +346,14 @@ class ManageCourse extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div style={{ marginTop: "20px", marginBottom: "30px" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            marginBottom: "30px",
+            marginLeft: "5px",
+            marginRight: "5px",
+          }}
+        >
           <CourseGrid courseList={this.state.courseList} />
         </div>
       </div>

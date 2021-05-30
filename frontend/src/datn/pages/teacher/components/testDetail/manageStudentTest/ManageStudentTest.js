@@ -434,9 +434,9 @@ class ManageStudentJoinCourse extends React.Component {
                         <div></div>
                       ) : (
                         <div style={{ fontSize: "18px", marginTop: "90px" }}>
-                          <b>Kết quả : {this.state.studentTest.score} điểm</b>
+                          <h3>Kết quả : {this.state.studentTest.score} điểm</h3>
                           <br></br>
-                          <b>Nhận xét của giáo viên: </b>
+                          <h3>Nhận xét của giáo viên: </h3>
                           <Form.Item
                             name="feedback"
                             rules={[

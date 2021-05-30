@@ -8,7 +8,6 @@ import {
   Col,
   Input,
   Popconfirm,
-  BackTop,
 } from "antd";
 import Parser from "html-react-parser";
 import TextEditor from "../richTextEditor/TextEditor";
@@ -256,22 +255,29 @@ class LessonDetail extends React.Component {
 
         <div
           style={{
-            marginLeft: "25px",
+            width: "70%",
+            marginLeft: "10%",
           }}
         >
           <div>
-            <h3
+            <div
               style={{
                 fontWeight: "600",
                 marginBottom: "12px",
                 marginTop: "10px",
-                fontSize: "25px",
+                fontSize: "28px",
               }}
             >
               {lessonDetail.name}
-            </h3>
+            </div>
           </div>
-          <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+          <div
+            style={{
+              marginTop: "15px",
+              marginBottom: "30px",
+              fontSize: "16px",
+            }}
+          >
             {lessonDetail.description}
           </div>
           {Parser(lessonDetail.content)}

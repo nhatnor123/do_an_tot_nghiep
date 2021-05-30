@@ -51,15 +51,23 @@ class DiscoverNewCourses extends React.Component {
     return (
       <div>
         <Row justify="start" style={{ marginTop: "10px" }}>
-          <Col span={5} offset={5}>
+          <Col span={5} offset={6}>
             <Input.Search
               placeholder="Tìm kiếm khóa học"
               onSearch={this.handleSearchCourse}
+              size="large"
               enterButton
             />
           </Col>
         </Row>
-        <div style={{ marginTop: "20px", marginBottom: "30px" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            marginBottom: "30px",
+            marginLeft: "5px",
+            marginRight: "5px",
+          }}
+        >
           <CourseGrid courseList={this.state.courseListResult} />
         </div>
       </div>

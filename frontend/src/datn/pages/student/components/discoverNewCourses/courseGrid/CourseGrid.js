@@ -16,8 +16,8 @@ class CourseGrid extends React.Component {
                 <div
                   style={{
                     marginLeft: "10px",
-                    marginTop: "20px",
-                    width: "90",
+                    marginBottom: "40px",
+                    width: "92%",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
@@ -28,6 +28,7 @@ class CourseGrid extends React.Component {
                     <img
                       src={course.imageUrl}
                       alt={course.name}
+                      class="my-border-image"
                       style={{
                         width: "100%",
                         height: "auto",

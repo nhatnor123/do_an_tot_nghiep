@@ -4,4 +4,14 @@
 
 .ant-list-split .ant-list-item {
   border-bottom: 1px groove #f0f0f0;
+  border-top:  1px groove #f0f0f0;
+  border-left:  1px groove #f0f0f0;
+  border-right:  1px groove #f0f0f0;
+}
+
+.ant-list-split .ant-list-item:last-child{
+  border-bottom: 1px groove #f0f0f0;
+  border-top:  1px groove #f0f0f0;
+  border-left:  1px groove #f0f0f0;
+  border-right:  1px groove #f0f0f0;
 }

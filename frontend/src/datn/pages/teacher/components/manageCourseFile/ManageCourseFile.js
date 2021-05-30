@@ -433,7 +433,7 @@ class ManageCourseFile extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>
+        <div style={{ width: "85%", marginBottom: "150px" }}>
           <List
             itemLayout="horizontal"
             style={{ marginTop: "20px", marginBottom: "30px" }}
@@ -490,7 +490,7 @@ class ManageCourseFile extends React.Component {
                     >
                       <Button
                         type="primary"
-                        style={{ margin: "1% 0px 1% 20px" }}
+                        style={{ margin: "10px 0px 1% 1%" }}
                       >
                         <DeleteOutlined /> Xóa
                       </Button>

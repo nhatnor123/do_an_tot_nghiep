@@ -13,6 +13,7 @@ import {
   InputNumber,
   DatePicker,
   TimePicker,
+  Statistic,
 } from "antd";
 import {
   DeleteOutlined,
@@ -563,75 +564,89 @@ class Detail extends React.Component {
           </Form>
         </Modal>
 
-        <Row>
-          <Col offset={3}>
+        <Row style={{ marginTop: "20px" }}>
+          <Col offset={2} span={22}>
             <div
               style={{
                 marginLeft: "25px",
               }}
             >
               <div>
+                <Row>
+                  <Col span={17}>
+                    <div
+                      style={{
+                        fontWeight: "600",
+                        marginBottom: "12px",
+                        marginTop: "10px",
+                        fontSize: "35px",
+                        color: "#076ac8 !important",
+                      }}
+                    >
+                      {testDetail.name}
+                    </div>
+                  </Col>
+                  <Col span={5} offset={2}>
+                    <Statistic.Countdown
+                      title={"Thời gian còn lại"}
+                      value={moment(testDetail.dateTimeEnd)}
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div style={{ width: "90%" }}>
+                <div style={{ marginBottom: "23px", fontSize: "17px" }}>
+                  {"Thời gian: " +
+                    testDetail.dateTimeStart.substring(0, 19) +
+                    " ----> " +
+                    testDetail.dateTimeEnd.substring(0, 19)}
+                </div>
                 <div
                   style={{
-                    fontWeight: "600",
-                    marginBottom: "12px",
-                    marginTop: "10px",
-                    fontSize: "35px",
+                    marginTop: "20px",
+                    marginBottom: "20px",
+                    fontSize: "17px",
                   }}
                 >
-                  {testDetail.name}
+                  <i>{testDetail.description}</i>
                 </div>
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  fontSize: "16px",
-                }}
-              >
-                <i>{testDetail.description}</i>
-              </div>
-              <div style={{ marginBottom: "13px", fontSize: "16px" }}>
-                {"Thời gian: " +
-                  testDetail.dateTimeStart.substring(0, 19) +
-                  " ----> " +
-                  testDetail.dateTimeEnd.substring(0, 19)}
-              </div>
-              <div>
-                {testDetail.modifiedContent.map((question, questionIndex) => {
-                  console.log("question ", questionIndex, " =", question);
-                  let trueAnswers = testDetail.answer[questionIndex];
-                  console.log("trueAnswer =", trueAnswers);
-                  return (
-                    <div style={{ color: "black", marginTop: "15px" }}>
-                      <div style={{ fontSize: "18px" }}>
-                        <b>{"Câu " + (questionIndex + 1)}</b>
-                        {" (" + question.score + " đ) : " + question.question}
+
+                <div>
+                  {testDetail.modifiedContent.map((question, questionIndex) => {
+                    console.log("question ", questionIndex, " =", question);
+                    let trueAnswers = testDetail.answer[questionIndex];
+                    console.log("trueAnswer =", trueAnswers);
+                    return (
+                      <div style={{ color: "black", marginTop: "15px" }}>
+                        <div style={{ fontSize: "18px" }}>
+                          <b>{"Câu " + (questionIndex + 1)}</b>
+                          {" (" + question.score + " đ) : " + question.question}
+                        </div>
+                        <div>
+                          <Space direction="vertical">
+                            {question.option.map((answer, answerIndex) => {
+                              let isTrueAnswer = trueAnswers.includes(
+                                answerIndex
+                              );
+                              return (
+                                <Checkbox
+                                  defaultChecked={isTrueAnswer}
+                                  style={{
+                                    marginTop: "5px",
+                                    fontSize: "16px",
+                                    color: isTrueAnswer ? "red" : "black",
+                                  }}
+                                >
+                                  {answer.value}
+                                </Checkbox>
+                              );
+                            })}
+                          </Space>
+                        </div>
                       </div>
-                      <div>
-                        <Space direction="vertical">
-                          {question.option.map((answer, answerIndex) => {
-                            let isTrueAnswer = trueAnswers.includes(
-                              answerIndex
-                            );
-                            return (
-                              <Checkbox
-                                defaultChecked={isTrueAnswer}
-                                style={{
-                                  marginTop: "5px",
-                                  fontSize: "15px",
-                                  color: isTrueAnswer ? "red" : "black",
-                                }}
-                              >
-                                {answer.value}
-                              </Checkbox>
-                            );
-                          })}
-                        </Space>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </Col>

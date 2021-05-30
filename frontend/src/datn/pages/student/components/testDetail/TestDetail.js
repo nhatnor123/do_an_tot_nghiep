@@ -1,5 +1,17 @@
 import React from "react";
-import { message, Form, Button, Col, Space, Checkbox } from "antd";
+import {
+  message,
+  Form,
+  Button,
+  Col,
+  Space,
+  Checkbox,
+  Statistic,
+  Row,
+  Tag,
+} from "antd";
+import Parser from "html-react-parser";
+import moment from "moment";
 
 import testApi from "../../../../api/TestApi";
 import studentTestApi from "../../../../api/StudentTestApi";
@@ -111,31 +123,48 @@ class TestDetail extends React.Component {
       <div>
         <Col offset={4} md={16}>
           <div>
-            <div
-              style={{
-                fontWeight: "600",
-                marginBottom: "12px",
-                marginTop: "10px",
-                fontSize: "35px",
-              }}
-            >
-              {testDetail.name}
-            </div>
+            <Row>
+              <Col span={17}>
+                <div
+                  style={{
+                    fontWeight: "600",
+                    marginBottom: "12px",
+                    marginTop: "10px",
+                    fontSize: "35px",
+                    color: "#076ac8 !important",
+                  }}
+                >
+                  {testDetail.name}
+                </div>
+              </Col>
+              <Col span={5} offset={2}>
+                {this.state.studentTest == null ? (
+                  <Statistic.Countdown
+                    title={"Thời gian còn lại"}
+                    value={moment(testDetail.dateTimeEnd)}
+                  />
+                ) : (
+                  <Tag color="#00a76a" style={{ fontSize: "15px" }}>
+                    Đã làm
+                  </Tag>
+                )}
+              </Col>
+            </Row>
           </div>
-          <div
-            style={{
-              marginTop: "10px",
-              marginBottom: "10px",
-              fontSize: "16px",
-            }}
-          >
-            <i>{testDetail.description}</i>
-          </div>
-          <div style={{ marginBottom: "13px", fontSize: "16px" }}>
+          <div style={{ marginBottom: "23px", fontSize: "17px" }}>
             {"Thời gian: " +
               testDetail.dateTimeStart.substring(0, 19) +
               " ----> " +
               testDetail.dateTimeEnd.substring(0, 19)}
+          </div>
+          <div
+            style={{
+              marginTop: "20px",
+              marginBottom: "20px",
+              fontSize: "17px",
+            }}
+          >
+            <i>{testDetail.description}</i>
           </div>
 
           <div>
@@ -224,10 +253,10 @@ class TestDetail extends React.Component {
                   </Button>
                 ) : (
                   <div style={{ fontSize: "18px", marginTop: "90px" }}>
-                    <b>Kết quả : {this.state.studentTest.score} điểm</b>
+                    <h3>Kết quả : {this.state.studentTest.score} điểm</h3>
                     <br></br>
-                    <b>Nhận xét của giáo viên: </b>
-                    <div>{this.state.studentTest.feedback}</div>
+                    <h3>Nhận xét của giáo viên: </h3>
+                    <div> {Parser(this.state.studentTest.feedback)}</div>
                   </div>
                 )}
               </Form.Item>

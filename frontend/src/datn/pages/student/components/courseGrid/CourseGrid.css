@@ -1,3 +1,8 @@
 .link-to-the-course {
   color: #1890ff;
 }
+
+.my-border-image:hover{
+  box-shadow: 2px 2px 2px 2px;
+  color: #a970ff;
+}

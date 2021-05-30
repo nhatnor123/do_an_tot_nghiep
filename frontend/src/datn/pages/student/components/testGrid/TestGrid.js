@@ -11,7 +11,7 @@ class TestGrid extends React.Component {
     console.log("props =", this.props);
 
     return (
-      <div>
+      <div style={{ width: "85%", marginBottom: "150px" }}>
         <List
           itemLayout="horizontal"
           style={{ marginTop: "20px", marginBottom: "30px" }}
@@ -29,7 +29,7 @@ class TestGrid extends React.Component {
                       marginBottom: "12px",
                       marginTop: "10px",
                       color: "#1890ff !important",
-                      fontSize: "20px",
+                      fontSize: "21px",
                     }}
                     className="link-to-the-test"
                   >
@@ -39,25 +39,32 @@ class TestGrid extends React.Component {
                 description={
                   <div
                     style={{
-                      paddingBottom: "23px",
-                      // borderStyle: "groove",
-                      // borderWidth: "0 0 0.5px 0",
+                      paddingBottom: "10px",
+                      fontSize: "16px",
                     }}
                   >
+                    <div style={{ marginBottom: "10px" }}>
+                      {"Thời gian: " +
+                        test.dateTimeStart.substring(0, 19) +
+                        " ---> " +
+                        test.dateTimeEnd.substring(0, 19)}
+                    </div>
                     {test.description}
                     <br></br>
-                    {"Thời gian: " +
-                      test.dateTimeStart.substring(0, 19) +
-                      " ---> " +
-                      test.dateTimeEnd.substring(0, 19)}
 
                     <div style={{ marginTop: "5px" }}>
                       {moment().isBefore(moment(test.dateTimeStart)) ? (
-                        <Tag color="#55acee">Chưa diễn ra</Tag>
+                        <Tag color="#55acee" style={{ fontSize: "15px" }}>
+                          Chưa diễn ra
+                        </Tag>
                       ) : moment().isBefore(moment(test.dateTimeEnd)) ? (
-                        <Tag color="#00a76a">Đang diễn ra</Tag>
+                        <Tag color="#00a76a" style={{ fontSize: "15px" }}>
+                          Đang diễn ra
+                        </Tag>
                       ) : (
-                        <Tag color="#00a76a">Đã kết thúc</Tag>
+                        <Tag color="#00a76a" style={{ fontSize: "15px" }}>
+                          Đã kết thúc
+                        </Tag>
                       )}
                     </div>
                   </div>

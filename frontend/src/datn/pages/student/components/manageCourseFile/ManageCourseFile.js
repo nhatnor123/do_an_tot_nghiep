@@ -12,7 +12,6 @@ import {
   Popconfirm,
 } from "antd";
 import {
-  PlusOutlined,
   UploadOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -424,7 +423,7 @@ class ManageCourseFile extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>
+        <div style={{ width: "85%", marginBottom: "150px" }}>
           <List
             itemLayout="horizontal"
             style={{ marginTop: "20px", marginBottom: "30px" }}
@@ -462,32 +461,6 @@ class ManageCourseFile extends React.Component {
                     </div>
                   }
                 />
-                <Row style={{ marginTop: "10px" }}>
-                  <Col span={5}>
-                    <Button
-                      type="primary"
-                      onClick={this.showModalUpdate(courseFile)}
-                      style={{ margin: "1% 0px 1% 1%" }}
-                    >
-                      <EditOutlined /> Sửa
-                    </Button>
-                    <Popconfirm
-                      title="Xác nhận xóa tài liệu này ?"
-                      cancelText="Hủy"
-                      okText="Đồng ý"
-                      onConfirm={this.handleClickDeleteButton(
-                        courseFile.courseFileId
-                      )}
-                    >
-                      <Button
-                        type="primary"
-                        style={{ margin: "1% 0px 1% 20px" }}
-                      >
-                        <DeleteOutlined /> Xóa
-                      </Button>
-                    </Popconfirm>
-                  </Col>
-                </Row>
               </List.Item>
             )}
           />

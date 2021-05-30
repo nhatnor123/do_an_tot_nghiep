@@ -431,32 +431,54 @@ class CourseOverview extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <img
-          src={courseDetail.imageUrl}
-          alt={courseDetail.name}
-          style={{ width: "50%", height: "auto" }}
-        />
-        <div style={{ marginLeft: "15px" }}>
-          <div
-            style={{
-              fontWeight: "600",
-              marginBottom: "12px",
-              marginTop: "10px",
-              color: "#076ac8 !important",
-              fontSize: "22px",
-            }}
-          >
-            {courseDetail.name}
-          </div>
-          <div style={{ color: "#969696" }}>{courseDetail.description}</div>
-          <div style={{ marginTop: "15px", marginBottom: "30px" }}>
-            {courseDetail.isPublic === true ? (
-              <Tag color="#55acee">Công khai</Tag>
-            ) : (
-              <Tag color="#00a76a">Không Công khai</Tag>
-            )}
-          </div>
-        </div>
+        <Row style={{ marginTop: "10px" }}>
+          <Col span={18} offset={2}>
+            <img
+              src={courseDetail.imageUrl}
+              alt={courseDetail.name}
+              style={{ width: "70%", height: "auto", margin: "auto" }}
+            />
+            <div style={{ marginLeft: "15px" }}>
+              <div
+                style={{
+                  fontWeight: "600",
+                  marginBottom: "12px",
+                  marginTop: "17px",
+                  color: "#076ac8 !important",
+                  fontSize: "28px",
+                }}
+              >
+                {courseDetail.name}
+              </div>
+              <div
+                style={{
+                  marginTop: "15px",
+                  marginBottom: "30px",
+                  fontSize: "18px",
+                }}
+              >
+                {courseDetail.isPublic === true ? (
+                  <Tag color="#55acee" style={{ fontSize: "15px" }}>
+                    Công khai
+                  </Tag>
+                ) : (
+                  <Tag color="#00a76a" style={{ fontSize: "15px" }}>
+                    Không Công khai
+                  </Tag>
+                )}
+              </div>
+              <div
+                style={{
+                  color: "#969696",
+                  fontSize: "17px",
+                  marginBottom: "150px",
+                }}
+              >
+                {courseDetail.description}
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
     ) : (
       <div>Loading</div>

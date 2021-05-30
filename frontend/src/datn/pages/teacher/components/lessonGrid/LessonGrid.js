@@ -10,7 +10,7 @@ class LessonGrid extends React.Component {
     const courseId = this.props.courseId;
 
     return (
-      <div>
+      <div style={{ width: "85%", marginBottom: "150px" }}>
         <List
           itemLayout="horizontal"
           style={{ marginTop: "20px", marginBottom: "30px" }}
@@ -28,7 +28,7 @@ class LessonGrid extends React.Component {
                       marginBottom: "12px",
                       marginTop: "10px",
                       color: "#1890ff !important",
-                      fontSize: "20px",
+                      fontSize: "21px",
                     }}
                     className="link-to-the-lesson"
                   >
@@ -39,8 +39,7 @@ class LessonGrid extends React.Component {
                   <div
                     style={{
                       paddingBottom: "23px",
-                      // borderStyle: "groove",
-                      // borderWidth: "0 0 0.5px 0",
+                      fontSize: "16px",
                     }}
                   >
                     {lesson.description}

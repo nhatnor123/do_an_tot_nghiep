@@ -15,6 +15,8 @@ import commentApi from "../../../../api/CommentApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
 import Modal from "antd/lib/modal/Modal";
 
+import "./Comment.css";
+
 const nestComments = (commentList) => {
   console.log("begin nest comment func =", commentList);
   const commentMap = {};
@@ -74,7 +76,7 @@ const CommentNestedList = ({
     <CommentAntd
       {...comment}
       author={
-        <div style={{ fontSize: "16px", color: "black" }}>{comment.author}</div>
+        <div style={{ fontSize: "18px", color: "black" }}>{comment.author}</div>
       }
       content={Parser(comment.content)}
       actions={
@@ -410,7 +412,9 @@ class Comment extends React.Component {
     const { comments } = this.state;
 
     return this.state.selfAccountInfo ? (
-      <div style={{ marginTop: "40px" }}>
+      <div
+        style={{ marginTop: "40px", fontSize: "16px", marginBottom: "150px" }}
+      >
         <Modal
           title="Sửa bình luận"
           width={650}
@@ -505,7 +509,9 @@ class Comment extends React.Component {
             </Form.Item>
           </Form>
         </Modal>
-        <div>{this.state.numbersOfComments} bình luận</div>
+        <h3 style={{ fontWeight: "bold" }}>
+          Bình luận ({this.state.numbersOfComments})
+        </h3>
         {comments.length > 0 &&
           comments.map((comment) => {
             return (
