@@ -122,7 +122,7 @@ class TestDetail extends React.Component {
     return testDetail ? (
       <div>
         <Col offset={4} md={16}>
-          <div>
+          <div style={{ marginTop: "20px" }}>
             <Row>
               <Col span={17}>
                 <div
