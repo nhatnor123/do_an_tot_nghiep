@@ -7,6 +7,8 @@ import ManageTest from "../manageTest/ManageTest";
 import ManageStudentJoinCourse from "../manageStudentJoinCourse/ManageStudentJoinCourse";
 import ManageCourseFile from "../manageCourseFile/ManageCourseFile";
 
+import "./CourseDetail.css";
+
 const { TabPane } = Tabs;
 
 class CourseDetail extends React.Component {

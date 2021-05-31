@@ -15,3 +15,11 @@
   border-left:  1px groove #f0f0f0;
   border-right:  1px groove #f0f0f0;
 }
+
+.ant-list-item{
+  margin-bottom: 15px;
+}
+
+.ant-list-bordered{
+  border: none;
+}

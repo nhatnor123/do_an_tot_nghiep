@@ -5,3 +5,11 @@
 .ant-list-split .ant-list-item {
   border-bottom: 1px groove #f0f0f0;
 }
+
+.ant-list-item{
+  margin-bottom: 15px;
+}
+
+.ant-list-bordered{
+  border: none;
+}
