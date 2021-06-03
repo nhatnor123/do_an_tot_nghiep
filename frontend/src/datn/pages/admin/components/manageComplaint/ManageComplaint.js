@@ -10,14 +10,15 @@ class CourseDetail extends React.Component {
   render() {
     return (
       <div>
-        <Tabs defaultActiveKey="1" tabPosition="left">
+        {/* <Tabs defaultActiveKey="1" tabPosition="left">
           <TabPane tab="Trả lời khiếu nại" key="1">
             <ManageCourseComplaint />
           </TabPane>
           <TabPane tab="Xem khiếu nại giáo viên" key="2">
             <ManageMyComplaint />
           </TabPane>
-        </Tabs>
+        </Tabs> */}
+        <ManageCourseComplaint />
       </div>
     );
   }

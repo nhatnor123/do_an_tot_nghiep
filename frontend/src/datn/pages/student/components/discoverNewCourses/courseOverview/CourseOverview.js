@@ -10,7 +10,11 @@ import {
   Form,
   Input,
 } from "antd";
-import { LogoutOutlined, LoginOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  LoginOutlined,
+  PlusCircleFilled,
+} from "@ant-design/icons";
 import courseApi from "../../../../../api/CourseApi";
 import studentCourseApi from "../../../../../api/StudentCourseApi";
 import { getAccessToken } from "../../../../../api/TokenUtil";
@@ -133,14 +137,14 @@ class CourseOverview extends React.Component {
     }
   };
 
-  handleSummitJoinCourse = async (value) => {
+  handleRequestJoinCourse = async () => {
     var accessToken = getAccessToken();
 
     try {
       const response = await studentCourseApi.requestToJoinCourse(
         {
           courseId: this.state.courseId,
-          code: value.code,
+          code: null,
         },
         accessToken
       );
@@ -159,6 +163,35 @@ class CourseOverview extends React.Component {
     } catch (e) {
       console.error(e);
       message.error("Yêu cầu tham gia khóa học thất bại", 3);
+    }
+  };
+
+  handleSummitJoinCourseByCode = async (value) => {
+    var accessToken = getAccessToken();
+
+    try {
+      const response = await studentCourseApi.requestToJoinCourse(
+        {
+          courseId: this.state.courseId,
+          code: value.code ? value.code : "",
+        },
+        accessToken
+      );
+      console.log("resp = ", response);
+      message.success("Tham gia khóa học thành công", 3);
+      if (response.isApproved) {
+        this.props.history.push(
+          `/student/manageCourse/course/${this.state.courseId}`
+        );
+      } else {
+        this.getCourseDetail();
+      }
+      this.setState({
+        isModalCourseCodeVisible: false,
+      });
+    } catch (e) {
+      console.error(e);
+      message.error("Mã code không chính xác", 3);
     }
   };
 
@@ -183,19 +216,30 @@ class CourseOverview extends React.Component {
               </Popconfirm>
             </Col>
           ) : (
-            <Col span={5}>
-              <Button
-                type="primary"
-                onClick={this.showModalCourseCode}
-                style={{ margin: "1% 20px 1% 20px" }}
-              >
-                <LoginOutlined /> Yêu cầu tham gia khóa học
-              </Button>
-            </Col>
+            <>
+              <Col span={4}>
+                <Button
+                  type="primary"
+                  onClick={this.handleRequestJoinCourse}
+                  style={{ margin: "1% 20px 1% 20px" }}
+                >
+                  <PlusCircleFilled /> Yêu cầu tham gia
+                </Button>
+              </Col>
+              <Col span={4}>
+                <Button
+                  type="primary"
+                  onClick={this.showModalCourseCode}
+                  style={{ margin: "1% 20px 1% 20px" }}
+                >
+                  <LoginOutlined /> Tham gia bằng mã code
+                </Button>
+              </Col>
+            </>
           )}
         </Row>
         <Modal
-          title="Yêu cầu tham gia khóa học"
+          title="Tham gia khóa học bằng mã Code"
           width={650}
           okButtonProps={{ disabled: true }}
           cancelText={"Thoát"}
@@ -207,13 +251,20 @@ class CourseOverview extends React.Component {
             layout="vertical"
             hideRequiredMark
             scrollToFirstError
-            onFinish={this.handleSummitJoinCourse}
+            onFinish={this.handleSummitJoinCourseByCode}
             ref={this.formRefJoinCourse}
           >
             <Form.Item {...tailFormItemLayout}>
               <Form.Item
                 name="code"
                 label={<div style={labelStyle}>Mã Code</div>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập mã code !",
+                    whitespace: true,
+                  },
+                ]}
               >
                 <Input style={inputStyle} />
               </Form.Item>
@@ -237,7 +288,7 @@ class CourseOverview extends React.Component {
           </Form>
         </Modal>
 
-        <Row style={{ marginTop: "10px" }}>
+        <Row style={{ marginTop: "30px" }}>
           <Col span={16} offset={4}>
             <img
               src={courseDetail.imageUrl}
