@@ -150,14 +150,16 @@ public class StudentCourseServiceImpl implements StudentCourseService {
     }
 
     @Override
-    public StudentCourse requestToJoinCourse(Long courseId, String code) {
+    public StudentCourse requestToJoinCourse(Long courseId, String code) throws Exception {
         AccountDto accountDto = accountService.getSelfAccount();
         Long studentId = accountDto.getStudent().getStudentId();
         boolean isApproved = false;
-        if (code != null && !code.isEmpty()) {
+        if (code != null) {
             Course course = courseService.getById(courseId);
             if (code.equals(course.getCode())) {
                 isApproved = true;
+            } else {
+                throw new Exception();
             }
         }
 

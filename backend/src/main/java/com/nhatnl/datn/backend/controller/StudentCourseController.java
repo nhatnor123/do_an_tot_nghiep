@@ -76,7 +76,7 @@ public class StudentCourseController {
 
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping(path = "/request-join-course")
-    public ResponseEntity<?> requestToJoinCourse(@RequestBody RequestToJoinCourseReq request) {
+    public ResponseEntity<?> requestToJoinCourse(@RequestBody RequestToJoinCourseReq request) throws Exception {
         log.info("requestToJoinCourse");
         return ResponseEntity.ok(studentCourseService.requestToJoinCourse(request.getCourseId(), request.getCode()));
     }

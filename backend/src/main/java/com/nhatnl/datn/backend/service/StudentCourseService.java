@@ -25,7 +25,7 @@ public interface StudentCourseService {
 
     GetStudentsJoiningCourseResp getStudentsJoiningCourse(Long courseId);
 
-    StudentCourse requestToJoinCourse(Long courseId, String code);
+    StudentCourse requestToJoinCourse(Long courseId, String code) throws Exception;
 
     StudentCourse cancelRequestToJoinCourse(Long courseId);
 

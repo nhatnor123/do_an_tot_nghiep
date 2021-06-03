@@ -33,8 +33,11 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    this.checkRole();
     this.getStatistic();
   }
+
+  checkRole = () => {};
 
   getStatistic = async () => {
     var accessToken = getAccessToken();
