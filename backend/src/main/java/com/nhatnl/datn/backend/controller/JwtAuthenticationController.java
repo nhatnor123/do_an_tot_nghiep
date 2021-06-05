@@ -70,10 +70,10 @@ public class JwtAuthenticationController {
 
         for (GrantedAuthority grantedAuthority : user.getAuthorities()) {
             if (grantedAuthority.getAuthority().equals(ConfigConstant.ROLE_PREFIX + request.getRole().name())) {
-                return ResponseEntity.ok(true);
+                return new ResponseEntity<>(true, HttpStatus.OK);
             }
         }
-        return ResponseEntity.ok(false);
+        return new ResponseEntity<>(false, HttpStatus.OK);
     }
 
 }
