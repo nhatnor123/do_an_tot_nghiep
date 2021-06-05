@@ -176,6 +176,7 @@ class ManageComplaint extends React.Component {
     this.setState({
       isModalViewVisible: false,
     });
+    this.formRef.current.resetFields();
   };
 
   getColumnSearchProps = (dataIndex) => ({
@@ -276,14 +277,10 @@ class ManageComplaint extends React.Component {
       );
       console.log("res = ", response);
       let dataSourceResponsed = response.map((item, index) => {
-        let temp = null;
+        let temp = "Học viên gửi đến giáo viên";
         let status =
           item.replyContent === null ? "Chưa phản hồi" : "Đã phản hồi";
-        if (item.type === "STUDENT_TO_ADMIN") {
-          temp = "Gửi đến quản trị viên";
-        } else if (item.type === "STUDENT_TO_TEACHER") {
-          temp = "Gửi đến giáo viên";
-        }
+
         return {
           ...item,
           typeText: temp,

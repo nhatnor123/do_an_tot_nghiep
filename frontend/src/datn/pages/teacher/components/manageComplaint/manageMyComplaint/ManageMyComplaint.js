@@ -289,14 +289,10 @@ class ManageComplaint extends React.Component {
       );
       console.log("res = ", response);
       let dataSourceResponsed = response.map((item, index) => {
-        let temp = null;
+        let temp = "Giáo viên gửi đến QTV";
         let status =
           item.replyContent === null ? "Chưa phản hồi" : "Đã phản hồi";
-        if (item.type === "STUDENT_TO_ADMIN") {
-          temp = "Gửi đến quản trị viên";
-        } else if (item.type === "STUDENT_TO_TEACHER") {
-          temp = "Gửi đến giáo viên";
-        }
+
         return {
           ...item,
           typeText: temp,
@@ -490,7 +486,7 @@ class ManageComplaint extends React.Component {
                     <div style={{ marginTop: "5px", marginBottom: "10px" }}>
                       <div>
                         <h5 style={{ fontWeight: 600 }}>
-                          Loại khiếu nại: Giáo viên gửi đến admin
+                          Loại khiếu nại: Giáo viên gửi đến Quản trị viên
                         </h5>
                       </div>
                       {"Từ: " +

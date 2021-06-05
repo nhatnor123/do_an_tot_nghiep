@@ -139,11 +139,22 @@ class ManageComplaint extends React.Component {
           },
           accessToken
         );
+        let response_2;
+        if (complaint.toAccountId) {
+          response_2 = await accountApi.getById(
+            {
+              accountId: complaint.toAccountId,
+            },
+            accessToken
+          );
+        }
         console.log("resp = ", response);
+        console.log("response_2 = ", response_2);
 
         this.setState({
           complaintViewed: complaint,
           fromAccount: response,
+          toAccount: response_2,
           isModalViewVisible: true,
         });
       } catch (e) {
@@ -169,6 +180,7 @@ class ManageComplaint extends React.Component {
     this.setState({
       isModalViewVisible: false,
     });
+    this.formRef.current.resetFields();
   };
 
   getColumnSearchProps = (dataIndex) => ({
@@ -273,9 +285,9 @@ class ManageComplaint extends React.Component {
         let status =
           item.replyContent === null ? "Chưa phản hồi" : "Đã phản hồi";
         if (item.type === "STUDENT_TO_ADMIN") {
-          temp = "Gửi đến quản trị viên";
-        } else if (item.type === "STUDENT_TO_TEACHER") {
-          temp = "Gửi đến giáo viên";
+          temp = "Học viên gửi đến QTV";
+        } else if (item.type === "TEACHER_TO_ADMIN") {
+          temp = "Giáo viên gửi đến QTV";
         }
         return {
           ...item,
@@ -319,6 +331,7 @@ class ManageComplaint extends React.Component {
       this.setState({
         visible: false,
       });
+      this.onCloseModalViewComplaint();
       this.getComplaintList();
     } catch (e) {
       console.error(e);
@@ -364,6 +377,7 @@ class ManageComplaint extends React.Component {
 
     let complaintViewed = this.state.complaintViewed;
     let fromAccount = this.state.fromAccount;
+    let toAccount = this.state.toAccount;
 
     return (
       <Layout className="site-layout">
@@ -395,8 +409,8 @@ class ManageComplaint extends React.Component {
                             <h5 style={{ fontWeight: 600 }}>
                               Loại khiếu nại:{" "}
                               {complaintViewed.type === "STUDENT_TO_ADMIN"
-                                ? "Học viên gửi đến Admin"
-                                : "Giáo viên gửi đến Admin"}
+                                ? "Học viên gửi đến Quản trị viên"
+                                : "Giáo viên gửi đến Quản trị viên"}
                             </h5>
                           </div>
                           {"Từ: " +
@@ -407,42 +421,68 @@ class ManageComplaint extends React.Component {
                             fromAccount.email +
                             ")"}
                         </div>
+                        {toAccount ? (
+                          <div
+                            style={{ marginTop: "5px", marginBottom: "10px" }}
+                          >
+                            {"Người trả lời: " +
+                              toAccount.firstName +
+                              " " +
+                              toAccount.lastName +
+                              " (" +
+                              toAccount.email +
+                              ")"}
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
 
                         <h5 style={{ fontWeight: 600 }}>Nội dung : </h5>
                         {Parser(complaintViewed.content)}
+
+                        {complaintViewed.replyContent === null ? (
+                          <>
+                            <Form.Item
+                              name="replyContent"
+                              label={
+                                <h5 style={{ fontWeight: 600 }}>
+                                  Nội dung phản hồi
+                                </h5>
+                              }
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng nhập nội dung phản hồi !",
+                                },
+                              ]}
+                            >
+                              <TextEditor />
+                            </Form.Item>
+
+                            <Button
+                              type="primary"
+                              htmlType="submit"
+                              style={{ margin: "10px 10px 10px 10%" }}
+                            >
+                              Gửi
+                            </Button>
+                            <Button
+                              type="primary"
+                              style={{ margin: "10px 10px 30px 30%" }}
+                              onClick={this.handleResetForm}
+                              htmlType="button"
+                            >
+                              Đặt lại
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <h5 style={{ fontWeight: 600 }}>Phản hồi : </h5>
+                            {Parser(complaintViewed.replyContent)}
+                          </>
+                        )}
                       </div>
                     ) : null}
-
-                    <Form.Item
-                      name="replyContent"
-                      label={
-                        <h5 style={{ fontWeight: 600 }}>Nội dung phản hồi</h5>
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng nhập nội dung phản hồi !",
-                        },
-                      ]}
-                    >
-                      <TextEditor />
-                    </Form.Item>
-
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      style={{ margin: "10px 10px 10px 10%" }}
-                    >
-                      Gửi
-                    </Button>
-                    <Button
-                      type="primary"
-                      style={{ margin: "10px 10px 30px 30%" }}
-                      onClick={this.handleResetForm}
-                      htmlType="button"
-                    >
-                      Đặt lại
-                    </Button>
                   </Form.Item>
                 </Form>
               </Modal>
