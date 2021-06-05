@@ -277,7 +277,7 @@ class ManageComplaint extends React.Component {
       );
       console.log("res = ", response);
       let dataSourceResponsed = response.map((item, index) => {
-        let temp = "Học viên gửi đến giáo viên";
+        let temp = "Học viên gửi đến Giáo viên";
         let status =
           item.replyContent === null ? "Chưa phản hồi" : "Đã phản hồi";
 
@@ -322,6 +322,7 @@ class ManageComplaint extends React.Component {
       this.setState({
         visible: false,
       });
+      this.onCloseModalViewComplaint();
       this.getComplaintList();
     } catch (e) {
       console.error(e);
@@ -397,7 +398,7 @@ class ManageComplaint extends React.Component {
                         <div style={{ marginTop: "5px", marginBottom: "10px" }}>
                           <div>
                             <h5 style={{ fontWeight: 600 }}>
-                              Loại khiếu nại: Học viên gửi đến giáo viên
+                              Loại khiếu nại: Học viên gửi đến Giáo viên
                             </h5>
                           </div>
                           {"Từ: " +
@@ -420,39 +421,50 @@ class ManageComplaint extends React.Component {
 
                         <h5 style={{ fontWeight: 600 }}>Nội dung : </h5>
                         {Parser(complaintViewed.content)}
+
+                        {complaintViewed.replyContent === null ? (
+                          <>
+                            <Form.Item
+                              name="replyContent"
+                              label={
+                                <h5 style={{ fontWeight: 600 }}>
+                                  Nội dung phản hồi
+                                </h5>
+                              }
+                              rules={[
+                                {
+                                  required: true,
+                                  message: "Vui lòng nhập nội dung phản hồi !",
+                                },
+                              ]}
+                            >
+                              <TextEditor />
+                            </Form.Item>
+
+                            <Button
+                              type="primary"
+                              htmlType="submit"
+                              style={{ margin: "10px 10px 10px 10%" }}
+                            >
+                              Gửi
+                            </Button>
+                            <Button
+                              type="primary"
+                              style={{ margin: "10px 10px 30px 30%" }}
+                              onClick={this.handleResetForm}
+                              htmlType="button"
+                            >
+                              Đặt lại
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <h5 style={{ fontWeight: 600 }}>Phản hồi : </h5>
+                            {Parser(complaintViewed.replyContent)}
+                          </>
+                        )}
                       </div>
                     ) : null}
-
-                    <Form.Item
-                      name="replyContent"
-                      label={
-                        <h5 style={{ fontWeight: 600 }}>Nội dung phản hồi</h5>
-                      }
-                      rules={[
-                        {
-                          required: true,
-                          message: "Vui lòng nhập nội dung phản hồi !",
-                        },
-                      ]}
-                    >
-                      <TextEditor />
-                    </Form.Item>
-
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      style={{ margin: "10px 10px 10px 10%" }}
-                    >
-                      Gửi
-                    </Button>
-                    <Button
-                      type="primary"
-                      style={{ margin: "10px 10px 30px 30%" }}
-                      onClick={this.handleResetForm}
-                      htmlType="button"
-                    >
-                      Đặt lại
-                    </Button>
                   </Form.Item>
                 </Form>
               </Modal>

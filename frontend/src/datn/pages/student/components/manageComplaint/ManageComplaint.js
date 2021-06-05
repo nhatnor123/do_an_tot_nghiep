@@ -470,7 +470,9 @@ class ManageComplaint extends React.Component {
                     <Form.Item
                       name="toAccountId"
                       label={
-                        <div style={labelStyle}>Khiếu nại đến khóa học</div>
+                        <div style={labelStyle}>
+                          Khiếu nại liên quan đến khóa học
+                        </div>
                       }
                       rules={[
                         {
