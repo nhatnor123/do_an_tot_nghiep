@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, Tag } from "antd";
+import { Col, Row } from "antd";
 
 import "./TeacherGrid.css";
 

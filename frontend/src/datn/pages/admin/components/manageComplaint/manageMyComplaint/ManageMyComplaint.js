@@ -6,53 +6,21 @@ import {
   Input,
   Button,
   Space,
-  Form,
   Tooltip,
-  Popconfirm,
-  Radio,
   Modal,
-  Select,
 } from "antd";
-import TextEditor from "../../richTextEditor/TextEditor";
+
 import Highlighter from "react-highlight-words";
 import Parser from "html-react-parser";
-import {
-  SearchOutlined,
-  PlusOutlined,
-  FileSearchOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, FileSearchOutlined } from "@ant-design/icons";
 
 import accountApi from "../../../../../api/AccountApi";
 import ComplaintApi from "../../../../../api/ComplaintApi";
-import CourseApi from "../../../../../api/CourseApi";
 import { getAccessToken } from "../../../../../api/TokenUtil";
 
 import "./ManageMyComplaint.css";
 
-const { Option } = Select;
 const { Content } = Layout;
-
-const inputStyle = {
-  fontSize: "16px",
-};
-
-const labelStyle = {
-  fontSize: "14px",
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 18,
-      offset: 0,
-    },
-    sm: {
-      span: 24,
-      offset: 0,
-    },
-  },
-};
 
 message.config({
   top: 80,

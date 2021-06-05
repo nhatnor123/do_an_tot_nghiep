@@ -1,46 +1,10 @@
 import React from "react";
-import {
-  Form,
-  Input,
-  Modal,
-  Button,
-  message,
-  Row,
-  Col,
-  Radio,
-  Space,
-  InputNumber,
-  DatePicker,
-  TimePicker,
-} from "antd";
+import { Input, message, Row, Col } from "antd";
 
 import TestGrid from "../testGrid/TestGrid";
 
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
-
 import TestApi from "../../../../api/TestApi";
 import { getAccessToken } from "../../../../api/TokenUtil";
-
-const inputStyle = {
-  fontSize: "16px",
-};
-
-const labelStyle = {
-  fontSize: "14px",
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 18,
-      offset: 0,
-    },
-    sm: {
-      span: 24,
-      offset: 0,
-    },
-  },
-};
 
 class ManageTest extends React.Component {
   constructor(props) {

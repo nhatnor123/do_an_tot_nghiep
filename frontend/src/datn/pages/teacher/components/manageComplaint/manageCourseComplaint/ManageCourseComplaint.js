@@ -9,7 +9,6 @@ import {
   Form,
   Tooltip,
   Popconfirm,
-  Radio,
   Modal,
 } from "antd";
 import TextEditor from "../../richTextEditor/TextEditor";
@@ -28,14 +27,6 @@ import { getAccessToken } from "../../../../../api/TokenUtil";
 import "./ManageCourseComplaint.css";
 
 const { Content } = Layout;
-
-const inputStyle = {
-  fontSize: "16px",
-};
-
-const labelStyle = {
-  fontSize: "14px",
-};
 
 const tailFormItemLayout = {
   wrapperCol: {

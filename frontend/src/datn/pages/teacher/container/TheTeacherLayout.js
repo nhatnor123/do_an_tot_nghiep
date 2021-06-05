@@ -64,7 +64,7 @@ class TheAdminLayout extends React.Component {
     } else if (isValid === false) {
       return <Page404 />;
     } else {
-      return <div>Loading</div>;
+      return <div></div>;
     }
   }
 }

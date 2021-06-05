@@ -148,7 +148,7 @@ class Register extends React.Component {
         <CContainer>
           <CRow className="justify-content-center">
             <CCol md="10" lg="8" xl="7">
-              <CCard className="mx-4">
+              <CCard className="mx-4" style={{ marginTop: "22px" }}>
                 <CCardBody className="p-4">
                   <Form
                     {...formItemLayout}

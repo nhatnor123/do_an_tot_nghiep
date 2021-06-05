@@ -173,7 +173,7 @@ class CourseOverview extends React.Component {
         </Row>
       </div>
     ) : (
-      <div>Loading</div>
+      <div></div>
     );
   }
 }

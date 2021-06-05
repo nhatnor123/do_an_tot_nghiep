@@ -265,7 +265,7 @@ class TestDetail extends React.Component {
         </Col>
       </div>
     ) : (
-      <div>Loading</div>
+      <div></div>
     );
   }
 }

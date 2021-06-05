@@ -11,7 +11,6 @@ import {
   Popconfirm,
   Radio,
   Modal,
-  Select,
 } from "antd";
 import TextEditor from "../../richTextEditor/TextEditor";
 import Highlighter from "react-highlight-words";
@@ -25,12 +24,10 @@ import {
 
 import accountApi from "../../../../../api/AccountApi";
 import ComplaintApi from "../../../../../api/ComplaintApi";
-import CourseApi from "../../../../../api/CourseApi";
 import { getAccessToken } from "../../../../../api/TokenUtil";
 
 import "./ManageMyComplaint.css";
 
-const { Option } = Select;
 const { Content } = Layout;
 
 const inputStyle = {

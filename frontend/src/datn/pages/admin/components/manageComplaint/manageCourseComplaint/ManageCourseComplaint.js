@@ -28,10 +28,6 @@ import "./ManageCourseComplaint.css";
 
 const { Content } = Layout;
 
-const labelStyle = {
-  fontSize: "14px",
-};
-
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {

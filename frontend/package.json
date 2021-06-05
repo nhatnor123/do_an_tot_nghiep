@@ -39,6 +39,7 @@
     "enzyme": "^3.11.0",
     "html-react-parser": "^1.2.5",
     "js-cookie": "^2.2.1",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",

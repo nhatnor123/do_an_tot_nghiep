@@ -86,7 +86,7 @@ class LessonDetail extends React.Component {
         </div>
       </div>
     ) : (
-      <div>Loading</div>
+      <div></div>
     );
   }
 }

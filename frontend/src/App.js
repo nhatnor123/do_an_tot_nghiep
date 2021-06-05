@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { AuthRoute } from "./datn/components/auth/AuthRoute";
 import "./scss/style.scss";
 
+import Home from "./datn/pages/home/Home";
 import TheAdminLayout from "./datn/pages/admin/container/TheAdminLayout";
 import TheTeacherLayout from "./datn/pages/teacher/container/TheTeacherLayout";
 import TheStudentLayout from "./datn/pages/student/container/TheStudentLayout";
@@ -32,6 +33,12 @@ class App extends Component {
       <BrowserRouter>
         <React.Suspense fallback={loading}>
           <Switch>
+            <Route
+              exact
+              path="/"
+              name="Home Page"
+              render={(props) => <Home {...props} />}
+            />
             <Route
               exact
               path="/login"
