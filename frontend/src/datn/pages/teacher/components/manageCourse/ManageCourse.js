@@ -286,7 +286,12 @@ class ManageCourse extends React.Component {
                 name="imageUrl"
                 label={<div style={labelStyle}>Ảnh đại diện khóa học</div>}
               >
-                <ImgCrop rotate={true} aspect={1.5}>
+                <ImgCrop
+                  rotate={true}
+                  aspect={1.5}
+                  modalTitle="Chỉnh sửa ảnh"
+                  modalCancel="Thoát"
+                >
                   <Upload
                     action={dbFileApi.uploadFileUrl}
                     listType="picture-card"
