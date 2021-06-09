@@ -138,7 +138,7 @@ CREATE TABLE `Complaint` (
     `isActive` BOOLEAN NOT NULL,
     `createdAt` DATETIME NOT NULL,
     `updatedAt` DATETIME NOT NULL,
-    PRIMARY KEY (`complaintId`)
+    PRIMARY KEY (`LessoncomplaintId`)
 );
 
 ALTER TABLE `Comment` ADD CONSTRAINT `Comment_fk0` FOREIGN KEY (`commentParentId`) REFERENCES `Comment`(`commentId`);
