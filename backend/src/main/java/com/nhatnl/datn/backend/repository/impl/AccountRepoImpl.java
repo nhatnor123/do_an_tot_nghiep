@@ -22,7 +22,7 @@ public class AccountRepoImpl implements AccountRepo {
     @Transactional(rollbackFor = Exception.class)
     public Account create(Account account) {
         account.setCreatedAt(new Date());
-        account.setUpdatedAt(new Date());
+//        account.setUpdatedAt(new Date());
         entityManager.persist(account);
         return account;
     }

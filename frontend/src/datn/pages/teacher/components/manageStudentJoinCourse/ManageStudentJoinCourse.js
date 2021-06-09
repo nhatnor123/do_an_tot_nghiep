@@ -260,8 +260,8 @@ class ManageStudentJoinCourse extends React.Component {
         return {
           ...item,
           isApprovedText: item.isApproved ? "Đã phê duyệt" : "Chờ phê duyệt",
-          createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
-          updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
+          // createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
+          // updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
           index: index + 1,
         };
       });

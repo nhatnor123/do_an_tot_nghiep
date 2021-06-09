@@ -22,6 +22,7 @@ import {
   LockOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
+import moment from "moment";
 
 import accountApi from "../../../../api/AccountApi";
 import dbFileApi from "../../../../api/DBFileApi";
@@ -298,9 +299,9 @@ class ManageUserAccount extends React.Component {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : "",
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -362,7 +363,7 @@ class ManageUserAccount extends React.Component {
         return {
           ...item,
           isActiveText: item.isActive ? "Đang hoạt động" : "Bị khóa",
-          // birthday: item.birthday.substring(0, item.birthday.length - 19),
+          birthday: moment(item.birthday).format("DD/MM/YYYY"),
           // createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
           // updatedAt: item.updatedAt.substring(0, item.updatedAt.length - 10),
           index: index + 1,

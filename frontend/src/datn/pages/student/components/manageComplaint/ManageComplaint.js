@@ -307,10 +307,10 @@ class ManageComplaint extends React.Component {
           ...item,
           typeText: temp,
           status,
-          createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
-          updatedAt: item.replyContent
-            ? item.updatedAt.substring(0, item.updatedAt.length - 10)
-            : "",
+          // createdAt: item.createdAt.substring(0, item.createdAt.length - 10),
+          // updatedAt: item.replyContent
+          //   ? item.updatedAt.substring(0, item.updatedAt.length - 10)
+          //   : "",
           index: index + 1,
         };
       });

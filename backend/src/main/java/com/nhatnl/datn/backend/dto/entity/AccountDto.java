@@ -1,9 +1,10 @@
 package com.nhatnl.datn.backend.dto.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nhatnl.datn.backend.model.Account;
 import com.nhatnl.datn.backend.model.Student;
 import com.nhatnl.datn.backend.model.Teacher;
+import com.nhatnl.datn.backend.util.CustomDateSerializer;
 import lombok.*;
 
 import java.util.Date;
@@ -22,12 +23,11 @@ public class AccountDto {
     private String phoneNo;
     private String address;
     private String imageUrl;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date birthday;
     private Boolean isActive;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date createdAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
+    @JsonSerialize(using = CustomDateSerializer.class)
     private Date updatedAt;
     private Student student;
     private Teacher teacher;

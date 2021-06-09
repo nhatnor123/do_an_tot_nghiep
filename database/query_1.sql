@@ -2,6 +2,10 @@ create database do_an_tot_nghiep;
 
 use do_an_tot_nghiep;
 
+create database do_an_tot_nghiep_2;
+
+use do_an_tot_nghiep_2;
+
 CREATE TABLE `Account` (
 	`accountId` INT NOT NULL AUTO_INCREMENT,
 	`username` VARCHAR(255) NOT NULL ,
@@ -138,7 +142,7 @@ CREATE TABLE `Complaint` (
     `isActive` BOOLEAN NOT NULL,
     `createdAt` DATETIME NOT NULL,
     `updatedAt` DATETIME NOT NULL,
-    PRIMARY KEY (`LessoncomplaintId`)
+    PRIMARY KEY (`complaintId`)
 );
 
 ALTER TABLE `Comment` ADD CONSTRAINT `Comment_fk0` FOREIGN KEY (`commentParentId`) REFERENCES `Comment`(`commentId`);
@@ -168,3 +172,9 @@ ALTER TABLE `StudentTest` ADD CONSTRAINT `StudentTest_fk1` FOREIGN KEY (`testId`
 ALTER TABLE `StudentTest` ADD CONSTRAINT `unique_key` Unique key (`studentId`, `testId`);
 
 ALTER TABLE `StudentCourse` ADD CONSTRAINT `unique_key` Unique key (`studentId`, `courseId`);
+
+ALTER TABLE `Complaint` ADD CONSTRAINT `Complaint_fk2` FOREIGN KEY (`fromAccountId`) REFERENCES `Account`(`accountId`);
+
+ALTER TABLE `Complaint` ADD CONSTRAINT `Complaint_fk1` FOREIGN KEY (`toAccountId`) REFERENCES `Account`(`accountId`);
+
+ALTER TABLE `CourseFile` ADD CONSTRAINT `CourseFile_fk1` FOREIGN KEY (`courseId`) REFERENCES `Course`(`courseId`);

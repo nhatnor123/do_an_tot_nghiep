@@ -31,7 +31,7 @@ public class StudentTestServiceImpl implements StudentTestService {
                 .score(req.getScore())
                 .feedback(" ")
                 .doAt(new Date())
-                .feedbackAt(new Date())
+                .feedbackAt(null)
                 .build();
 
         return studentTestRepo.create(studentTest);

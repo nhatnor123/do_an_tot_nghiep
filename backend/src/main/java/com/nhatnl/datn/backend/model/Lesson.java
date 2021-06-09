@@ -1,6 +1,8 @@
 package com.nhatnl.datn.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nhatnl.datn.backend.util.CustomDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,10 +37,12 @@ public class Lesson {
     @Column(name = "isActive", nullable = false)
     private Boolean isActive;
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(name = "updatedAt", nullable = false)
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @Column(name = "updatedAt")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

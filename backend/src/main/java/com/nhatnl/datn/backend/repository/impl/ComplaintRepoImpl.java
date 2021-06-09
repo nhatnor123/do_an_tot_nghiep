@@ -22,7 +22,7 @@ public class ComplaintRepoImpl implements ComplaintRepo {
     @Transactional(rollbackFor = Exception.class)
     public Complaint create(Complaint complaint) {
         complaint.setCreatedAt(new Date());
-        complaint.setUpdatedAt(new Date());
+//        complaint.setUpdatedAt(new Date());
         entityManager.persist(complaint);
         return complaint;
     }

@@ -229,10 +229,7 @@ class Comment extends React.Component {
           author: comment.otherInfo.name,
           avatar: comment.otherInfo.imageUrl,
           content: comment.comment.content,
-          datetime: comment.comment.updatedAt.substring(
-            0,
-            comment.comment.updatedAt.length - 10
-          ),
+          datetime: comment.comment.createdAt,
           isCommentOfSelfAccount:
             comment.comment.accountId === this.state.selfAccountInfo.accountId,
         };

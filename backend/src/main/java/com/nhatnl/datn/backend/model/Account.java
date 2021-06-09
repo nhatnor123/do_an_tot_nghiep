@@ -1,6 +1,8 @@
 package com.nhatnl.datn.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nhatnl.datn.backend.util.CustomDateSerializer;
 import lombok.*;
 
 import javax.persistence.*;
@@ -53,10 +55,12 @@ public class Account {
     @Column(name = "isActive", nullable = false)
     private Boolean isActive;
 
+    @JsonSerialize(using = CustomDateSerializer.class)
     @Column(name = "createdAt", nullable = false)
     private Date createdAt;
 
-    @Column(name = "updatedAt", nullable = false)
+    @JsonSerialize(using = CustomDateSerializer.class)
+    @Column(name = "updatedAt")
     private Date updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")

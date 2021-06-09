@@ -1,5 +1,6 @@
 package com.nhatnl.datn.backend.dto.response.studentCourse;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,9 @@ public class GetStudentsJoiningCourseResp {
         private String firstName;
         private String lastName;
         private Boolean isApproved;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
         public Date createdAt;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
         public Date updatedAt;
     }
 

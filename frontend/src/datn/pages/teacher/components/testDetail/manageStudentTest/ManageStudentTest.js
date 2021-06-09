@@ -264,10 +264,8 @@ class ManageStudentJoinCourse extends React.Component {
           testDetail: temp,
           isTestDid,
           isTestDidText: isTestDid ? "Đã làm" : "Chưa làm",
-          doAt: isTestDid ? temp.doAt.substring(0, temp.doAt.length - 10) : "",
-          feedbackAt: isTestDid
-            ? temp.feedbackAt.substring(0, temp.feedbackAt.length - 10)
-            : "",
+          doAt: isTestDid ? temp.doAt : "",
+          feedbackAt: isTestDid ? temp.feedbackAt : "",
           index: index + 1,
         };
       });
@@ -291,7 +289,7 @@ class ManageStudentJoinCourse extends React.Component {
           testId: this.state.studentTest.testId,
           studentId: this.state.studentTest.studentId,
           feedback: value.feedback,
-          fieldList: ["feedback"],
+          fieldList: ["feedback", "feedbackAt"],
         },
         accessToken
       );
