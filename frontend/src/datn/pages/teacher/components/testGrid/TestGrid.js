@@ -45,9 +45,13 @@ class TestGrid extends React.Component {
                   >
                     <div style={{ marginBottom: "10px" }}>
                       {"Thời gian: " +
-                        test.dateTimeStart.substring(0, 19) +
-                        " ---> " +
-                        test.dateTimeEnd.substring(0, 19)}
+                        moment(test.dateTimeStart)
+                          .format("DD/MM/yyyy HH:mm:ss")
+                          .toString() +
+                        " ----> " +
+                        moment(test.dateTimeEnd)
+                          .format("DD/MM/yyyy HH:mm:ss")
+                          .toString()}
                     </div>
                     {test.description}
                     <br></br>

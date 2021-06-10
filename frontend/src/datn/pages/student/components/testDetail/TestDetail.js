@@ -153,9 +153,13 @@ class TestDetail extends React.Component {
           </div>
           <div style={{ marginBottom: "23px", fontSize: "17px" }}>
             {"Thời gian: " +
-              testDetail.dateTimeStart.substring(0, 19) +
+              moment(testDetail.dateTimeStart)
+                .format("DD/MM/yyyy HH:mm:ss")
+                .toString() +
               " ----> " +
-              testDetail.dateTimeEnd.substring(0, 19)}
+              moment(testDetail.dateTimeEnd)
+                .format("DD/MM/yyyy HH:mm:ss")
+                .toString()}
           </div>
           <div
             style={{
