@@ -20,7 +20,7 @@ CREATE TABLE `Account` (
 	`birthday` DATE NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`accountId`)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE `Comment` (
 	`content` TEXT NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`commentId`)
 );
 
@@ -43,7 +43,7 @@ CREATE TABLE `Student` (
 	`description` TEXT ,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`studentId`)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE `Teacher` (
 	`isPublic` BOOLEAN NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME,
 	PRIMARY KEY (`teacherId`)
 );
 
@@ -69,7 +69,7 @@ CREATE TABLE `Course` (
 	`isPublic` BOOLEAN NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`courseId`)
 );
 
@@ -81,7 +81,7 @@ CREATE TABLE `Lesson` (
 	`content` LONGBLOB NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`lessonId`)
 );
 
@@ -91,7 +91,7 @@ CREATE TABLE `StudentCourse` (
 	`isApproved` BOOLEAN NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL
+	`updatedAt` DATETIME 
 );
 
 CREATE TABLE `CourseFile` (
@@ -102,7 +102,7 @@ CREATE TABLE `CourseFile` (
     `description` TEXT NOT NULL,
     `isActive` BOOLEAN NOT NULL,
     `createdAt` DATETIME NOT NULL,
-    `updatedAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME ,
     PRIMARY KEY (`courseFileId`)
 );
 
@@ -117,7 +117,7 @@ CREATE TABLE `Test` (
 	`dateTimeEnd` DATETIME NOT NULL,
 	`isActive` BOOLEAN NOT NULL,
 	`createdAt` DATETIME NOT NULL,
-	`updatedAt` DATETIME NOT NULL,
+	`updatedAt` DATETIME ,
 	PRIMARY KEY (`testId`)
 );
 
@@ -128,7 +128,7 @@ CREATE TABLE `StudentTest` (
 	`score` varchar(255) NOT NULL,
 	`feedback` TEXT NOT NULL,
 	`doAt` DATETIME NOT NULL,
-	`feedbackAt` DATETIME NOT NULL
+	`feedbackAt` DATETIME 
 );
 
 CREATE TABLE `Complaint` (
@@ -141,7 +141,7 @@ CREATE TABLE `Complaint` (
     `toAccountId` INT,
     `isActive` BOOLEAN NOT NULL,
     `createdAt` DATETIME NOT NULL,
-    `updatedAt` DATETIME NOT NULL,
+    `updatedAt` DATETIME,
     PRIMARY KEY (`complaintId`)
 );
 

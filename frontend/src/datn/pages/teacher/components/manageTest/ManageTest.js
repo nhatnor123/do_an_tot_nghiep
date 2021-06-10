@@ -14,6 +14,8 @@ import {
   TimePicker,
 } from "antd";
 
+import moment from "moment";
+
 import TestGrid from "../testGrid/TestGrid";
 
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -128,8 +130,41 @@ class ManageTest extends React.Component {
 
     var answer = [];
 
-    var modifiedContent = value.content.map((content) => {
+    console.log("VALUE = ", value)
+
+    let tempStartAt = moment(value.dateStart.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+      value.timeStart.format("YYYY-MM-DD HH:mm:ss").substring(11, 19));
+    console.log("tempStartAt = " + tempStartAt)
+
+    let tempEndAt = moment(value.dateEnd.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+      value.timeEnd.format("YYYY-MM-DD HH:mm:ss").substring(11, 19));
+
+    let isTimeValid = tempStartAt.isBefore(tempEndAt)
+    console.log("Time is valid ? :" + isTimeValid)
+
+    if (!isTimeValid) {
+      message.error("Thời gian bắt đầu phải trước thời gian kết thúc");
+      return;
+    }
+    if (tempEndAt.isSameOrBefore(moment())) {
+      message.error("Thời gian kết thúc phải sau thời gian hiện tại");
+      return;
+    }
+
+    if (!value.content) {
+      message.error("Phải tạo ít nhất 1 câu hỏi cho bài kiểm tra");
+      return;
+    }
+
+    let isValid = true;
+
+    var modifiedContent = value.content.map((content, index) => {
       let trueAnswer = [];
+      if (!content.option) {
+        message.error("Câu hỏi số " + (index + 1) + " chưa có câu trả lời");
+        isValid = false;
+        return;
+      }
       let response = {
         question: content.question,
         option: content.option.map((option, optionIndex) => {
@@ -148,6 +183,10 @@ class ManageTest extends React.Component {
 
       return response;
     });
+
+    if (!isValid) {
+      return;
+    }
 
     var req = {
       courseId: this.props.courseId,
