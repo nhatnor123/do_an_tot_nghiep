@@ -122,6 +122,7 @@ class ManageCourseFile extends React.Component {
     this.setState({
       isModalUpdateCourseFileVisible: false,
     });
+    this.formRefUpdateCourseFile.current.resetFields();
   };
 
   handleResetFormCreateNewCourseFile = () => {
@@ -195,7 +196,7 @@ class ManageCourseFile extends React.Component {
       message.success("Sửa tài liệu khóa học thành công", 3);
       this.onCloseModalUpdateCourseFile();
       this.getCourseFileList();
-      this.handleResetFormUpdateCourse();
+      this.formRefUpdateCourseFile.current.resetFields();
     } catch (e) {
       console.error(e);
       message.error("Sửa tài liệu khóa học thất bại", 3);

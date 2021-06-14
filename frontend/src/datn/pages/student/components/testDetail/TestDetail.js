@@ -62,9 +62,9 @@ class TestDetail extends React.Component {
         },
         studentTest: resp_2.isExisted
           ? {
-              ...resp_2.studentTest,
-              content: JSON.parse(resp_2.studentTest.content),
-            }
+            ...resp_2.studentTest,
+            content: JSON.parse(resp_2.studentTest.content),
+          }
           : null,
       });
     } catch (e) {
@@ -142,6 +142,7 @@ class TestDetail extends React.Component {
                   <Statistic.Countdown
                     title={"Thời gian còn lại"}
                     value={moment(testDetail.dateTimeEnd)}
+                    format={"DD ngày, HHh:mm':ss''"}
                   />
                 ) : (
                   <Tag color="#00a76a" style={{ fontSize: "15px" }}>

@@ -119,7 +119,7 @@ class LessonDetail extends React.Component {
       message.success("Cập nhật thông tin bài học thành công", 3);
       this.onCloseModalUpdateLesson();
       this.getLessonDetail();
-      this.handleResetFormUpdateLesson();
+      this.formRefUpdateLesson.current.resetFields();
     } catch (e) {
       console.error(e);
       message.error("Cập nhật thông tin bài học thất bại", 3);

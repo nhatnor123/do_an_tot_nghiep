@@ -201,7 +201,7 @@ class CourseOverview extends React.Component {
       message.success("Cập nhật thông tin khóa học thành công", 3);
       this.onCloseModalUpdateCourse();
       this.getCourseDetail();
-      this.handleResetFormUpdateCourse();
+      this.formRefUpdateCourse.current.resetFields();
     } catch (e) {
       console.error(e);
       message.error("Cập nhật thông tin khóa học thất bại", 3);

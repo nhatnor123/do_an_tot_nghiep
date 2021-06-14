@@ -177,7 +177,7 @@ class Detail extends React.Component {
       message.success("Cập nhật thông tin bài kiểm tra thành công", 3);
       this.onCloseModalUpdateTest();
       this.getTestDetail();
-      this.handleResetFormUpdateTest();
+      this.formRefUpdateTest.current.resetFields();
     } catch (e) {
       console.error(e);
       message.error("Cập nhật thông tin bài kiểm tra thất bại", 3);
@@ -590,6 +590,7 @@ class Detail extends React.Component {
                     <Statistic.Countdown
                       title={"Thời gian còn lại"}
                       value={moment(testDetail.dateTimeEnd)}
+                      format={"DD ngày, HHh:mm':ss''"}
                     />
                   </Col>
                 </Row>
