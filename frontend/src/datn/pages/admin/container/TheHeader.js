@@ -20,7 +20,7 @@ import {
   TheHeaderDropdownTasks,
 } from "./index";
 
-const TheHeader = () => {
+const TheHeader = (props) => {
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
 
@@ -67,7 +67,7 @@ const TheHeader = () => {
         <TheHeaderDropdownNotif />
         <TheHeaderDropdownTasks />
         <TheHeaderDropdownMssg />
-        <TheHeaderDropdown />
+        <TheHeaderDropdown props_2={props} />
       </CHeaderNav>
     </CHeader>
   );

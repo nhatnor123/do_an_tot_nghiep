@@ -8,7 +8,6 @@ import {
   CDropdownToggle,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { Link } from "react-router-dom";
 import accountApi from "../../../api/AccountApi";
 import { getAccessToken, removeToken } from "../../../api/TokenUtil";
 
@@ -26,6 +25,7 @@ class TheHeaderDropdown extends React.Component {
 
   handleClickButtonLogOut = () => {
     removeToken();
+    this.props.props_2.props_1.history.push("/login");
   };
 
   getSelfAccountInfo = async () => {
@@ -89,10 +89,8 @@ class TheHeaderDropdown extends React.Component {
           </CDropdownItem>
           <CDropdownItem divider />
           <CDropdownItem onClick={this.handleClickButtonLogOut}>
-            <Link to="/login">
-              <CIcon name="cil-lock-locked" className="mfe-2" />
-              Đăng xuất
-            </Link>
+            <CIcon name="cil-lock-locked" className="mfe-2" />
+            Đăng xuất
           </CDropdownItem>
         </CDropdownMenu>
       </CDropdown>

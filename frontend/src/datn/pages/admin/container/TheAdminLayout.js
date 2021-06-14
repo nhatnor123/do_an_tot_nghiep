@@ -49,7 +49,7 @@ class TheAdminLayout extends React.Component {
         <div className="c-app c-default-layout">
           <TheSidebar />
           <div className="c-wrapper">
-            <TheHeader />
+            <TheHeader props_1={this.props} />
             <div className="c-body">
               <TheContent />
             </div>

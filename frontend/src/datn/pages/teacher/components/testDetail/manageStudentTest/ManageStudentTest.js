@@ -195,9 +195,9 @@ class ManageStudentJoinCourse extends React.Component {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase())
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : "",
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -255,8 +255,8 @@ class ManageStudentJoinCourse extends React.Component {
         let isTestDid = studentListDidTest.includes(item.studentId);
         let temp = isTestDid
           ? response_2.filter((item2) => {
-            return item2.studentId === item.studentId;
-          })[0]
+              return item2.studentId === item.studentId;
+            })[0]
           : null;
         console.log("temp = ", temp);
 
@@ -436,33 +436,43 @@ class ManageStudentJoinCourse extends React.Component {
                           <h3>Kết quả : {this.state.studentTest.score} điểm</h3>
                           <br></br>
                           <h3>Nhận xét của giáo viên: </h3>
-                          {!this.state.studentTest.feedback.trim() ? <> <Form.Item
-                            name="feedback"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Vui lòng điền nhận xét !",
-                              },
-                            ]}
-                          >
-                            <TextEditor />
-                          </Form.Item>
-                            <Button
-                              type="primary"
-                              htmlType="submit"
-                              style={{ marginLeft: "20%", marginTop: "30px" }}
-                              size="middle"
-                            >
-                              Nhận xét
-                            </Button></> : <div>  {Parser(this.state.studentTest.feedback)}</div>}
-                          <Button
-                            type="primary"
-                            style={{ margin: "10px 10px 0px 30%" }}
-                            onClick={this.handleResetForm}
-                            htmlType="button"
-                          >
-                            Đặt lại
-                          </Button>
+                          {!this.state.studentTest.feedback.trim() ? (
+                            <>
+                              {" "}
+                              <Form.Item
+                                name="feedback"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Vui lòng điền nhận xét !",
+                                  },
+                                ]}
+                              >
+                                <TextEditor />
+                              </Form.Item>
+                              <Button
+                                type="primary"
+                                htmlType="submit"
+                                style={{ marginLeft: "20%", marginTop: "30px" }}
+                                size="middle"
+                              >
+                                Nhận xét
+                              </Button>{" "}
+                              <Button
+                                type="primary"
+                                style={{ margin: "10px 10px 0px 30%" }}
+                                onClick={this.handleResetForm}
+                                htmlType="button"
+                              >
+                                Đặt lại
+                              </Button>
+                            </>
+                          ) : (
+                            <div>
+                              {" "}
+                              {Parser(this.state.studentTest.feedback)}
+                            </div>
+                          )}
                         </div>
                       )}
                     </Form.Item>

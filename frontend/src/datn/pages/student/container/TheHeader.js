@@ -5,11 +5,8 @@ import {
   CToggler,
   CHeaderBrand,
   CHeaderNav,
-  CHeaderNavItem,
-  CHeaderNavLink,
   CSubheader,
   CBreadcrumbRouter,
-  CLink,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
@@ -23,7 +20,7 @@ import {
   TheHeaderDropdownTasks,
 } from "./index";
 
-const TheHeader = () => {
+const TheHeader = (props) => {
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
 
@@ -70,7 +67,7 @@ const TheHeader = () => {
         <TheHeaderDropdownNotif />
         <TheHeaderDropdownTasks />
         <TheHeaderDropdownMssg />
-        <TheHeaderDropdown />
+        <TheHeaderDropdown props_2={props} />
       </CHeaderNav>
     </CHeader>
   );
