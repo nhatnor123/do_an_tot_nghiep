@@ -62,9 +62,9 @@ class TestDetail extends React.Component {
         },
         studentTest: resp_2.isExisted
           ? {
-            ...resp_2.studentTest,
-            content: JSON.parse(resp_2.studentTest.content),
-          }
+              ...resp_2.studentTest,
+              content: JSON.parse(resp_2.studentTest.content),
+            }
           : null,
       });
     } catch (e) {
@@ -75,6 +75,15 @@ class TestDetail extends React.Component {
 
   handleSubmitTest = async (value) => {
     var accessToken = getAccessToken();
+
+    // let now = moment().isSameOrAfter()
+    let endTime = moment(this.state.testDetail.dateTimeEnd);
+    console.log("endTime = ", endTime);
+    let isValid = moment().isSameOrBefore(endTime);
+    if (!isValid) {
+      message.error("Đã hết thời gian làm bài");
+      return;
+    }
 
     console.log("value of TEST = ", value);
     var content = [];

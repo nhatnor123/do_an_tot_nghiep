@@ -123,8 +123,45 @@ class Detail extends React.Component {
 
     var answer = [];
 
-    var modifiedContent = value.content.map((content) => {
+    console.log("VALUE = ", value);
+
+    let tempStartAt = moment(
+      value.dateStart.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+        value.timeStart.format("YYYY-MM-DD HH:mm:ss").substring(11, 19)
+    );
+    console.log("tempStartAt = " + tempStartAt);
+
+    let tempEndAt = moment(
+      value.dateEnd.format("YYYY-MM-DD HH:mm:ss").substring(0, 11) +
+        value.timeEnd.format("YYYY-MM-DD HH:mm:ss").substring(11, 19)
+    );
+
+    let isTimeValid = tempStartAt.isBefore(tempEndAt);
+    console.log("Time is valid ? :" + isTimeValid);
+
+    if (!isTimeValid) {
+      message.error("Thời gian bắt đầu phải trước thời gian kết thúc");
+      return;
+    }
+    if (tempEndAt.isSameOrBefore(moment())) {
+      message.error("Thời gian kết thúc phải sau thời gian hiện tại");
+      return;
+    }
+
+    if (!value.content) {
+      message.error("Phải tạo ít nhất 1 câu hỏi cho bài kiểm tra");
+      return;
+    }
+
+    let isValid = true;
+
+    var modifiedContent = value.content.map((content, index) => {
       let trueAnswer = [];
+      if (!content.option) {
+        message.error("Câu hỏi số " + (index + 1) + " chưa có câu trả lời");
+        isValid = false;
+        return;
+      }
       let response = {
         question: content.question,
         option: content.option.map((option, optionIndex) => {
@@ -143,6 +180,10 @@ class Detail extends React.Component {
 
       return response;
     });
+
+    if (!isValid) {
+      return;
+    }
 
     var req = {
       testId: this.state.testId,
@@ -598,9 +639,13 @@ class Detail extends React.Component {
               <div style={{ width: "90%" }}>
                 <div style={{ marginBottom: "23px", fontSize: "17px" }}>
                   {"Thời gian: " +
-                    moment(testDetail.dateTimeStart).format("DD/MM/yyyy HH:mm:ss").toString() +
+                    moment(testDetail.dateTimeStart)
+                      .format("DD/MM/yyyy HH:mm:ss")
+                      .toString() +
                     " ----> " +
-                    moment(testDetail.dateTimeEnd).format("DD/MM/yyyy HH:mm:ss").toString()}
+                    moment(testDetail.dateTimeEnd)
+                      .format("DD/MM/yyyy HH:mm:ss")
+                      .toString()}
                 </div>
                 <div
                   style={{
